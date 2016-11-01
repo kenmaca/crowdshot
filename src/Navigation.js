@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Navigator
+  View, StyleSheet, Navigator, Platform, StatusBar
 } from 'react-native';
 import {
   Router, Scene
