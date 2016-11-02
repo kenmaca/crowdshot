@@ -13,6 +13,7 @@
     "react-native-fbsdk": "^0.3.0",
     "react-native-router-flux": "^3.36.0",
     "react-native-simple-store": "^1.1.0",
+    "react-native-tabs": "^1.0.9",
     "react-native-vector-icons": "^3.0.0"
   },
   "jest": {

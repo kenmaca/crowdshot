@@ -15,6 +15,7 @@ import {
 import Loader from './views/main/Loader';
 import Login from './views/main/Login';
 import Main from './views/main/Main';
+import TabButton from './components/common/TabButton';
 
 export default class Navigation extends Component {
   componentDidMount() {
@@ -24,34 +25,47 @@ export default class Navigation extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Router
-          getSceneStyle={
-            (props, computed) => ({
-              paddingTop: computed.hideNavBar
-                ? 0
-                : Navigator.NavigationBar.Styles.General.TotalNavHeight
-            })
-          }>
+        <Router>
           <Scene
             hideNavBar
-            key='root'
-            navigationBarStyle={styles.nav}
-            titleStyle={styles.navText}
-            leftButtonIconStyle = {styles.navButtons}
-            rightButtonIconStyle = {styles.navButtons}>
+            key='root'>
             <Scene
               initial
               key='loader'
               component={Loader}
               type='replace' />
             <Scene
-              key='main'
-              component={Main}
-              type='replace' />
-            <Scene
               key='login'
               component={Login}
               type='replace' />
+            <Scene
+              tabs
+              tabBarStyle={styles.tabs}
+              key='main'
+              type='replace'>
+              <Scene
+                initial
+                hideNavBar
+                key='mainMain'
+                component={Main}
+                title='Home'
+                iconName='home'
+                icon={TabButton} />
+              <Scene
+                hideNavBar
+                key='mainBroadcast'
+                component={Main}
+                title='Start a Contest'
+                iconName='casino'
+                icon={TabButton} />
+              <Scene
+                hideNavBar
+                key='mainCamera'
+                component={Main}
+                title='Camera'
+                iconName='camera'
+                icon={TabButton} />
+            </Scene>
           </Scene>
         </Router>
       </View>
@@ -75,5 +89,9 @@ const styles = StyleSheet.create({
 
   navButtons: {
     tintColor: Colors.Text
+  },
+
+  tabs: {
+    backgroundColor: Colors.Foreground
   }
 });
