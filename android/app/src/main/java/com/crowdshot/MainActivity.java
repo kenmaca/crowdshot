@@ -1,6 +1,8 @@
 package com.crowdshot;
 
 import com.facebook.react.ReactActivity;
+import com.BV.LinearGradient.LinearGradientPackage;
+import com.lwansbrough.ReactCamera.ReactCamera;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 

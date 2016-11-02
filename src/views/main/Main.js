@@ -27,7 +27,7 @@ export default class Main extends Component {
           </Text>
         </Field>
         <Field
-          label='Another one'>
+          label='dasdasdasfdafdsfsdfsdf one'>
           <Text>
             Hi there.
           </Text>
