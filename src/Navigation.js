@@ -12,7 +12,9 @@ import {
 } from './Const';
 
 // views
+import Loader from './views/main/Loader';
 import Login from './views/main/Login';
+import Main from './views/main/Main';
 
 export default class Navigation extends Component {
   componentDidMount() {
@@ -39,6 +41,14 @@ export default class Navigation extends Component {
             rightButtonIconStyle = {styles.navButtons}>
             <Scene
               initial
+              key='loader'
+              component={Loader}
+              type='replace' />
+            <Scene
+              key='main'
+              component={Main}
+              type='replace' />
+            <Scene
               key='login'
               component={Login}
               type='replace' />
