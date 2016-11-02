@@ -13,6 +13,7 @@ import {
 
 // components
 import DatePicker from '../../components/common/DatePicker';
+import Button from '../../components/common/Button';
 
 export default class NewContest extends Component {
   render() {
@@ -23,6 +24,9 @@ export default class NewContest extends Component {
           isBottom
           label='Hold Contest Until'
           type='time' />
+        <Button
+          color={Colors.Primary}
+          label='Start a new Photo Contest' />
       </View>
     );
   }
