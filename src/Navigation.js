@@ -15,6 +15,9 @@ import {
 import Loader from './views/main/Loader';
 import Login from './views/main/Login';
 import Main from './views/main/Main';
+import NewContest from './views/forms/NewContest';
+
+// components
 import TabButton from './components/common/TabButton';
 
 export default class Navigation extends Component {
@@ -54,7 +57,7 @@ export default class Navigation extends Component {
               <Scene
                 hideNavBar
                 key='mainBroadcast'
-                component={Main}
+                component={NewContest}
                 title='Start a Contest'
                 iconName='casino'
                 icon={TabButton} />

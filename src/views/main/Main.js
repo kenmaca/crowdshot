@@ -11,13 +11,35 @@ import {
   Colors
 } from '../../Const';
 
+// components
+import Field from '../../components/common/Field';
+
 export default class Main extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>
-          Hi there.
-        </Text>
+        <Field
+          isTop
+          label='A special message'
+          subtitle='This is a very special one.'>
+          <Text>
+            Hi there.
+          </Text>
+        </Field>
+        <Field
+          label='Another one'>
+          <Text>
+            Hi there.
+          </Text>
+        </Field>
+        <Field
+          isBottom
+          label='And a final message'
+          subtitle='No more, I promise.'>
+          <Text>
+            Hi there.
+          </Text>
+        </Field>
       </View>
     );
   }

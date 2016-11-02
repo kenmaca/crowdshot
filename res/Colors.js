@@ -16,14 +16,15 @@ export const Colors = {
   // backgrounds
   Background: '#222222',
   Foreground: '#252525',
+  ModalBackground: '#FFFFFF',
 
   // lines
-  Divider: 'rgba(255, 255, 255, 0.15)',
+  Divider: 'rgba(100, 100, 100, 0.1)',
   Outline: '#222222',
 
   // text
   Text: '#FFFFFF',
-  SubduedText: '#333333',
+  SubduedText: '#AAAAAA',
   AlternateText: '#222222',
   EmphasizedText: '#6D6C6C',
   Facebook: '#3B5998'
