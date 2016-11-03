@@ -175,7 +175,9 @@ export default class Main extends Component {
               return (
                 (i == 0 || i == this.state.data.getRowCount() - 1)
                 ? <AnimatedView style={this.getPaddingStyle(i)} />
-                : <ContestCard key={i} />
+                : <ContestCard
+                  isActive={!this.state.isDocked}
+                  key={i} />
               );
             }
           } />

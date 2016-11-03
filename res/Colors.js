@@ -3,6 +3,7 @@ export const Colors = {
   // overlays
   Transparent: 'rgba(0, 0, 0, 0)',
   Overlay: 'rgba(0, 0, 0, 0.25)',
+  LightOverlay: 'rgba(200, 200, 200, 0.1)',
   DarkOverlay: 'rgba(0, 0, 0, 0.9)',
   WhiteOverlay: 'rgba(255, 255, 255, 0.9)',
   LightWhiteOverlay: 'rgba(255, 255, 255, 0.1)',
