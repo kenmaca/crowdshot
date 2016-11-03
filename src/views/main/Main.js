@@ -2,44 +2,183 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, Animated, PanResponder,
+  ListView
 } from 'react-native';
 import {
   Actions
 } from 'react-native-router-flux';
 import {
-  Colors
+  Colors, Sizes
 } from '../../Const';
 
+// modifications
+let panDiff = 120;
+let AnimatedListView = Animated.createAnimatedComponent(
+  ListView
+);
+let AnimatedView = Animated.createAnimatedComponent(View);
+
 // components
-import Field from '../../components/common/Field';
+import ContestCard from '../../components/lists/ContestCard';
 
 export default class Main extends Component {
+  constructor(props) {
+    super(props);
+
+    let pan = new Animated.ValueXY();
+    this.state = {
+      isDocked: true,
+      pan: pan,
+      data: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1 !== r2
+      }),
+      animation: pan.y.interpolate({
+        inputRange: [-panDiff, 0],
+        outputRange: [0, 1],
+        extrapolate: 'clamp'
+      })
+    };
+
+    this.getListViewStyle = this.getListViewStyle.bind(this);
+    this.getPaddingStyle = this.getPaddingStyle.bind(this);
+  }
+
+  componentWillMount() {
+
+    // mock data
+    this.setState({
+      data: this.state.data.cloneWithRows([
+        1, 2, 3, 4, 5, 6
+      ])
+    });
+
+    // PanResponder setup
+    this._panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (
+        evt, gestureState
+      ) => true,
+      onStartShouldSetPanResponderCapture: (
+        evt, gestureState
+      ) => true,
+      onMoveShouldSetPanResponder: (
+        evt, gestureState
+      ) => true,
+      onMoveShouldSetPanResponderCapture: (
+        evt, gestureState
+      ) => true,
+      onPanResponderGrant: () => {},
+      onPanResponderMove: Animated.event(
+        [null, {
+          dx: this.state.pan.x,
+          dy: this.state.pan.y
+        }]
+      ),
+      onPanResponderRelease: (evt, gestureState) => {
+        let shouldToggle = (
+          this.state.isDocked
+          ? (gestureState.dy < (-panDiff / 3))
+          : (gestureState.dy > (panDiff))
+        );
+
+        if (!shouldToggle) {
+
+          // return to original position
+          Animated.spring(
+            this.state.pan.y,
+            {toValue: 0}
+          ).start();
+        } else {
+
+          // toggle between docked and zoomed
+          Animated.spring(
+            this.state.pan.y,
+            {
+              toValue: (
+                this.state.isDocked
+                ? -panDiff
+                : panDiff
+              )
+            }
+          ).start(() => {
+            this.setState({
+              isDocked: !this.state.isDocked,
+              animation: (
+                !this.state.isDocked
+                ? this.state.pan.y.interpolate({
+                  inputRange: [-panDiff, 0],
+                  outputRange: [0, 1],
+                  extrapolate: 'clamp'
+                })
+                : this.state.pan.y.interpolate({
+                  inputRange: [0, panDiff],
+                  outputRange: [0, 1],
+                  extrapolate: 'clamp'
+                })
+              )
+            });
+          });
+        }
+      }
+    });
+  }
+
+  getListViewStyle() {
+    return {
+      flex: 1,
+      width: this.state.animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [Sizes.Width, Sizes.Width * 2],
+      }),
+      transform: [
+        {
+          scale: this.state.animation.interpolate({
+            inputRange: [0, 1],
+            outputRange: [1, 0.8]
+          }),
+        }, {
+          translateX: this.state.animation.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, -Sizes.Width / 2]
+          }),
+        }, {
+          translateY: this.state.animation.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, Sizes.Height / 2],
+          }),
+        }
+      ]
+    };
+  }
+
+  getPaddingStyle() {
+    return {
+      width: this.state.animation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, Sizes.Width / 2.5]
+      })
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Field
-          isTop
-          label='A special message'
-          subtitle='This is a very special one.'>
-          <Text>
-            Hi there.
-          </Text>
-        </Field>
-        <Field
-          label='dasdasdasfdafdsfsdfsdf one'>
-          <Text>
-            Hi there.
-          </Text>
-        </Field>
-        <Field
-          isBottom
-          label='And a final message'
-          subtitle='No more, I promise.'>
-          <Text>
-            Hi there.
-          </Text>
-        </Field>
+        <AnimatedListView
+          horizontal
+          pagingEnabled={!this.state.isDocked}
+          dataSource={this.state.data}
+          contentContainerStyle={styles.list}
+          style={this.getListViewStyle()}
+          {...this._panResponder.panHandlers}
+          renderRow={
+            (rowData, s, i) => {
+              return (
+                (i == 0 || i == this.state.data.getRowCount() - 1)
+                ? <AnimatedView style={this.getPaddingStyle(i)} />
+                : <ContestCard key={i} />
+              );
+            }
+          } />
       </View>
     );
   }
@@ -48,8 +187,14 @@ export default class Main extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: Colors.Background
+  },
+
+  list: {
+    alignItems: 'center'
+  },
+
+  header: {
+    flex: 1
   }
 });
