@@ -15,6 +15,8 @@ import {
 import DatePicker from '../../components/common/DatePicker';
 import Button from '../../components/common/Button';
 import PricePicker from '../../components/common/PricePicker';
+import Capture from './Capture';
+import Location from './Location';
 
 export default class NewContest extends Component {
   render() {
@@ -30,6 +32,12 @@ export default class NewContest extends Component {
           number={1}
           min={1}
           max={20}
+          isBottom />
+        <Capture
+          label='Capture'
+          isBottom />
+        <Location
+          label='Location'
           isBottom />
         <Button
           color={Colors.Primary}
