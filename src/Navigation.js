@@ -16,6 +16,7 @@ import Loader from './views/main/Loader';
 import Login from './views/main/Login';
 import Main from './views/main/Main';
 import NewContest from './views/forms/NewContest';
+import Profile from './views/profiles/Profile';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -41,6 +42,9 @@ export default class Navigation extends Component {
               key='login'
               component={Login}
               type='replace' />
+            <Scene
+              key='profile'
+              component={Profile} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}

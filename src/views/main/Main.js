@@ -185,13 +185,16 @@ export default class Main extends Component {
             style={styles.headerContent}>
             <Avatar
               size={30}
+              onPress={() => Actions.profile({
+                uid: Firebase.auth().currentUser.uid
+              })}
               uid={Firebase.auth().currentUser.uid} />
             <Text style={styles.welcomeTitle}>
               Good afternoon, Kenneth.
             </Text>
             <OutlineText
               style={styles.location}
-              text='Toronto, ON, Canada' />
+              text='3 Active Contests' />
           </LinearGradient>
           <View style={styles.arrowContainer}>
             <CircleIcon

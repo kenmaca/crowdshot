@@ -11,6 +11,7 @@
     "firebase": "^3.5.3",
     "react": "15.3.2",
     "react-native": "0.36.0",
+    "react-native-blur": "^1.1.1",
     "react-native-camera": "^0.3.8",
     "react-native-fbsdk": "^0.3.0",
     "react-native-linear-gradient": "^1.5.14",
