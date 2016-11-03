@@ -11,6 +11,7 @@ import {
 import {
   Colors, Sizes
 } from '../../Const';
+import * as Firebase from 'firebase';
 
 // modifications
 let panDiff = 120;
@@ -20,7 +21,12 @@ let AnimatedListView = Animated.createAnimatedComponent(
 let AnimatedView = Animated.createAnimatedComponent(View);
 
 // components
+import LinearGradient from 'react-native-linear-gradient';
+import Video from 'react-native-video';
+import Avatar from '../../components/profiles/Avatar';
+import OutlineText from '../../components/common/OutlineText';
 import ContestCard from '../../components/lists/ContestCard';
+import CircleIcon from '../../components/common/CircleIcon';
 
 export default class Main extends Component {
   constructor(props) {
@@ -155,7 +161,7 @@ export default class Main extends Component {
     return {
       width: this.state.animation.interpolate({
         inputRange: [0, 1],
-        outputRange: [0, Sizes.Width / 2.5]
+        outputRange: [0, Sizes.Width / 2.6]
       })
     }
   }
@@ -163,6 +169,42 @@ export default class Main extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.header}>
+          <Video
+            repeat
+            muted
+            resizeMode='cover'
+            source={require('../../../res/img/header.mp4')}
+            style={styles.cover} />
+          <LinearGradient
+            colors={[
+              Colors.Transparent,
+              Colors.Transparent,
+              Colors.Background,
+            ]}
+            style={styles.headerContent}>
+            <Avatar
+              size={30}
+              uid={Firebase.auth().currentUser.uid} />
+            <Text style={styles.welcomeTitle}>
+              Good afternoon, Kenneth.
+            </Text>
+            <OutlineText
+              style={styles.location}
+              text='Toronto, ON, Canada' />
+          </LinearGradient>
+          <View style={styles.arrowContainer}>
+            <CircleIcon
+              style={styles.arrow}
+              size={Sizes.H1 * 2}
+              icon='keyboard-arrow-up'
+              checkColor={Colors.LightWhiteOverlay}
+              color={Colors.Transparent} />
+            <Text style={styles.arrowText}>
+              SLIDE UP
+            </Text>
+          </View>
+        </View>
         <AnimatedListView
           horizontal
           pagingEnabled={!this.state.isDocked}
@@ -197,6 +239,56 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    flex: 1
+    flex: 1,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: Sizes.Width,
+    height: Sizes.Height,
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
+
+  cover: {
+    minHeight: Sizes.Height * 0.6,
+    alignSelf: 'stretch'
+  },
+
+  welcomeTitle: {
+    width: Sizes.Width * 0.7,
+    fontSize: 32,
+    fontWeight: '700',
+    color: Colors.Text,
+    backgroundColor: Colors.Transparent,
+    textAlign: 'center'
+  },
+
+  location: {
+    marginTop: Sizes.OuterFrame
+  },
+
+  headerContent: {
+    marginTop: -Sizes.Height * 0.6,
+    height: Sizes.Height * 0.6,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: Sizes.InnerFrame
+  },
+
+  arrowContainer: {
+    marginTop: -Sizes.InnerFrame * 10,
+    alignItems: 'center'
+  },
+
+  arrow: {
+    marginBottom: -Sizes.InnerFrame * 1.5
+  },
+
+  arrowText: {
+    textAlign: 'center',
+    fontSize: Sizes.SmallText,
+    color: Colors.LightWhiteOverlay,
+    backgroundColor: Colors.Transparent
   }
 });

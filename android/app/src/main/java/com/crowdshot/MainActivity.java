@@ -1,6 +1,7 @@
 package com.crowdshot;
 
 import com.facebook.react.ReactActivity;
+import com.brentvatne.react.ReactVideoPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.lwansbrough.ReactCamera.ReactCamera;
 import com.oblador.vectoricons.VectorIconsPackage;
