@@ -19,16 +19,14 @@ import Field from './Field';
 export default class InformationField extends Component {
   render() {
     return (
-      <Field
-        {...this.props}
-        field={
-          <Text style={[
-            styles.info,
-            this.props.style
-          ]}>
-            {this.props.info}
-          </Text>
-        } />
+      <Field {...this.props}>
+        <Text style={[
+          styles.info,
+          this.props.style
+        ]}>
+          {this.props.info}
+        </Text>
+      </Field>
     );
   }
 }
@@ -40,6 +38,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     paddingRight: Sizes.OuterFrame,
     fontSize: Sizes.Text,
-    color: Colors.Text
+    color: Colors.Text,
+    backgroundColor: Colors.Transparent
   }
 });
