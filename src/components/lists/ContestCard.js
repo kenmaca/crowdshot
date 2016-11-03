@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, ScrollView
 } from 'react-native';
 import {
   Colors, Sizes
@@ -10,6 +10,7 @@ import {
 
 // components
 import Button from '../common/Button';
+import InputSectionHeader from '../common/InputSectionHeader';
 import Photo from '../common/Photo';
 import PhotoGrid from '../common/PhotoGrid';
 import Divider from '../common/Divider';
@@ -58,33 +59,40 @@ export default class ContestCard extends Component {
               unfilledColor={Colors.LightOverlay}
               borderWidth={0} />
           </View>
-          <View style={styles.summary}>
-            <CircleIconInfo
-              color={Colors.Primary}
-              icon='burst-mode'
-              label='4 entries submitted from 3 photographers' />
-            <CircleIconInfo
-              color={Colors.Primary}
-              icon='directions-run'
-              label='23 photograhers nearby' />
-          </View>
-          <Divider style={styles.divider} />
-          <Text style={styles.instructions}>
-            Take a landscape photo to include the entire
-            ridge and surrounding mountains. Bonus points to
-            wide angle and use of DOF.
-          </Text>
-          <View style={styles.photoContainer}>
-            <PhotoGrid
-              width={Sizes.Width - Sizes.InnerFrame * 2.5}
-              eachRow={6}
-              photoIds={[
-                'appLoginBackground',
-                'appLoginBackground',
-                'appLoginBackground',
-                'appLoginBackground'
-              ]} />
-          </View>
+          <ScrollView style={styles.detailContainer}>
+            <View style={styles.summary}>
+              <CircleIconInfo
+                color={Colors.Primary}
+                icon='burst-mode'
+                label='4 entries submitted from 3 photographers' />
+              <CircleIconInfo
+                color={Colors.Primary}
+                icon='directions-run'
+                label='23 photograhers nearby' />
+            </View>
+            <Divider style={styles.divider} />
+            <View style={styles.instructionContainer}>
+              <InputSectionHeader label='Instructions' />
+              <Text style={styles.instructions}>
+                Take a landscape photo to include the entire
+                ridge and surrounding mountains. Bonus points to
+                wide angle and use of DOF.
+              </Text>
+            </View>
+            <View style={styles.photoContainer}>
+              <InputSectionHeader label='Contest Entries' />
+              <PhotoGrid
+                style={styles.photoGrid}
+                width={Sizes.Width - Sizes.InnerFrame * 2.5}
+                eachRow={6}
+                photoIds={[
+                  'appLoginBackground',
+                  'appLoginBackground',
+                  'appLoginBackground',
+                  'appLoginBackground'
+                ]} />
+            </View>
+          </ScrollView>
         </View>
       </View>
     );
@@ -145,20 +153,32 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
 
+  detailContainer: {
+    flex: 1
+  },
+
   summary: {
     padding: Sizes.InnerFrame
   },
 
+  instructionContainer: {
+    marginTop: Sizes.InnerFrame,
+  },
+
   instructions: {
-    margin: Sizes.InnerFrame,
-    color: Colors.SubduedText,
+    marginLeft: Sizes.InnerFrame,
+    color: Colors.AlternateText,
     fontWeight: '100'
   },
 
   photoContainer: {
-    marginLeft: Sizes.InnerFrame,
+    marginTop: Sizes.InnerFrame,
     alignItems: 'flex-start',
     justifyContent: 'center'
+  },
+
+  photoGrid: {
+    marginLeft: Sizes.InnerFrame
   },
 
   buttonContainer: {

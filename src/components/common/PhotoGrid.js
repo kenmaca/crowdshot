@@ -49,7 +49,8 @@ export default class PhotoGrid extends Component {
         styles.container,
         this.props.width && {
           width: this.props.width
-        }
+        },
+        this.props.style
       ]}>
         {this.state.photos.map((photoUri, i) => {
           return (
