@@ -220,9 +220,11 @@ export default class Main extends Component {
               return (
                 (i == 0 || i == this.state.data.getRowCount() - 1)
                 ? <AnimatedView style={this.getPaddingStyle(i)} />
-                : <ContestCard
-                  isActive={!this.state.isDocked}
-                  key={i} />
+                : <View style={styles.cardShadow}>
+                  <ContestCard
+                    isActive={!this.state.isDocked}
+                    key={i} />
+                </View>
               );
             }
           } />
@@ -293,5 +295,19 @@ const styles = StyleSheet.create({
     fontSize: Sizes.SmallText,
     color: Colors.LightWhiteOverlay,
     backgroundColor: Colors.Transparent
+  },
+
+  cardShadow: {
+    borderRadius: 5,
+    marginTop: Sizes.InnerFrame / 4,
+    marginLeft: Sizes.InnerFrame / 4,
+    marginRight: Sizes.InnerFrame / 4,
+    shadowColor: Colors.DarkOverlay,
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    shadowOffset: {
+      height: 5,
+      width: 0
+    }
   }
 });

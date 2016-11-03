@@ -101,12 +101,10 @@ export default class ContestCard extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     width: Sizes.Width - Sizes.InnerFrame / 2,
     borderRadius: 5,
-    overflow: 'hidden',
-    marginTop: Sizes.InnerFrame / 4,
-    marginLeft: Sizes.InnerFrame / 4,
-    marginRight: Sizes.InnerFrame / 4,
+    overflow: 'hidden'
   },
 
   header: {
