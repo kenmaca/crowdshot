@@ -14,6 +14,7 @@ import {
 // components
 import DatePicker from '../../components/common/DatePicker';
 import Button from '../../components/common/Button';
+import PricePicker from '../../components/common/PricePicker';
 
 export default class NewContest extends Component {
   render() {
@@ -24,6 +25,12 @@ export default class NewContest extends Component {
           isBottom
           label='Hold Contest Until'
           type='time' />
+        <PricePicker
+          label='Price'
+          number={1}
+          min={1}
+          max={20}
+          isBottom />
         <Button
           color={Colors.Primary}
           label='Start a new Photo Contest' />
