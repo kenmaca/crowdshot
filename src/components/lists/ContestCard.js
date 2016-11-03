@@ -9,8 +9,10 @@ import {
 } from '../../Const';
 
 // components
+import Button from '../common/Button';
 import Photo from '../common/Photo';
 import PhotoGrid from '../common/PhotoGrid';
+import Divider from '../common/Divider';
 import OutlineText from '../common/OutlineText';
 import CircleIconInfo from '../common/CircleIconInfo';
 import * as Progress from 'react-native-progress';
@@ -22,6 +24,18 @@ export default class ContestCard extends Component {
         <Photo
           photoId='appLoginBackground'
           style={styles.header}>
+          <View style={styles.buttonContainer}>
+            <Button
+              size={Sizes.H2}
+              style={styles.button}
+              icon='card-giftcard'
+              color={Colors.Transparent} />
+            <Button
+              size={Sizes.H2}
+              style={styles.button}
+              icon='delete-forever'
+              color={Colors.Transparent} />
+          </View>
           <OutlineText
             text='Toronto, ON, Canada' />
         </Photo>
@@ -54,20 +68,17 @@ export default class ContestCard extends Component {
               icon='directions-run'
               label='23 photograhers nearby' />
           </View>
+          <Divider style={styles.divider} />
+          <Text style={styles.instructions}>
+            Take a landscape photo to include the entire
+            ridge and surrounding mountains. Bonus points to
+            wide angle and use of DOF.
+          </Text>
           <View style={styles.photoContainer}>
             <PhotoGrid
-              width={Sizes.Width - Sizes.InnerFrame * 2}
-              eachRow={10}
+              width={Sizes.Width - Sizes.InnerFrame * 2.5}
+              eachRow={6}
               photoIds={[
-                'appLoginBackground',
-                'appLoginBackground',
-                'appLoginBackground',
-                'appLoginBackground',
-                'appLoginBackground',
-                'appLoginBackground',
-                'appLoginBackground',
-                'appLoginBackground',
-                'appLoginBackground',
                 'appLoginBackground',
                 'appLoginBackground',
                 'appLoginBackground',
@@ -91,9 +102,9 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    height: 125,
+    height: 200,
     alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignSelf: 'stretch',
     padding: Sizes.InnerFrame
   },
@@ -138,8 +149,27 @@ const styles = StyleSheet.create({
     padding: Sizes.InnerFrame
   },
 
+  instructions: {
+    margin: Sizes.InnerFrame,
+    color: Colors.SubduedText,
+    fontWeight: '100'
+  },
+
   photoContainer: {
-    alignItems: 'center',
+    marginLeft: Sizes.InnerFrame,
+    alignItems: 'flex-start',
     justifyContent: 'center'
+  },
+
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end'
+  },
+
+  button: {
+    paddingTop: Sizes.InnerFrame / 2,
+    paddingBottom: Sizes.InnerFrame / 2,
+    paddingLeft: Sizes.InnerFrame / 2,
+    paddingRight: Sizes.InnerFrame / 2
   }
 });

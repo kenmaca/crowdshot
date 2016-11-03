@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
 
   text: {
     marginLeft: Sizes.InnerFrame,
-    fontSize: Sizes.Text
+    fontSize: Sizes.Text,
+    fontWeight: '100'
   }
 });
