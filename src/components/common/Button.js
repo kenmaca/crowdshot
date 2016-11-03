@@ -114,7 +114,7 @@ export default class Button extends Component {
                       color={
                         (this.props.isDisabled && this.props.disabledFontColor)
                         || this.props.fontColor
-                        || Sizes.Text
+                        || Colors.Text
                       } />
                   ) || (
                     <Icon
@@ -123,7 +123,7 @@ export default class Button extends Component {
                       color={
                         (this.props.isDisabled && this.props.disabledFontColor)
                         || this.props.fontColor
-                        || Sizes.Text
+                        || Colors.Text
                       } />
                   )
                 )
@@ -176,7 +176,7 @@ export default class Button extends Component {
                       color={
                         (this.props.isDisabled && this.props.disabledFontColor)
                         || this.props.fontColor
-                        || Sizes.Text
+                        || Colors.Text
                       } />
                   ) || (
                     <Icon
@@ -185,7 +185,7 @@ export default class Button extends Component {
                       color={
                         (this.props.isDisabled && this.props.disabledFontColor)
                         || this.props.fontColor
-                        || Sizes.Text
+                        || Colors.Text
                       } />
                   )
                 )
