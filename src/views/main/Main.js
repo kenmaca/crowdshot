@@ -14,7 +14,7 @@ import {
 import * as Firebase from 'firebase';
 
 // modifications
-let panDiff = 240;
+let panDiff = 120;
 let AnimatedListView = Animated.createAnimatedComponent(
   ListView
 );
@@ -132,11 +132,9 @@ export default class Main extends Component {
   getListViewStyle() {
     return {
       flex: 1,
-      width: this.state.animation.interpolate({
-        inputRange: [0, 1],
-        outputRange: [Sizes.Width, Sizes.Width * 2],
-        extrapolate: 'clamp'
-      }),
+      alignSelf: 'stretch',
+      width: Sizes.Width,
+      overflow: 'visible',
       transform: [
         {
           scale: this.state.animation.interpolate({
@@ -147,15 +145,15 @@ export default class Main extends Component {
         }, {
           translateX: this.state.animation.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, -Sizes.Width / 2],
+            outputRange: [0, 0.8],
             extrapolate: 'clamp'
-          }),
+          })
         }, {
           translateY: this.state.animation.interpolate({
             inputRange: [0, 1],
             outputRange: [0, Sizes.Height / 2],
             extrapolate: 'clamp'
-          }),
+          })
         }
       ]
     };
@@ -216,7 +214,6 @@ export default class Main extends Component {
           horizontal
           pagingEnabled={!this.state.isDocked}
           dataSource={this.state.data}
-          contentContainerStyle={styles.list}
           style={this.getListViewStyle()}
           {...this._panResponder.panHandlers}
           renderRow={
@@ -239,10 +236,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.Background
-  },
-
-  list: {
-    alignItems: 'center'
   },
 
   header: {
