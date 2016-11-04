@@ -121,13 +121,14 @@ const styles = StyleSheet.create({
     height: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    padding: 3
   },
 
   textContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
 
   text: {
@@ -135,11 +136,12 @@ const styles = StyleSheet.create({
     fontSize: Sizes.Text,
     color: Colors.Text,
     alignSelf: 'center',
-    width: 80
+    width: 70
   },
 
   button: {
-    padding: Sizes.InnerFrame,
+    paddingRight: Sizes.OuterFrame,
+    paddingLeft: Sizes.OuterFrame
   },
 
   buttonText: {
