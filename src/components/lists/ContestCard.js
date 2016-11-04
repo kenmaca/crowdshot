@@ -66,10 +66,12 @@ export default class ContestCard extends Component {
           <ScrollView style={styles.detailContainer}>
             <View style={styles.summary}>
               <CircleIconInfo
+                size={Sizes.H2}
                 color={Colors.Primary}
                 icon='burst-mode'
                 label='4 entries submitted from 3 photographers' />
               <CircleIconInfo
+                size={Sizes.H2}
                 color={Colors.Primary}
                 icon='directions-run'
                 label='23 photograhers nearby' />

@@ -14,7 +14,7 @@ import {
 import * as Firebase from 'firebase';
 
 // modifications
-let panDiff = 480;
+let panDiff = 240;
 let AnimatedListView = Animated.createAnimatedComponent(
   ListView
 );
