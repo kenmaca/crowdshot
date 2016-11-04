@@ -135,22 +135,26 @@ export default class Main extends Component {
       width: this.state.animation.interpolate({
         inputRange: [0, 1],
         outputRange: [Sizes.Width, Sizes.Width * 2],
+        extrapolate: 'clamp'
       }),
       transform: [
         {
           scale: this.state.animation.interpolate({
             inputRange: [0, 1],
-            outputRange: [1, 0.8]
+            outputRange: [1, 0.8],
+            extrapolate: 'clamp'
           }),
         }, {
           translateX: this.state.animation.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, -Sizes.Width / 2]
+            outputRange: [0, -Sizes.Width / 2],
+            extrapolate: 'clamp'
           }),
         }, {
           translateY: this.state.animation.interpolate({
             inputRange: [0, 1],
             outputRange: [0, Sizes.Height / 2],
+            extrapolate: 'clamp'
           }),
         }
       ]

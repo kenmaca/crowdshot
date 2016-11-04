@@ -17,6 +17,7 @@ import Login from './views/main/Login';
 import Main from './views/main/Main';
 import NewContest from './views/forms/NewContest';
 import Profile from './views/profiles/Profile';
+import ContestPhotos from './views/contests/ContestPhotos';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -45,6 +46,9 @@ export default class Navigation extends Component {
             <Scene
               key='profile'
               component={Profile} />
+            <Scene
+              key='contestPhotos'
+              component={ContestPhotos} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}
