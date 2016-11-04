@@ -2,12 +2,15 @@ import React, {
   Component
 } from 'react';
 import {
-  StyleSheet, View, Modal
+  StyleSheet, View, Modal, TouchableHighlight
 } from 'react-native';
 import {
   Sizes, Colors
 } from '../../Const';
 import Database from '../../utils/Database';
+import {
+  Actions
+} from 'react-native-router-flux';
 
 // components
 import Photo from './Photo';
@@ -54,20 +57,23 @@ export default class PhotoGrid extends Component {
       ]}>
         {this.state.photos.map((photoUri, i) => {
           return (
-            <Photo
-              key={Math.random()}
-              style={[
-                styles.photo,
-                this.props.width && {
-                  width: (
-                    (this.props.width / this.props.eachRow) - 2
-                  ),
-                  height: (
-                    (this.props.width / this.props.eachRow) - 2
-                  )
-                }
-              ]}
-              uri={photoUri} />
+            <TouchableHighlight
+              key={i}
+              onPress={Actions.contestPhotos}>
+              <Photo
+                style={[
+                  styles.photo,
+                  this.props.width && {
+                    width: (
+                      (this.props.width / this.props.eachRow) - 2
+                    ),
+                    height: (
+                      (this.props.width / this.props.eachRow) - 2
+                    )
+                  }
+                ]}
+                uri={photoUri} />
+            </TouchableHighlight>
           );
         })}
       </View>

@@ -24,6 +24,7 @@ export default class CloseFullscreenButton extends Component {
           icon='close'
           color={Colors.Transparent}
           checkColor={Colors.Text}
+          shadowStyle={styles.shadow}
           size={70} />
       </TouchableOpacity>
     );
@@ -35,5 +36,15 @@ const styles = StyleSheet.create({
     top: Sizes.InnerFrame,
     right: 0,
     position: 'absolute'
+  },
+
+  shadow: {
+    shadowColor: Colors.DarkOverlay,
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    shadowOffset: {
+      height: 1,
+      width: 0
+    }
   }
 });

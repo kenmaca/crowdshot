@@ -24,14 +24,16 @@ export default class CircleIcon extends Component {
         },
         this.props.style
       ]}>
-        <Icon
-          size={this.props.size && (this.props.size * 0.6) || 12}
-          name={this.props.icon || 'check'}
-          color={
-            this.props.checkColor
-            ? this.props.checkColor
-            : Colors.Text
-          } />
+        <View style={this.props.shadowStyle}>
+          <Icon
+            size={this.props.size && (this.props.size * 0.6) || 12}
+            name={this.props.icon || 'check'}
+            color={
+              this.props.checkColor
+              ? this.props.checkColor
+              : Colors.Text
+            } />
+        </View>
       </View>
     );
   }

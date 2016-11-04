@@ -222,12 +222,10 @@ export default class Main extends Component {
           renderRow={
             (rowData, s, i) => {
               return (
-                (i == 0 || i == this.state.data.getRowCount() - 1)
-                ? <AnimatedView style={this.getPaddingStyle(i)} />
-                : <View style={styles.cardShadow}>
-                  <ContestCard
-                    isActive={!this.state.isDocked}
-                    key={i} />
+                <View
+                  key={i}
+                  style={styles.cardShadow}>
+                  <ContestCard />
                 </View>
               );
             }

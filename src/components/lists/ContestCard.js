@@ -7,6 +7,9 @@ import {
 import {
   Colors, Sizes
 } from '../../Const';
+import {
+  Actions
+} from 'react-native-router-flux';
 
 // components
 import Button from '../common/Button';
@@ -32,6 +35,7 @@ export default class ContestCard extends Component {
               icon='card-giftcard'
               color={Colors.Transparent} />
             <Button
+              onPress={Actions.contestPhotos}
               size={Sizes.H2}
               style={styles.button}
               icon='delete-forever'
@@ -84,7 +88,7 @@ export default class ContestCard extends Component {
               <PhotoGrid
                 style={styles.photoGrid}
                 width={Sizes.Width - Sizes.InnerFrame * 2.5}
-                eachRow={6}
+                eachRow={3}
                 photoIds={[
                   'appLoginBackground',
                   'appLoginBackground',
