@@ -212,7 +212,7 @@ export default class Main extends Component {
         </View>
         <AnimatedListView
           horizontal
-          pagingEnabled={!this.state.isDocked}
+          pagingEnabled
           dataSource={this.state.data}
           style={this.getListViewStyle()}
           {...this._panResponder.panHandlers}
