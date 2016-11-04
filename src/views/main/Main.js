@@ -14,7 +14,7 @@ import {
 import * as Firebase from 'firebase';
 
 // modifications
-let panDiff = 120;
+let panDiff = 480;
 let AnimatedListView = Animated.createAnimatedComponent(
   ListView
 );
@@ -69,10 +69,10 @@ export default class Main extends Component {
       ) => true,
       onMoveShouldSetPanResponder: (
         evt, gestureState
-      ) => true,
+      ) => gestureState.dy !== 0,
       onMoveShouldSetPanResponderCapture: (
         evt, gestureState
-      ) => true,
+      ) => gestureState.dy !== 0,
       onPanResponderGrant: () => {},
       onPanResponderMove: Animated.event(
         [null, {

@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Alert
+  View, StyleSheet, Alert, Text
 } from 'react-native';
 import {
   Colors, Sizes
@@ -17,7 +17,8 @@ export default class ContestPhotos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cards: [1, 2, 3, 4]
+      cards: [1, 2, 3, 4],
+      numCards: 4
     };
   }
 
@@ -27,8 +28,18 @@ export default class ContestPhotos extends Component {
         <SwipeCards
           containerStyle={styles.cards}
           cards={this.state.cards}
-          renderCard={data => <ContestPhotoCard />}
-          renderNoMoreCards={() => <View />}
+          renderCard={data => (
+            <ContestPhotoCard
+              i={this.state.cards.indexOf(data) + 1}
+              n={this.state.numCards} />
+          )}
+          renderNoMoreCards={() => (
+            <View style={styles.noMoreContainer}>
+              <Text style={styles.noMore}>
+                👻
+              </Text>
+            </View>
+          )}
           yupText='Shortlist!'
           noText='Nope!'
           handleYup={() => Alert.alert('yep')}
@@ -51,5 +62,16 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: Sizes.Height / 7,
     backgroundColor: Colors.Transparent
+  },
+
+  noMoreContainer: {
+    flex: 1,
+    marginTop: -Sizes.Height / 7,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  noMore: {
+    fontSize: Sizes.H1 * 2
   }
 });

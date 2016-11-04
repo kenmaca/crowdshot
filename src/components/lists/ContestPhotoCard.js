@@ -11,6 +11,7 @@ import {
 // components
 import Photo from '../common/Photo';
 import Avatar from '../profiles/Avatar';
+import OutlineText from '../common/OutlineText';
 
 export default class ContestPhotoCard extends Component {
   render() {
@@ -19,6 +20,11 @@ export default class ContestPhotoCard extends Component {
         <Photo
           photoId='appLoginBackground'
           style={styles.photo}>
+          <OutlineText text={`${
+            this.props.i || 1
+          } of ${
+            this.props.n || 1
+          }`} />
           <View style={styles.infoContainer}>
             <View style={styles.avatar}>
               <Avatar
@@ -76,8 +82,8 @@ const styles = StyleSheet.create({
 
   photo: {
     padding: Sizes.InnerFrame,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
     width: Sizes.Width / 1.15,
     height: Sizes.Width * 1.15,
     borderRadius: 15,
@@ -109,7 +115,7 @@ const styles = StyleSheet.create({
 
   name: {
     padding: Sizes.InnerFrame / 2,
-    fontSize: Sizes.H4,
+    fontSize: Sizes.H3,
     fontWeight: '500'
   },
 
