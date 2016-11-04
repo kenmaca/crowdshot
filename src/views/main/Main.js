@@ -84,7 +84,7 @@ export default class Main extends Component {
         let shouldToggle = (
           this.state.isDocked
           ? (gestureState.dy < (-panDiff / 3))
-          : (gestureState.dy > (panDiff))
+          : (gestureState.dy > (panDiff / 3))
         );
 
         if (!shouldToggle) {
