@@ -69,10 +69,16 @@ export default class Main extends Component {
       ) => true,
       onMoveShouldSetPanResponder: (
         evt, gestureState
-      ) => gestureState.dy !== 0,
+      ) => (
+        (gestureState.dy < (-panDiff / 6))
+        || (gestureState.dy > (panDiff / 6))
+      ),
       onMoveShouldSetPanResponderCapture: (
         evt, gestureState
-      ) => gestureState.dy !== 0,
+      ) => (
+        (gestureState.dy < (-panDiff / 6))
+        || (gestureState.dy > (panDiff / 6))
+      ),
       onPanResponderGrant: () => {},
       onPanResponderMove: Animated.event(
         [null, {
