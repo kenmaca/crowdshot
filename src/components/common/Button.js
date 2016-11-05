@@ -58,7 +58,7 @@ export default class Button extends Component {
       <TouchableOpacity
         hitSlop={{top: 20, right: 20, bottom: 20, left: 20}}
         style={[
-          styles.container,
+          this.props.container || styles.container,
           this.props.style,
           this.props.color && {backgroundColor: this.props.color},
           this.props.isDisabled && {
