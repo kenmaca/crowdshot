@@ -15,6 +15,7 @@ import {
 import Loader from './views/main/Loader';
 import Login from './views/main/Login';
 import Main from './views/main/Main';
+import Contestant from './views/main/Contestant';
 import NewContest from './views/forms/NewContest';
 import Modal from './Modal';
 import Profile from './views/profiles/Profile';
@@ -75,8 +76,8 @@ export default class Navigation extends Component {
                 icon={TabButton} />
               <Scene
                 hideNavBar
-                key='mainCamera'
-                component={Main}
+                key='mainContestant'
+                component={Contestant}
                 title='Camera'
                 iconName='camera'
                 icon={TabButton} />
