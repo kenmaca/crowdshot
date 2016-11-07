@@ -34,7 +34,7 @@ export default class ContestPhotos extends Component {
   }
 
   componentDidMount() {
-    this.listener = this.ref.once('value', data => {
+    this.ref.once('value', data => {
       if (data.exists()) {
 
         // entry keys
@@ -49,19 +49,17 @@ export default class ContestPhotos extends Component {
     });
   }
 
-  componentWillUnmount() {
-    this.listener && this.ref.off('value', this.listener);
-  }
-
   render() {
     return (
       <View style={styles.container}>
         <SwipeCards
+          loop
           ref='swiper'
           containerStyle={styles.cards}
           cards={this.state.entries}
           renderCard={entry => (
             <ContestPhotoCard
+              key={entry}
               contestId={this.props.contestId}
               entryId={entry}
               i={this.state.entries.indexOf(entry) + 1}
@@ -69,7 +67,6 @@ export default class ContestPhotos extends Component {
           )}
           yupText='Shortlist!'
           noText='Nope!'
-          loop
           handleYup={entry => {
             Database.ref(
               `entries/${
