@@ -8,8 +8,10 @@ import {
 import {
   Colors, Sizes
 } from '../../Const';
+import Database from '../../utils/Database';
 
 // components
+import ContestThumbnail from '../../components/lists/ContestThumbnail';
 import SwipeCards from 'react-native-swipe-cards';
 import ContestPhotoCard from '../../components/lists/ContestPhotoCard';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
@@ -19,31 +21,36 @@ export default class ContestPhotos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      endDate: 1234,
-      prizes: {
-        '1234': true,
-        '1235': true
-      },
-      referencePhotoId: 'appLoginBackground',
-      instructions: 'stuff',
-      locationId: 'location',
-      entries: {
-        abc1: true,
-        abc2: true,
-        abc3: true
-      },
+      entries: [],
       thumbnails: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
       })
     };
+
+    // database
+    this.ref = Database.ref(
+      `entries/${this.props.contestId}`
+    );
   }
 
-  componentWillMount() {
-    this.setState({
-      thumbnails: this.state.thumbnails.cloneWithRows(
-        Object.keys(this.state.entries)
-      )
+  componentDidMount() {
+    this.listener = this.ref.on('value', data => {
+      if (data.exists()) {
+
+        // entry keys
+        let entries = Object.keys(data.val());
+        this.setState({
+          entries: entries,
+          thumbnails: this.state.thumbnails.cloneWithRows(
+            entries
+          )
+        });
+      }
     });
+  }
+
+  componentWillUnmount() {
+    this.listener && this.ref.off('value', this.listener);
   }
 
   render() {
@@ -52,17 +59,13 @@ export default class ContestPhotos extends Component {
         <SwipeCards
           ref='swiper'
           containerStyle={styles.cards}
-          cards={Object.keys(this.state.entries)}
+          cards={this.state.entries}
           renderCard={entry => (
             <ContestPhotoCard
-              i={
-                Object.keys(
-                  this.state.entries
-                ).indexOf(entry) + 1
-              }
-              n={
-                Object.keys(this.state.entries).length
-              } />
+              contestId={this.props.contestId}
+              entryId={entry}
+              i={this.state.entries.indexOf(entry) + 1}
+              n={this.state.entries.length} />
           )}
           yupText='Shortlist!'
           noText='Nope!'
@@ -76,7 +79,7 @@ export default class ContestPhotos extends Component {
           cardRemoved={i => {
 
             // handle end of selection
-            if (i >= Object.keys(this.state.entries).length - 1) {
+            if (i >= this.state.entries.length - 1) {
             }
           }} />
         <CloseFullscreenButton />
@@ -109,10 +112,9 @@ export default class ContestPhotos extends Component {
                     }
                   );
                 }}>
-                <View style={{
-                  backgroundColor: Colors.Primary,
-                  width: 50, height: 50, margin: 1
-                }} />
+                <ContestThumbnail
+                  contestId={this.props.contestId}
+                  entryId={data} />
               </TouchableOpacity>
             );
           }} />
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
 
   cards: {
     marginTop: Sizes.Height / 7,
-    marginBottom: Sizes.OuterFrame * 1.25,
+    marginBottom: Sizes.InnerFrame * 1.25,
     backgroundColor: Colors.Transparent
   },
 
@@ -149,7 +151,7 @@ const styles = StyleSheet.create({
   },
 
   thumbnails: {
-    alignItems: 'flex-end'
+    alignItems: 'center'
   },
 
   endButton: {

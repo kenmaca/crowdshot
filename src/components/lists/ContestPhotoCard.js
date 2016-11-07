@@ -2,11 +2,12 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, Alert
 } from 'react-native';
 import {
   Colors, Sizes
 } from '../../Const';
+import Database from '../../utils/Database';
 
 // components
 import Photo from '../common/Photo';
@@ -15,11 +16,38 @@ import OutlineText from '../common/OutlineText';
 import CircleIcon from '../common/CircleIcon';
 
 export default class ContestPhotoCard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+
+    // database
+    this.ref = Database.ref(
+      `entries/${
+        this.props.contestId
+      }/${
+        this.props.entryId
+      }`
+    );
+  }
+
+  componentDidMount() {
+    this.listener = this.ref.on('value', data => {
+      if (data.exists()) {
+        this.setState(data.val());
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this.listener && this.ref.off('value', this.listener);
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Photo
-          photoId='appLoginBackground'
+          photoId={this.state.photoId}
           style={styles.photo}>
           <View style={styles.statusContainer}>
             {
@@ -48,7 +76,13 @@ export default class ContestPhotoCard extends Component {
                 uid='ht33R6YWUWQMc8SZb27o9BOzn6G3' />
             </View>
             <Text style={styles.name}>
-              Kenneth Ma
+              {
+                `entries/${
+                  this.props.contestId
+                }/${
+                  this.props.entryId
+                }`
+              }
             </Text>
             <View style={styles.userContainer}>
               <View style={styles.statContainer}>

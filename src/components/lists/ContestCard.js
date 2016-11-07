@@ -35,7 +35,9 @@ export default class ContestCard extends Component {
               icon='card-giftcard'
               color={Colors.Transparent} />
             <Button
-              onPress={Actions.contestPhotos}
+              onPress={() => Actions.contestPhotos({
+                contestId: 'testContest'
+              })}
               size={Sizes.H2}
               style={styles.button}
               icon='delete-forever'
