@@ -2,13 +2,17 @@ import React, {
   Component
 } from 'react';
 import {
-  StyleSheet, View, Image, TouchableOpacity, Alert
+  StyleSheet, View, Image, TouchableOpacity, Alert, Text
 } from 'react-native';
 import {
   Sizes, Colors
 } from '../../Const';
+import Database from '../../utils/Database'
 import * as Firebase from 'firebase';
 
+import RNFetchBlob from 'react-native-fetch-blob';
+
+const Blob = RNFetchBlob.polyfill.Blob;
 
 
 // components
@@ -23,7 +27,8 @@ export default class CameraPreview extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      progress: 0
+      progress: 0,
+      snapshot: 'snapshot'
     };
 
     this.revert = this.revert.bind(this);
@@ -61,28 +66,81 @@ export default class CameraPreview extends Component {
               </TouchableOpacity>
             </Animatable.View>
             <Animatable.View ref='accept'>
-              <TouchableOpacity
-                onPress={() => {
-                  // hide buttons
-                  this.refs.accept.bounceOutDown(1000);
-                  this.refs.cancel.bounceOutDown(1000);
+            <TouchableOpacity
+              onPress={() => {
 
-                }}>
-                <CircleIcon
-                  icon='check'
-                  style={styles.accept}
-                  size={40} />
-              </TouchableOpacity>
+                // hide buttons
+                this.refs.accept.bounceOutDown(1000);
+                this.refs.cancel.bounceOutDown(1000);
+
+                // hijack Blob and XMLHttpRequest temporarily
+                let realBlob = window.Blob;
+                let realXML = window.XMLHttpRequest;
+                window.Blob = Blob;
+                window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+
+                Blob.build(
+                  RNFetchBlob.wrap(
+                    this.props.path
+                  ), {
+                    type: 'image/jpg;'
+                  }
+                ).then(blob => {
+                  let task = Firebase.storage().ref().child(
+                    `images/${
+                      this.props.path.split('/').pop()
+                    }`
+                  ).put(blob, {
+                    contentType: 'image/jpg'
+                  });
+
+                  // keep track of upload
+                  task.on('state_changed', snapshot => {
+                    this.setState({
+                      snapshot: snapshot.bytesTransferred,
+                      progress: (
+                        Number(snapshot.bytesTransferred) || 0
+                        // snapshot.totalBytes
+                      )
+                    });
+                  }, err => {
+                    console.error(err);
+                    this.revert(realBlob, realXML);
+                  }, () => {
+
+                    // successful, create photos item ref
+                    let photoId = Database.ref(`photos`).push().key;
+                    Database.ref(
+                      `photos/${photoId}`
+                    ).set({
+                      createdBy: Firebase.auth().currentUser.uid,
+                      url: task.snapshot.downloadURL
+                    });
+
+                    // and now finalize by callback from parent
+                    this.revert(realBlob, realXML);
+                    this.props.accept
+                    && this.props.accept(photoId);
+
+                  });
+                }).catch(err => {
+                  console.error(err);
+                  this.revert(realBlob, realXML);
+                });
+              }}>
+              <CircleIcon
+                icon='check'
+                style={styles.accept}
+                size={40} />
+            </TouchableOpacity>
             </Animatable.View>
           </Image>
           <Progress.Bar
             style={styles.progress}
             borderWidth={0}
-            borderRadius={0}
             color={Colors.Primary}
             progress={this.state.progress}
-            height={3}
-            width={Sizes.width * 0.9 - 8} />
+            width={Sizes.Width * 0.9 - 8} />
         </BlurView>
       </View>
     );
