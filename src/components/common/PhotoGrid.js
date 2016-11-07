@@ -85,7 +85,8 @@ const styles = StyleSheet.create({
   container: {
     margin: -1,
     flexWrap: 'wrap',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'flex-start'
   },
 
   photo: {

@@ -219,6 +219,7 @@ export default class Main extends Component {
         <AnimatedListView
           horizontal
           pagingEnabled
+          removeClippedSubviews={false}
           dataSource={this.state.data}
           style={this.getListViewStyle()}
           {...this._panResponder.panHandlers}

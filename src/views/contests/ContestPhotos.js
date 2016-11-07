@@ -17,8 +17,9 @@ export default class ContestPhotos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cards: [1, 2, 3, 4],
-      numCards: 4
+      cards: [
+        {selected: false}, {selected: true}, {}, {}
+      ]
     };
   }
 
@@ -28,22 +29,27 @@ export default class ContestPhotos extends Component {
         <SwipeCards
           containerStyle={styles.cards}
           cards={this.state.cards}
-          renderCard={data => (
+          renderCard={entry => (
             <ContestPhotoCard
-              i={this.state.cards.indexOf(data) + 1}
-              n={this.state.numCards} />
-          )}
-          renderNoMoreCards={() => (
-            <View style={styles.noMoreContainer}>
-              <Text style={styles.noMore}>
-                👻
-              </Text>
-            </View>
+              {...entry}
+              i={this.state.cards.indexOf(entry) + 1}
+              n={this.state.cards.length} />
           )}
           yupText='Shortlist!'
           noText='Nope!'
-          handleYup={() => Alert.alert('yep')}
-          handleNope={() => Alert.alert('nope')} />
+          handleYup={entry => {
+            entry.selected = true;
+          }}
+          handleNope={entry => {
+            entry.selected = false;
+          }}
+          cardRemoved={i => {
+
+            // handle end of selection
+            if (i >= this.state.cards.length - 1) {
+              Alert.alert('end');
+            }
+          }} />
         <CloseFullscreenButton />
       </View>
     );

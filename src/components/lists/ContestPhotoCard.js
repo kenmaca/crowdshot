@@ -12,6 +12,7 @@ import {
 import Photo from '../common/Photo';
 import Avatar from '../profiles/Avatar';
 import OutlineText from '../common/OutlineText';
+import CircleIcon from '../common/CircleIcon';
 
 export default class ContestPhotoCard extends Component {
   render() {
@@ -20,11 +21,24 @@ export default class ContestPhotoCard extends Component {
         <Photo
           photoId='appLoginBackground'
           style={styles.photo}>
-          <OutlineText text={`${
-            this.props.i || 1
-          } of ${
-            this.props.n || 1
-          }`} />
+          <View style={styles.statusContainer}>
+            {
+              this.props.selected === true
+              && (
+                <CircleIcon />
+              ) || this.props.selected === false
+              && (
+                <CircleIcon color='red' icon='close' />
+              )
+            }
+            <OutlineText
+              style={styles.statusCounter}
+              text={`${
+                this.props.i || 1
+              } of ${
+                this.props.n || 1
+              }`} />
+          </View>
           <View style={styles.infoContainer}>
             <View style={styles.avatar}>
               <Avatar
@@ -90,6 +104,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
 
+  statusContainer: {
+    flexDirection: 'row'
+  },
+
+  statusCounter: {
+    marginLeft: Sizes.InnerFrame / 2
+  },
+
   infoContainer: {
     minHeight: Sizes.InnerFrame * 5,
     alignItems: 'center',
@@ -115,6 +137,7 @@ const styles = StyleSheet.create({
 
   name: {
     padding: Sizes.InnerFrame / 2,
+    paddingBottom: Sizes.InnerFrame / 1.5,
     fontSize: Sizes.H3,
     fontWeight: '500'
   },

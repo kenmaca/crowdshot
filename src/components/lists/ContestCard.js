@@ -42,12 +42,11 @@ export default class ContestCard extends Component {
               color={Colors.Transparent} />
           </View>
           <OutlineText
-            text='Toronto, ON, Canada' />
+            text='$100 Bounty To Top 3' />
         </Photo>
         <View style={styles.body}>
           <View style={styles.progressContainer}>
             <View style={styles.progressTextContainer}>
-              <View style={styles.progressTextSpacer} />
               <Text style={styles.progressTextUntil}>
                 CONTEST ENDS AT
               </Text>
@@ -158,7 +157,8 @@ const styles = StyleSheet.create({
   },
 
   detailContainer: {
-    flex: 1
+    flex: 1,
+    paddingBottom: Sizes.OuterFrame * 10
   },
 
   summary: {
@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
 
   photoContainer: {
     marginTop: Sizes.InnerFrame,
+    marginBottom: Sizes.OuterFrame * 3,
     alignItems: 'flex-start',
     justifyContent: 'center'
   },
