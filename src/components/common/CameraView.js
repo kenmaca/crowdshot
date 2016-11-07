@@ -79,14 +79,15 @@ export default class CameraView extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
+    marginBottom: 50,
   },
 
   camera: {
     flex: 1,
     alignSelf: 'stretch',
+    justifyContent: 'flex-end',
     padding: Sizes.InnerFrame,
-    justifyContent: 'space-between'
   },
 
   upperContainer: {
@@ -95,9 +96,8 @@ const styles = StyleSheet.create({
   },
 
   lowerContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-around'
+    alignItems: 'center',
+    justifyContent: 'flex-end'
   },
 
   shutter: {

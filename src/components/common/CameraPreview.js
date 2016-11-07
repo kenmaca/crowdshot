@@ -63,20 +63,15 @@ export default class CameraPreview extends Component {
             <Animatable.View ref='accept'>
               <TouchableOpacity
                 onPress={() => {
-
                   // hide buttons
                   this.refs.accept.bounceOutDown(1000);
                   this.refs.cancel.bounceOutDown(1000);
-
-                  // hijack Blob and XMLHttpRequest temporarily
-                  let realBlob = window.Blob;
-                  let realXML = window.XMLHttpRequest;
 
                 }}>
                 <CircleIcon
                   icon='check'
                   style={styles.accept}
-                  size={60} />
+                  size={40} />
               </TouchableOpacity>
             </Animatable.View>
           </Image>
@@ -104,17 +99,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'stretch',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
 
   preview: {
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
-    width: Sizes.width * 0.9,
-    height: Sizes.height * 0.7,
+    width: Sizes.Width * 0.9,
+    height: Sizes.Height * 0.7,
     borderRadius: 5,
     padding: Sizes.InnerFrame,
-    flexDirection: 'row'
+    flexDirection: 'row',
+
   },
 
   accept: {
