@@ -18,6 +18,8 @@ import PricePicker from '../../components/common/PricePicker';
 import Capture from './Capture';
 import Location from './Location';
 
+import PriceSelect from '../../components/common/PriceSelect';
+
 export default class NewContest extends Component {
   render() {
     return (
@@ -32,6 +34,8 @@ export default class NewContest extends Component {
           number={1}
           min={1}
           max={20}
+          isBottom />
+        <PriceSelect
           isBottom />
         <Capture
           label='Capture'

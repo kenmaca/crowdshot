@@ -71,6 +71,8 @@
     </array>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Upload photos for contests</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Shoot photos to participate in contest</string>
     <key>UIAppFonts</key>
     <array>
       <string>Entypo.ttf</string>

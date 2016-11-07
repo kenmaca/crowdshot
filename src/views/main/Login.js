@@ -93,6 +93,8 @@ export default class Login extends Component {
                 );
               }
             }, error => {
+              console.log("login failed, ", error);
+              Alert.alert("Login Failed");
             });
           }} />
       </Photo>
