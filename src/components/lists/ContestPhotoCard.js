@@ -51,15 +51,6 @@ export default class ContestPhotoCard extends Component {
           photoId={this.state.photoId}
           style={styles.photo}>
           <View style={styles.statusContainer}>
-            {
-              this.props.selected === true
-              && (
-                <CircleIcon />
-              ) || this.props.selected === false
-              && (
-                <CircleIcon color='red' icon='close' />
-              )
-            }
             <OutlineText
               style={styles.statusCounter}
               text={`${
