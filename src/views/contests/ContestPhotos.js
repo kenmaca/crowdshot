@@ -34,7 +34,7 @@ export default class ContestPhotos extends Component {
   }
 
   componentDidMount() {
-    this.listener = this.ref.on('value', data => {
+    this.listener = this.ref.once('value', data => {
       if (data.exists()) {
 
         // entry keys
@@ -71,10 +71,26 @@ export default class ContestPhotos extends Component {
           noText='Nope!'
           loop
           handleYup={entry => {
-            entry
+            Database.ref(
+              `entries/${
+                this.props.contestId
+              }/${
+                entry
+              }`
+            ).update({
+              selected: true
+            });
           }}
           handleNope={entry => {
-            entry
+            Database.ref(
+              `entries/${
+                this.props.contestId
+              }/${
+                entry
+              }`
+            ).update({
+              selected: false
+            });
           }}
           cardRemoved={i => {
 
