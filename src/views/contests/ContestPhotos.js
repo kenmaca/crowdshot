@@ -16,6 +16,7 @@ import SwipeCards from 'react-native-swipe-cards';
 import ContestPhotoCard from '../../components/lists/ContestPhotoCard';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import Button from '../../components/common/Button';
+import ContestFinalize from '../../components/lists/ContestFinalize';
 
 export default class ContestPhotos extends Component {
   constructor(props) {
@@ -31,6 +32,9 @@ export default class ContestPhotos extends Component {
     this.ref = Database.ref(
       `entries/${this.props.contestId}`
     );
+    this.contestRef = Database.ref(
+      `contests/${this.props.contestId}`
+    );
   }
 
   componentDidMount() {
@@ -44,6 +48,14 @@ export default class ContestPhotos extends Component {
           thumbnails: this.state.thumbnails.cloneWithRows(
             entries
           )
+        });
+      }
+    });
+
+    this.contestRef.once('value', data => {
+      if (data.exists()) {
+        this.setState({
+          contest: data.val()
         });
       }
     });
@@ -131,9 +143,14 @@ export default class ContestPhotos extends Component {
               </TouchableOpacity>
             );
           }} />
+        <ContestFinalize
+          ref='finalize'
+          {...this.state.contest}
+          contestId={this.props.contestId} />
         <Button
           squareBorders
           fontAwesome
+          onPress={() => this.refs.finalize.finalize()}
           icon='trophy'
           style={styles.endButton}
           color={Colors.Primary}

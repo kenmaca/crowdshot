@@ -53,6 +53,7 @@ export default class Navigation extends Component {
               component={Profile} />
             <Scene
               key='contestPhotos'
+              panHandlers={null}
               component={ContestPhotos} />
             <Scene
               tabs
