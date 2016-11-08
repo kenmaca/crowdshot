@@ -17,6 +17,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.appevents.AppEventsLogger;
 import com.brentvatne.react.ReactVideoPackage;
+import com.BV.LinearGradient.LinearGradientPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,6 +45,7 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFetchBlobPackage(),
             new RCTCameraPackage(),
             new ReactVideoPackage(),
+            new LinearGradientPackage(),
             new FBSDKPackage(mCallbackManager)
       );
     }

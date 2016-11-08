@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  StyleSheet, View, Image, Alert, TouchableOpacity, Modal
+  StyleSheet, View, Image, Alert, TouchableOpacity, Modal, Text
 } from 'react-native';
 import {
   Sizes, Colors
@@ -18,8 +18,8 @@ export default class ContestMapView extends Component {
     this.state = {
       location: {
         coords: {
-          latitude: 43.761539,
-          longitude: -79.411079,
+          latitude: 0,
+          longitude: 0,
         }
       }
     };
@@ -28,11 +28,17 @@ export default class ContestMapView extends Component {
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        this.setState({location: position});
+        this.setState({
+          location: position,
+          init: true
+        });
       },
       (error) => alert(JSON.stringify(error)),
         {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
     );
+    navigator.geolocation.watchPosition((position) => {
+      this.setState({location: position});
+    });
   }
 
   render() {
@@ -47,6 +53,7 @@ export default class ContestMapView extends Component {
             latitudeDelta: 0.01,
             longitudeDelta: 0.01
           }}>
+          {this.state.init &&
           <MapView.Marker
             coordinate={{
               latitude: this.state.location.coords.latitude,
@@ -54,7 +61,15 @@ export default class ContestMapView extends Component {
             }}
             pinColor={Colors.Primary}
           />
+          }
         </MapView>
+        {this.state.init ||
+        <View style={styles.buttonContainer}>
+          <View style={styles.bubble}>
+            <Text style={styles.text}>Loading</Text>
+          </View>
+        </View>
+        }
       </View>
     );
   }
@@ -64,13 +79,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignSelf: 'stretch',
+    justifyContent: 'center',
     marginBottom: 50,
   },
 
   map: {
-    alignSelf: 'stretch',
-    height: Sizes.Height - 50
+    ...StyleSheet.absoluteFillObject,
   },
 
+  bubble: {
+    backgroundColor: Colors.Overlay,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 15,
+  },
+
+  buttonContainer: {
+    flexDirection: 'row',
+    marginVertical: 20,
+    alignSelf: 'center',
+    backgroundColor: 'transparent',
+  },
+
+  text: {
+    color: Colors.Text,
+    fontWeight: '600'
+  }
 
 });

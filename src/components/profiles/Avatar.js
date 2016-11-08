@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    backgroundColor: Colors.Primary,
+    backgroundColor: Colors.Transparent,
     borderRadius: 10,
     width: 20,
     height: 20,
