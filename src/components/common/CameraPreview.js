@@ -99,8 +99,8 @@ export default class CameraPreview extends Component {
                     this.setState({
                       snapshot: snapshot.bytesTransferred,
                       progress: (
-                        Number(snapshot.bytesTransferred) || 0
-                        // snapshot.totalBytes
+                        (Number(snapshot.bytesTransferred) /
+                        Number(snapshot.totalBytes)) || 0
                       )
                     });
                   }, err => {
