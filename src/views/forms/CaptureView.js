@@ -8,14 +8,14 @@ import {
   Colors, Sizes
 } from '../../Const';
 
+// components
+import Camera from 'react-native-camera';
+
 export default class CaptureView extends Component {
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.captureContainer}>
-          <Text style={styles.text}>
-            I am Camera
-          </Text>
         </View>
       </View>
     );
