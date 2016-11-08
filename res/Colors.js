@@ -8,6 +8,7 @@ export const Colors = {
   WhiteOverlay: 'rgba(255, 255, 255, 0.9)',
   LightWhiteOverlay: 'rgba(255, 255, 255, 0.1)',
   PrimaryOverlay: 'rgba(102, 199, 92, 0.5)',
+  BackgroundOverlay: 'rgba(34, 34, 34, 0.9)',
 
   // accents
   Primary: '#66C75C',
@@ -30,7 +31,7 @@ export const Colors = {
   EmphasizedText: '#6D6C6C',
   Facebook: '#3B5998',
 
-  // disabled 
+  // disabled
   Disabled: 'rgba(200, 200, 200, 0.1)'
 };
 

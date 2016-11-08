@@ -12,6 +12,8 @@ import {
   Colors, Sizes
 } from '../../Const';
 import * as Firebase from 'firebase';
+import Database from '../../utils/Database';
+import DateFormat from 'dateformat';
 
 // modifications
 let panDiff = 120;
@@ -43,11 +45,27 @@ export default class Main extends Component {
         inputRange: [-panDiff, 0],
         outputRange: [0, 1],
         extrapolate: 'clamp'
-      })
+      }),
+      displayName: 'Unknown'
     };
 
+    // bindings
     this.getListViewStyle = this.getListViewStyle.bind(this);
     this.getPaddingStyle = this.getPaddingStyle.bind(this);
+
+    // determine which header and greeting to display based
+    // on time
+    let isEvening = DateFormat(Date.now(), 'TT') == 'PM';
+    this.state.headerVideo = (
+      isEvening ?
+      require('../../../res/img/evening2.mp4')
+      : require('../../../res/img/header.mp4')
+    );
+    this.state.headerGreeting = (
+      isEvening
+      ? 'Good evening, '
+      : 'Good afternoon, '
+    );
   }
 
   componentWillMount() {
@@ -55,9 +73,18 @@ export default class Main extends Component {
     // mock data
     this.setState({
       data: this.state.data.cloneWithRows([
-        1, 2, 3, 4, 5, 6
+        'testContest'
       ])
     });
+
+    // profile
+    Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/displayName`
+    ).once('value', data => data.exists() && this.setState({
+      displayName: data.val()
+    }));
 
     // PanResponder setup
     this._panResponder = PanResponder.create({
@@ -182,7 +209,7 @@ export default class Main extends Component {
             repeat
             muted
             resizeMode='cover'
-            source={require('../../../res/img/header.mp4')}
+            source={this.state.headerVideo}
             style={styles.cover} />
           <LinearGradient
             colors={[
@@ -198,7 +225,11 @@ export default class Main extends Component {
               })}
               uid={Firebase.auth().currentUser.uid} />
             <Text style={styles.welcomeTitle}>
-              Good afternoon, Kenneth.
+              {
+                this.state.headerGreeting
+              }{
+                this.state.displayName.split(' ')[0]
+              }.
             </Text>
             <OutlineText
               style={styles.location}
@@ -229,7 +260,7 @@ export default class Main extends Component {
                 <View
                   key={i}
                   style={styles.cardShadow}>
-                  <ContestCard />
+                  <ContestCard contestId={rowData} />
                 </View>
               );
             }
