@@ -25,22 +25,22 @@ export default class PriceSelect extends Component {
               container={styles.button}
               isDisabled
               label='$0'/>
-              <Button
-                color={Colors.Primary}
-                container={styles.button}
-                label='$1'/>
-                <Button
-                  color={Colors.Primary}
-                  container={styles.button}
-                  label='$5'/>
-                  <Button
-                    color={Colors.Primary}
-                    container={styles.button}
-                    label='$10'/>
-                    <Button
-                      color={Colors.Primary}
-                      container={styles.button}
-                      label='...'/>
+            <Button
+              color={Colors.Primary}
+              container={styles.button}
+              label='$1'/>
+            <Button
+              color={Colors.Primary}
+              container={styles.button}
+              label='$5'/>
+            <Button
+              color={Colors.Primary}
+              container={styles.button}
+              label='$10'/>
+            <Button
+              color={Colors.Primary}
+              container={styles.button}
+              label='...'/>
           </View>
         </View>
       </Field>
@@ -58,9 +58,9 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   button: {
-    borderRadius: 14,
-    width: 27,
-    height: 27,
+    borderRadius: 16,
+    width: 32,
+    height: 32,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden'
