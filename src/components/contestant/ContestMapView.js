@@ -28,8 +28,34 @@ export default class ContestMapView extends Component {
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
+
+        let contestList = [];
+        contestList.push({
+          location: {
+            latitude: position.coords.latitude + 0.002,
+            longitude: position.coords.longitude + 0.004,
+          },
+          description: "Contest 1"
+        });
+        contestList.push({
+          location: {
+            latitude: position.coords.latitude - 0.002,
+            longitude: position.coords.longitude + 0.002,
+          },
+          description: "Contest 2"
+        });
+        contestList.push({
+          location: {
+            latitude: position.coords.latitude + 0.003,
+            longitude: position.coords.longitude + 0.001,
+          },
+          description: "Contest 3"
+        });
+
+
         this.setState({
           location: position,
+          contestList: contestList,
           init: true
         });
       },
@@ -45,7 +71,27 @@ export default class ContestMapView extends Component {
   }
 
   render() {
-    return (
+    let markerList = [];
+    let count = 0;
+    if (this.state.contestList){
+      this.state.contestList.forEach(contest => {
+          markerList.push(
+            <MapView.Marker
+              coordinate={{
+                latitude: contest.location.latitude,
+                longitude: contest.location.longitude,
+              }}
+              image={require('../../../res/img/camera.png')}
+              key={count}
+            />
+          );
+          count++;
+      });
+    }
+    console.log("markerList, ", markerList);
+
+
+   return (
       <View style={styles.container}>
         <MapView
           style={styles.map}
@@ -65,27 +111,7 @@ export default class ContestMapView extends Component {
             pinColor={Colors.Primary}
           />
           }
-          <MapView.Marker
-            coordinate={{
-              latitude: this.state.location.coords.latitude + 0.002,
-              longitude: this.state.location.coords.longitude + 0.004,
-            }}
-            image={require('../../../res/img/camera.png')}
-          />
-          <MapView.Marker
-            coordinate={{
-              latitude: this.state.location.coords.latitude - 0.002,
-              longitude: this.state.location.coords.longitude + 0.002,
-            }}
-            image={require('../../../res/img/camera.png')}
-          />
-          <MapView.Marker
-            coordinate={{
-              latitude: this.state.location.coords.latitude + 0.003,
-              longitude: this.state.location.coords.longitude + 0.001,
-            }}
-            image={require('../../../res/img/camera.png')}
-          />
+          {markerList}
         </MapView>
         {this.state.init ||
         <View style={styles.buttonContainer}>
