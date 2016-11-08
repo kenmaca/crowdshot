@@ -2,14 +2,8 @@ import React, {
   Component
 } from 'react';
 import {
-  View,
-Text,
-TouchableOpacity,
-StyleSheet,
-ScrollView,
-Dimensions,
-TextInput,
-Image
+  View, Text, TouchableOpacity, StyleSheet, ScrollView,
+  Dimensions, TextInput, Image
 } from 'react-native';
 import {
   Sizes, Colors
@@ -23,12 +17,10 @@ import CreditCard, {CardImages} from 'react-native-credit-card';
 import Button from '../../components/common/Button';
 import Field from '../../components/common/Field';
 import NewContest from '../../views/forms/NewContest';
-import PaymentField from './PaymentField';
 import Swiper from 'react-native-swiper';
 
 
 const SWIPER_HEIGHT = 180;
-const {height, width} = Dimensions.get('window');
 
 export default class Payment extends Component {
   constructor(props) {
