@@ -2,7 +2,8 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, ScrollView
+  View, StyleSheet, Text, ScrollView, ListView,
+  TouchableOpacity
 } from 'react-native';
 import {
   Colors, Sizes
@@ -10,55 +11,136 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
+import Database from '../../utils/Database';
+import DateFormat from 'dateformat';
 
 // components
 import Button from '../common/Button';
 import InputSectionHeader from '../common/InputSectionHeader';
 import Photo from '../common/Photo';
-import PhotoGrid from '../common/PhotoGrid';
 import Divider from '../common/Divider';
 import OutlineText from '../common/OutlineText';
 import CircleIconInfo from '../common/CircleIconInfo';
+import ContestThumbnail from '../lists/ContestThumbnail';
 import * as Progress from 'react-native-progress';
 
 export default class ContestCard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dateCreated: Date.now(),
+      currentTime: Date.now(),
+      progress: 0,
+      entries: {},
+      thumbnails: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1 !== r2
+      })
+    };
+
+    this.ref = Database.ref(
+      `contests/${this.props.contestId}`
+    );
+    this.entriesRef = Database.ref(
+      `entries/${this.props.contestId}`
+    );
+
+    this.updateProgress = this.updateProgress.bind(this);
+  }
+
+  componentDidMount() {
+    this.listener = this.ref.on('value', data => {
+      if (data.exists()) {
+        this.setState({
+          ...data.val()
+        });
+
+        // animated progress
+        this.updateProgress();
+      }
+    });
+
+    this.entriesListener = this.entriesRef.on('value', data => {
+      if (data.exists()) {
+        let entries = data.val();
+        this.setState({
+          entries: entries,
+          thumbnails: this.state.thumbnails.cloneWithRows(
+            Object.keys(entries)
+          )
+        });
+      }
+    });
+  }
+
+  updateProgress() {
+    let duration = parseInt(this.state.endDate) - parseInt(this.state.dateCreated);
+    let elapsed = Date.now() - parseInt(this.state.dateCreated);
+    this.setState({
+      progress: (
+        (duration !== 0)
+        ? (
+          (elapsed < duration)
+          ? elapsed / duration
+          : 1
+        ): 0
+      )
+    });
+
+    // refresh
+    this.progress = setTimeout(this.updateProgress, 20000);
+  }
+
+  componentWillUnmount() {
+    this.listener && this.ref.off('value', this.listener);
+    this.entriesListener && this.entriesRef.off('value', this.entriesListener);
+    this.progress && clearTimeout(this.progress);
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Photo
-          photoId='appLoginBackground'
+          photoId={this.state.referencePhotoId}
           style={styles.header}>
           <View style={styles.buttonContainer}>
             <Button
-              size={Sizes.H2}
-              style={styles.button}
-              icon='card-giftcard'
-              color={Colors.Transparent} />
-            <Button
-              onPress={() => Actions.contestPhotos({
-                contestId: 'testContest'
-              })}
               size={Sizes.H2}
               style={styles.button}
               icon='delete-forever'
               color={Colors.Transparent} />
           </View>
           <OutlineText
-            text='$100 Bounty To Top 3' />
+            text={
+              `$${
+                this.state.bounty || 0
+              } Bounty To Top ${
+                this.state.prizes
+                ? Object.keys(this.state.prizes).length
+                : 'Photo'
+              }`} />
         </Photo>
         <View style={styles.body}>
           <View style={styles.progressContainer}>
-            <View style={styles.progressTextContainer}>
-              <Text style={styles.progressTextUntil}>
-                CONTEST ENDS AT
-              </Text>
-              <Text style={styles.progressTextEnd}>
-                7:30PM
-              </Text>
-            </View>
+            {
+              this.state.progress < 1
+              ? (
+                <View style={styles.progressTextContainer}>
+                  <Text style={styles.progressTextUntil}>
+                    CONTEST ENDS ON
+                  </Text>
+                  <Text style={styles.progressTextEnd}>
+                    {DateFormat(this.state.endDate, 'dddd, h:MMTT')}
+                  </Text>
+                </View>
+              ): (
+                <Text style={styles.progressTextUntil}>
+                  CONTEST ENDED
+                </Text>
+              )
+            }
             <Progress.Bar
               animated
-              progress={0.3}
+              progress={this.state.progress}
               width={Sizes.Width - Sizes.InnerFrame * 4}
               color={Colors.Primary}
               unfilledColor={Colors.LightOverlay}
@@ -70,34 +152,62 @@ export default class ContestCard extends Component {
                 size={Sizes.H2}
                 color={Colors.Primary}
                 icon='burst-mode'
-                label='4 entries submitted from 3 photographers' />
+                label={
+                  `${
+                    Object.keys(this.state.entries).length
+                  } entries submitted from ${
+                    Object.keys(
+                      Object.values(this.state.entries).reduce(
+                        (a, b) => (
+                          {
+                            photographers: Object.assign(
+                              a.photographers || {},
+                              b.photographers || {},
+                              {[a.createdBy]: true},
+                              {[b.createdBy]: true}
+                            )
+                          }
+                        ), {photographers: {}}
+                      ).photographers
+                    ).filter(key => key != 'undefined').length
+                  } photographers`
+                } />
               <CircleIconInfo
                 size={Sizes.H2}
                 color={Colors.Primary}
                 icon='directions-run'
-                label='23 photograhers nearby' />
+                label='23 photographers nearby' />
             </View>
             <Divider style={styles.divider} />
             <View style={styles.instructionContainer}>
               <InputSectionHeader label='Instructions' />
               <Text style={styles.instructions}>
-                Take a landscape photo to include the entire
-                ridge and surrounding mountains. Bonus points to
-                wide angle and use of DOF.
+                {this.state.instructions}
               </Text>
             </View>
             <View style={styles.photoContainer}>
               <InputSectionHeader label='Contest Entries' />
-              <PhotoGrid
-                style={styles.photoGrid}
-                width={Sizes.Width - Sizes.InnerFrame * 2.5}
-                eachRow={3}
-                photoIds={[
-                  'appLoginBackground',
-                  'appLoginBackground',
-                  'appLoginBackground',
-                  'appLoginBackground'
-                ]} />
+              <ListView
+                horizontal
+                scrollEnabled={false}
+                dataSource={this.state.thumbnails}
+                style={styles.thumbnailContainer}
+                contentContainerStyle={styles.thumbnails}
+                renderRow={data => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => Actions.contestPhotos({
+                        contestId: 'testContest',
+                        startCard: data
+                      })}>
+                      <ContestThumbnail
+                        size={80}
+                        rejectedOverlay={Colors.Transparent}
+                        contestId={this.props.contestId}
+                        entryId={data} />
+                    </TouchableOpacity>
+                  );
+                }} />
             </View>
           </ScrollView>
         </View>
@@ -138,22 +248,20 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
-    padding: Sizes.InnerFrame / 2,
-    paddingTop: 0,
     flexDirection: 'row'
   },
 
-  progressTextSpacer: {
-    width: Sizes.InnerFrame * 3.5
-  },
-
   progressTextUntil: {
+    padding: Sizes.InnerFrame / 2,
+    paddingTop: 0,
     color: Colors.SubduedText,
     fontSize: Sizes.SmallText,
     fontWeight: '700'
   },
 
   progressTextEnd: {
+    padding: Sizes.InnerFrame / 2,
+    paddingTop: 0,
     color: Colors.SubduedText,
     fontWeight: '700'
   },
@@ -184,10 +292,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
 
-  photoGrid: {
-    marginLeft: Sizes.InnerFrame
-  },
-
   buttonContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end'
@@ -198,5 +302,18 @@ const styles = StyleSheet.create({
     paddingBottom: Sizes.InnerFrame / 2,
     paddingLeft: Sizes.InnerFrame / 2,
     paddingRight: Sizes.InnerFrame / 2
-  }
+  },
+
+  thumbnailContainer: {
+    flex: 1,
+    marginLeft: Sizes.InnerFrame,
+    marginRight: Sizes.InnerFrame,
+    alignSelf: 'stretch'
+  },
+
+  thumbnails: {
+    flex: 1,
+    flexWrap: 'wrap',
+    alignItems: 'center'
+  },
 });

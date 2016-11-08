@@ -19,29 +19,22 @@ export default class ContestPhotoCard extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
 
-    // database
-    this.ref = Database.ref(
+  componentDidMount() {
+    Database.ref(
       `entries/${
         this.props.contestId
       }/${
         this.props.entryId
       }`
-    );
-  }
-
-  componentDidMount() {
-    this.listener = this.ref.on('value', data => {
+    ).once('value', data => {
       if (data.exists()) {
         this.setState({
           ...data.val()
         });
       }
     });
-  }
-
-  componentWillUnmount() {
-    this.listener && this.ref.off('value', this.listener);
   }
 
   render() {

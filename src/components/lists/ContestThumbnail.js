@@ -45,14 +45,25 @@ export default class ContestThumbnail extends Component {
   render() {
     return (
       <Photo
-        style={styles.container}
+        style={[
+          styles.container,
+          this.props.size && {
+            width: this.props.size,
+            height: this.props.size
+          }
+        ]}
         photoId={this.state.photoId}>
         {
           this.state.selected === true && (
             <CircleIcon
               style={styles.statusIcon} />
           ) || this.state.selected === false && (
-            <View style={styles.rejectedOverlay}>
+            <View style={[
+              styles.rejectedOverlay,
+              this.props.rejectedOverlay && {
+                backgroundColor: this.props.rejectedOverlay
+              }
+            ]}>
               <CircleIcon
                 color='red'
                 icon='close'

@@ -35,6 +35,30 @@ export default class ContestPhotos extends Component {
     this.contestRef = Database.ref(
       `contests/${this.props.contestId}`
     );
+
+    // binding
+    this.switch = this.switch.bind(this);
+  }
+
+  switch(card) {
+
+    // shortcut to card directly
+    Animated.decay(
+      this.refs.swiper.state.pan,
+      {
+        velocity: {x: 0, y: 12},
+        deceleration: 0.98
+      }
+    ).start(
+      () => {
+        this.refs.swiper._resetState.bind(
+          this.refs.swiper
+        )();
+        this.refs.swiper.setState({
+          card: card
+        });
+      }
+    );
   }
 
   componentDidMount() {
@@ -59,6 +83,12 @@ export default class ContestPhotos extends Component {
         });
       }
     });
+
+    // allow initial switching if requested through
+    // props
+    if (this.props.startCard) {
+      this.switch(this.props.startCard);
+    }
   }
 
   render() {
@@ -117,26 +147,7 @@ export default class ContestPhotos extends Component {
           renderRow={data => {
             return (
               <TouchableOpacity
-                onPress={() => {
-
-                  // shortcut to card directly
-                  Animated.decay(
-                    this.refs.swiper.state.pan,
-                    {
-                      velocity: {x: 0, y: 12},
-                      deceleration: 0.98
-                    }
-                  ).start(
-                    () => {
-                      this.refs.swiper._resetState.bind(
-                        this.refs.swiper
-                      )();
-                      this.refs.swiper.setState({
-                        card: data
-                      });
-                    }
-                  );
-                }}>
+                onPress={() => this.switch(data)}>
                 <ContestThumbnail
                   contestId={this.props.contestId}
                   entryId={data} />
