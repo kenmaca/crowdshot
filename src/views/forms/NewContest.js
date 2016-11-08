@@ -17,8 +17,8 @@ import Button from '../../components/common/Button';
 import PricePicker from '../../components/common/PricePicker';
 import Capture from './Capture';
 import Location from './Location';
-
 import PriceSelect from '../../components/common/PriceSelect';
+import Payment from '../../components/common/Payment';
 
 export default class NewContest extends Component {
   render() {
@@ -45,6 +45,15 @@ export default class NewContest extends Component {
           isBottom />
         <Button
           color={Colors.Primary}
+          onPress={() => Actions.modal({
+            view: <Payment
+                    type={'visa'}
+                    focused={'name'}
+                    number={4500500087209876}
+                    expiry={1111}
+                    cvc={999}
+                    name={'RoyLaw'}/>
+          })}
           label='Start a new Photo Contest' />
       </View>
     );
