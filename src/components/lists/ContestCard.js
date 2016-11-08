@@ -155,7 +155,22 @@ export default class ContestCard extends Component {
                 label={
                   `${
                     Object.keys(this.state.entries).length
-                  } entries submitted from 3 photographers`
+                  } entries submitted from ${
+                    Object.keys(
+                      Object.values(this.state.entries).reduce(
+                        (a, b) => (
+                          {
+                            photographers: Object.assign(
+                              a.photographers || {},
+                              b.photographers || {},
+                              {[a.createdBy]: true},
+                              {[b.createdBy]: true}
+                            )
+                          }
+                        ), {photographers: {}}
+                      ).photographers
+                    ).filter(key => key != 'undefined').length
+                  } photographers`
                 } />
               <CircleIconInfo
                 size={Sizes.H2}
