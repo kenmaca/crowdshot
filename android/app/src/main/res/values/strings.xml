@@ -7,5 +7,5 @@
 
     <string name="app_name">crowdshot</string>
     <string name="facebook_app_id">330410660665844</string>
-    <string name="ANDROID_GOOGLE_MAPS_API_KEY">AIzaSyDMrGWPB7Q7bNF_1d2GGSgnXlycM_vLiGw</string>
+    <string name="GOOGLE_MAPS_API_KEY">AIzaSyCfs7dGLmxNQhy6cMUrCBFMOmmGfB1DjAQ</string>
 </resources>

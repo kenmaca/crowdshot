@@ -18,8 +18,8 @@ export default class ContestMapView extends Component {
     this.state = {
       location: {
         coords: {
-          latitude: 0,
-          longitude: 0,
+          latitude: 43.761539,
+          longitude: -79.411079,
         }
       }
     };
