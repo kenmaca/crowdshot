@@ -55,7 +55,7 @@ export default class Main extends Component {
     // mock data
     this.setState({
       data: this.state.data.cloneWithRows([
-        1, 2, 3, 4, 5, 6
+        'testContest'
       ])
     });
 
@@ -229,7 +229,7 @@ export default class Main extends Component {
                 <View
                   key={i}
                   style={styles.cardShadow}>
-                  <ContestCard />
+                  <ContestCard contestId={rowData} />
                 </View>
               );
             }
