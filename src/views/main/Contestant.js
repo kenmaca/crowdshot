@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Animated, PanResponder,
+  View, StyleSheet, Text, Animated,
   ListView
 } from 'react-native';
 import {
@@ -13,7 +13,8 @@ import {
 } from '../../Const';
 import * as Firebase from 'firebase';
 
-import CameraView from '../../components/common/CameraView';
+import CameraView from '../../components/contestant/CameraView';
+import ContestMapView from '../../components/contestant/ContestMapView';
 
 export default class Contestant extends Component {
   constructor(props) {
@@ -23,7 +24,7 @@ export default class Contestant extends Component {
 
   render() {
     return (
-      <CameraView/>
+      <ContestMapView/>
     );
   }
 }
