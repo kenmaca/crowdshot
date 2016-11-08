@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, Image
 } from 'react-native';
 import {
   Actions
@@ -24,37 +24,32 @@ export default class NewContest extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <DatePicker
-          isTop
-          isBottom
-          label='Hold Contest Until'
-          type='time' />
-        <PricePicker
-          label='Price'
-          number={1}
-          min={1}
-          max={20}
-          isBottom />
-        <PriceSelect
-          isBottom />
-        <Capture
-          label='Capture'
-          isBottom />
-        <Location
-          label='Location'
-          isBottom />
-        <Button
-          color={Colors.Primary}
-          onPress={() => Actions.modal({
-            view: <Payment
-                    type={'visa'}
-                    focused={'name'}
-                    number={4500500087209876}
-                    expiry={1111}
-                    cvc={999}
-                    name={'RoyLaw'}/>
-          })}
-          label='Start a new Photo Contest' />
+        <View style={styles.main}>
+          <Capture
+            label='Capture'
+            isBottom />
+          <Location
+            label='Location'
+            isBottom />
+          <PriceSelect
+            isBottom />
+        </View>
+        <View style={styles.button}>
+          <Button
+            color={Colors.Primary}
+            onPress={() => Actions.modal({
+              view: <Payment
+                      type={'visa'}
+                      focused={'name'}
+
+                      expiry={1111}
+                      cvc={999}
+                      name={'RoyLaw'}/>
+            })}
+            label='Start a new Photo Contest'
+            squareBorders={9}
+            style={styles.buttonStyle} />
+        </View>
       </View>
     );
   }
@@ -63,8 +58,21 @@ export default class NewContest extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: Colors.Background
+  },
+  main: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  button: {
+    marginBottom: 50,
+    justifyContent: 'flex-end',
+    alignItems: 'stretch',
+    alignSelf: 'stretch'
+  },
+  buttonStyle: {
+    width: Sizes.width,
+    height: 30
   }
 });
