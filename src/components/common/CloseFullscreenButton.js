@@ -34,7 +34,7 @@ export default class CloseFullscreenButton extends Component {
 const styles = StyleSheet.create({
   container: {
     top: Sizes.InnerFrame,
-    right: 0,
+    left: 0,
     position: 'absolute'
   },
 
