@@ -10,13 +10,13 @@ import {
 
 // components
 import Camera from 'react-native-camera';
+import CameraView from '../../components/contestant/CameraView';
 
 export default class CaptureView extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.captureContainer}>
-        </View>
+        <CameraView />
       </View>
     );
   }
@@ -24,12 +24,7 @@ export default class CaptureView extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: Colors.Background
-  },
-  captureContainer: {
-
+    flex: 1
   },
   text: {
     fontSize: Sizes.Text,

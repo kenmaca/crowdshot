@@ -30,6 +30,9 @@ export default class Capture extends Component {
               size={38}
               color={Colors.Secondary}/>
           </TouchableOpacity>
+          <Text style={styles.text}>
+            Capture Here!
+          </Text>
         </View>
       </View>
     );
@@ -41,9 +44,9 @@ const styles = StyleSheet.create({
     flex: 1
   },
   text: {
-    fontSize: Sizes.Text,
+    fontSize: Sizes.Text - 2,
     color: Colors.Text,
-    textAlign: 'right'
+    textAlign: 'center'
   },
   cameraContainer: {
     justifyContent: 'center',

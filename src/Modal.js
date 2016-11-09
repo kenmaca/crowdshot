@@ -21,6 +21,8 @@ export default class Modal extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    height: Sizes.Height + 50,
+    width: Sizes.Width
   }
 });
