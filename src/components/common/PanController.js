@@ -66,6 +66,7 @@ const PanController = React.createClass({
       directionLockDistance: 10,
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
+
     };
   },
 
