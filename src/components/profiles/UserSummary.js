@@ -18,19 +18,24 @@ export default class UserSummary extends Component {
     this.state = {
       displayName: 'Unknown'
     };
+
+    this.ref = Database.ref(
+      `profiles/${this.props.uid}`
+    );
   }
 
   componentDidMount() {
-    Database.ref(`profiles/${this.props.uid}`).once(
-      'value',
-      data => {
-        if (data.exists()) {
-          this.setState({
-            ...data.val()
-          });
-        }
+    this.listener = this.ref.on('value', data => {
+      if (data.exists()) {
+        this.setState({
+          ...data.val()
+        });
       }
-    );
+    });
+  }
+
+  componentWillUnmount() {
+    this.listener && this.ref.off('value', this.listener);
   }
 
   render() {
