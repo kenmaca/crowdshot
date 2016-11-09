@@ -32,7 +32,10 @@ export const Colors = {
   Facebook: '#3B5998',
 
   // disabled
-  Disabled: 'rgba(200, 200, 200, 0.1)'
+  Disabled: 'rgba(200, 200, 200, 0.1)',
+
+  // Location
+  Location: '#3281E8',
 };
 
 export default Colors;
