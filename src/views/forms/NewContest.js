@@ -25,29 +25,24 @@ export default class NewContest extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.main}>
-          <Capture
-            label='Capture'
-            isBottom />
-          <Location
-            label='Location'
-            isBottom />
-          <PriceSelect
-            isBottom />
+          <View style={styles.location}>
+            <Location
+              label='Location'
+              isTop
+              />
+          </View>
+          <View style={styles.capture}>
+            <Capture />
+          </View>
         </View>
         <View style={styles.button}>
           <Button
             color={Colors.Primary}
             onPress={() => Actions.modal({
-              view: <Payment
-                      type={'visa'}
-                      focused={'name'}
-
-                      expiry={1111}
-                      cvc={999}
-                      name={'RoyLaw'}/>
+              view: <Payment />
             })}
             label='Start a new Photo Contest'
-            squareBorders={9}
+            squareBorders={10}
             style={styles.buttonStyle} />
         </View>
       </View>
@@ -62,17 +57,26 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
+    width: Sizes.width
+  },
+  capture: {
+    flex: 1,
+    paddingTop: 200,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignSelf: 'center'
   },
   button: {
-    marginBottom: 50,
-    justifyContent: 'flex-end',
+    marginBottom: Sizes.H3
+  },
+  buttonStyle: {
+    paddingBottom: Sizes.H3 + 20,
+    height: Sizes.H3 + 50,
+    justifyContent: 'center',
     alignItems: 'stretch',
     alignSelf: 'stretch'
   },
-  buttonStyle: {
-    width: Sizes.width,
-    height: 30
+  location: {
+    marginTop: 20
   }
 });
