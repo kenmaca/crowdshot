@@ -7,14 +7,11 @@ import {
 import {
   Colors, Sizes
 } from '../../Const';
-import {
-  Actions
-} from 'react-native-router-flux';
 
 // components
 import Field from '../../components/common/Field';
-import CaptureView from './CaptureView';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import CameraView from '../../components/contestant/CameraView';
 
 export default class Capture extends Component {
   render() {
@@ -23,7 +20,7 @@ export default class Capture extends Component {
         <View style={styles.cameraContainer}>
           <TouchableOpacity
             onPress={() => Actions.modal({
-            view: <CaptureView />
+            view: <CameraView />
             })} >
             <Icon
               name='camera-alt'
