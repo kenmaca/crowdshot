@@ -11,39 +11,46 @@ import {
 
 // components
 import MapView from 'react-native-maps';
-import PanController from '../common/PanController';
 import ContestCard from '../../components/lists/ContestCard';
 
 
-let AnimatedListView = Animated.createAnimatedComponent(
-  ListView
-);
-
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = 0.01;
-const ITEM_SPACING = 10;
-const ITEM_PREVIEW = 10;
-const ITEM_WIDTH = Sizes.Width - (2 * ITEM_SPACING) - (2 * ITEM_PREVIEW);
-const SNAP_WIDTH = ITEM_WIDTH + ITEM_SPACING;
-const ITEM_PREVIEW_HEIGHT = 150;
 
 
 export default class ContestMapView extends Component {
   constructor(props) {
     super(props);
 
+    const panX = new Animated.Value(0);
+    const panY = new Animated.Value(0);
+
+    const scrollY = panY.interpolate({
+      inputRange: [-1, 1],
+      outputRange: [1, -1],
+    });
+
+    const scrollX = panX.interpolate({
+      inputRange: [-1, 1],
+      outputRange: [1, -1],
+    });
+
     this.state = {
       index: 0,
+      panX,
+      panY,
+      scrollX,
+      scrollY,
       currentCoord:{
         latitude: 0,
         longitude: 0,
       },
-      region: new MapView.AnimatedRegion({
+      region: {
         latitude: 0,
         longitude: 0,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
-      }),
+      },
       contests: [],
       data: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
@@ -61,6 +68,7 @@ export default class ContestMapView extends Component {
           id: 0,
           contestId: 'testContest',
           amount: 5,
+          selected: false,
           coordinate: {
             latitude: position.coords.latitude + 0.002,
             longitude: position.coords.longitude + 0.004,
@@ -71,6 +79,7 @@ export default class ContestMapView extends Component {
           id: 1,
           contestId: 'testContest',
           amount: 10,
+          selected: false,
           coordinate: {
             latitude: position.coords.latitude - 0.002,
             longitude: position.coords.longitude + 0.002,
@@ -81,6 +90,7 @@ export default class ContestMapView extends Component {
           id: 2,
           contestId: 'testContest',
           amount: 15,
+          selected: false,
           coordinate: {
             latitude: position.coords.latitude + 0.003,
             longitude: position.coords.longitude + 0.001,
@@ -88,12 +98,12 @@ export default class ContestMapView extends Component {
           description: "Contest 3"
         });
 
-        const region = new MapView.AnimatedRegion({
+        const region = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA,
-        });
+        };
 
         this.setState({
           currentCoord: position.coords,
@@ -108,6 +118,24 @@ export default class ContestMapView extends Component {
     );
   }
 
+  onChangeVisibleRows = (visibleRows, changedRows) => {
+    let {contests, currentCoord} = this.state
+
+    let index = Object.keys(visibleRows.s1)[0];
+  //  console.log("visibleRows ",index);
+    console.log("selected contest ", contests[index].description);
+    this.map.fitToCoordinates([currentCoord, contests[index].coordinate], {
+      edgePadding: {top:50,right:50,bottom:50,left:50},
+      animated: true,
+    });
+
+    contests.forEach(contest => {
+      contest.selected = false;
+    });
+    contests[index].selected = true;
+    this.setState({contests})
+
+  }
 
 
   render() {
@@ -120,12 +148,13 @@ export default class ContestMapView extends Component {
    return (
       <View style={styles.wrapper}>
         <View style={styles.container}>
-          <AnimatedListView
+          <ListView
             horizontal
             pagingEnabled
             removeClippedSubviews={false}
             dataSource={this.state.data}
             contentContainerStyle={styles.lists}
+            onChangeVisibleRows={this.onChangeVisibleRows}
             renderRow={
               (rowData, s, i) => {
                 return (
@@ -138,9 +167,10 @@ export default class ContestMapView extends Component {
               }
             } />
           <View style={styles.mapContainer}>
-            <MapView.Animated
+            <MapView
+              ref={ref => {this.map = ref;}}
               style={styles.map}
-              region={this.state.region}>
+              initialRegion={this.state.region}>
               <MapView.Marker
                 coordinate={currentCoord}
                 pinColor={Colors.Primary}
@@ -149,12 +179,12 @@ export default class ContestMapView extends Component {
                 return (
                   <MapView.Marker
                     coordinate={contest.coordinate}
-                    image={require('../../../res/img/camera.png')}
+                    pinColor='red'
                     key={contest.id}
                   />
                 );
               })}
-            </MapView.Animated>
+            </MapView>
             {this.state.init ||
             <View style={styles.buttonContainer}>
               <View style={styles.bubble}>
