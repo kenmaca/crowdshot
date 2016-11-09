@@ -63,12 +63,7 @@ export default class ContestThumbnail extends Component {
               this.props.rejectedOverlay && {
                 backgroundColor: this.props.rejectedOverlay
               }
-            ]}>
-              <CircleIcon
-                color='red'
-                icon='close'
-                style={styles.statusIcon} />
-            </View>
+            ]} />
           )
         }
       </Photo>

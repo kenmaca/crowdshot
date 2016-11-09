@@ -20,6 +20,7 @@ import NewContest from './views/forms/NewContest';
 import Modal from './Modal';
 import Profile from './views/profiles/Profile';
 import ContestPhotos from './views/contests/ContestPhotos';
+import Chat from './views/main/Chat';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -55,6 +56,9 @@ export default class Navigation extends Component {
               key='contestPhotos'
               panHandlers={null}
               component={ContestPhotos} />
+            <Scene
+              key='chat'
+              component={Chat} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}

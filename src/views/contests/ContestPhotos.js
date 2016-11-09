@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   },
 
   cards: {
-    marginTop: Sizes.Height / 7,
+    marginTop: Sizes.Height / 10,
     marginBottom: Sizes.InnerFrame * 1.25,
     backgroundColor: Colors.Transparent
   },
