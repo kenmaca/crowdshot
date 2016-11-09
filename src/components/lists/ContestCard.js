@@ -22,6 +22,7 @@ import Divider from '../common/Divider';
 import OutlineText from '../common/OutlineText';
 import CircleIconInfo from '../common/CircleIconInfo';
 import ContestThumbnail from '../lists/ContestThumbnail';
+import GroupAvatar from '../profiles/GroupAvatar';
 import * as Progress from 'react-native-progress';
 
 export default class ContestCard extends Component {
@@ -151,6 +152,11 @@ export default class ContestCard extends Component {
               <CircleIconInfo
                 size={Sizes.H2}
                 color={Colors.Primary}
+                icon='location-city'
+                label='Near Queen St W and Spadina' />
+              <CircleIconInfo
+                size={Sizes.H2}
+                color={Colors.Primary}
                 icon='burst-mode'
                 label={
                   `${
@@ -172,11 +178,6 @@ export default class ContestCard extends Component {
                     ).filter(key => key != 'undefined').length
                   } photographers`
                 } />
-              <CircleIconInfo
-                size={Sizes.H2}
-                color={Colors.Primary}
-                icon='directions-run'
-                label='23 photographers nearby' />
             </View>
             <Divider style={styles.divider} />
             <View style={styles.instructionContainer}>
@@ -184,6 +185,19 @@ export default class ContestCard extends Component {
               <Text style={styles.instructions}>
                 {this.state.instructions}
               </Text>
+            </View>
+            <View style={styles.instructionContainer}>
+              <InputSectionHeader label='Photographers Nearby' />
+              <GroupAvatar
+                limit={6}
+                uids={[
+                  '6P2NtwmzQWh0opdbuy0JwqSgPR02',
+                  'eyGDNyiqUBdu9ziuwCQehed13wr1',
+                  'ht33R6YWUWQMc8SZb27o9BOzn6G3'
+                ]}
+                size={Sizes.InnerFrame * 3}
+                outlineColor={Colors.ModalBackground}
+                style={styles.photographersNearby} />
             </View>
             <View style={styles.photoContainer}>
               <InputSectionHeader label='Contest Entries' />
@@ -283,6 +297,11 @@ const styles = StyleSheet.create({
     marginLeft: Sizes.InnerFrame,
     color: Colors.AlternateText,
     fontWeight: '100'
+  },
+
+  photographersNearby: {
+    marginLeft: Sizes.InnerFrame,
+    justifyContent: 'flex-start'
   },
 
   photoContainer: {

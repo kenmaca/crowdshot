@@ -71,15 +71,20 @@ export default class GroupAvatar extends Component {
                   width: this.props.size,
                   borderRadius: this.props.size / 2,
                   marginRight: this.props.size / 8 * -1
+                },
+                this.props.outlineColor && {
+                  backgroundColor: this.props.outlineColor
                 }
               ]}
               key={`${uid}-${Math.random()}`}>
               <Avatar
                 outline
+                outlineColor={this.props.outlineColor}
                 onPress={() => Actions.profile({uid: uid})}
                 color={this.props.color || Colors.Primary}
                 size={this.props.size || 40}
-                uid={uid} />
+                uid={uid}
+                key={`${uid}-${Math.random()}`} />
             </View>
           ))
         }
@@ -92,6 +97,9 @@ export default class GroupAvatar extends Component {
                 width: this.props.size,
                 borderRadius: this.props.size / 2,
                 marginRight: this.props.size / 8 * -1
+              },
+              this.props.outlineColor && {
+                backgroundColor: this.props.outlineColor
               }
             ]}>
               <View style={[
