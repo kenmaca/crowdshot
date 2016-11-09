@@ -151,12 +151,12 @@ export default class ContestCard extends Component {
             <View style={styles.summary}>
               <CircleIconInfo
                 size={Sizes.H2}
-                color={Colors.Primary}
+                color={Colors.Foreground}
                 icon='location-city'
                 label='Near Queen St W and Spadina' />
               <CircleIconInfo
                 size={Sizes.H2}
-                color={Colors.Primary}
+                color={Colors.Foreground}
                 icon='burst-mode'
                 label={
                   `${
@@ -189,13 +189,14 @@ export default class ContestCard extends Component {
             <View style={styles.instructionContainer}>
               <InputSectionHeader label='Photographers Nearby' />
               <GroupAvatar
-                limit={6}
+                limit={1}
                 uids={[
                   '6P2NtwmzQWh0opdbuy0JwqSgPR02',
                   'eyGDNyiqUBdu9ziuwCQehed13wr1',
                   'ht33R6YWUWQMc8SZb27o9BOzn6G3'
                 ]}
                 size={Sizes.InnerFrame * 3}
+                color={Colors.Foreground}
                 outlineColor={Colors.ModalBackground}
                 style={styles.photographersNearby} />
             </View>
