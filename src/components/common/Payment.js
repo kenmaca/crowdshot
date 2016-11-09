@@ -15,19 +15,18 @@ import {
 // components
 import CreditCard, {CardImages} from 'react-native-credit-card';
 import Button from '../../components/common/Button';
-import Field from '../../components/common/Field';
 import NewContest from '../../views/forms/NewContest';
 import Swiper from 'react-native-swiper';
 
-
-const SWIPER_HEIGHT = 180;
+const SWIPER_HEIGHT = 150;
 
 export default class Payment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      focused: 'name',
+      focused: 'number',
       number: '',
+      name: '',
       cvc: '',
       expiry:'',
       index: 0,
@@ -35,72 +34,63 @@ export default class Payment extends Component {
     }
   }
 
-  onNext() {
-    this.swiper.scrollby(1);
-  }
-
   componentDidMount() {
-    this.refs['number'].focus();
+    this.refs[this.state.focused].focus();
   }
-
 
   onMomentumScrollEnd(e, state, context) {
     var indexMap = [
         'number',
         'name',
         'expiry',
-        'cvc',
-        'type',
+        'cvc'
     ];
     this.setState({
         index: state.index,
         focused: indexMap[state.index]
     }, () => {
         try {
-            this.refs[indexMap[state.index]].focus();
+            this.refs[this.state.focused].focus()
+            console.log(this.state.focused)
+            console.log(this.refs[this.state.focused].isFocused(0));
         } catch(e) {
-
         }
     });
   }
 
   render() {
-    var cardTypes = [];
-    for (var key in CardImages) {
-        cardTypes.push({type: key, image: CardImages[key]});
-    }
-
-    if (this.state.restoring) {
-        return null;
-    }
-
     return (
     <View style={styles.container}>
-
           <CreditCard
-            style={{marginVertical: 10, marginHorizontal: 10, marginBottom: 0, elevation: 3, alignSelf: 'center'}}
+            style={styles.creditcard}
             imageFront={require('../../../res/img/card-front.png')}
             imageBack={require('../../../res/img/card-back.png')}
-            shiny={false}
-            bar={false}
+            shiny={true}
+            bar={true}
             focused={this.state.focused}
             number={this.state.number}
             name={this.state.name}
             expiry={this.state.expiry}
             cvc={this.state.cvc}/>
           <Swiper
-            style={styles.wrapper}
+            style={styles.swiper}
             height={SWIPER_HEIGHT}
             showsButtons={false}
             onMomentumScrollEnd = {this.onMomentumScrollEnd.bind(this)}
             ref={(swiper) => {this.swiper = swiper}}
             index={this.state.index}>
             <View style={styles.slide}>
+              <View style={styles.card}>
+                <Text style={styles.text}>-></Text>
+              </View>
+            </View>
+            <View style={styles.slide}>
                 <View style={styles.card}>
-                    <Text style={styles.textNumber}>CARD NUMBER</Text>
+                    <Text style={styles.text}>CARD NUMBER</Text>
                     <TextInput
                       ref="number"
                       autoFocus={true}
+                      keyboardType="number-pad"
                       value={this.state.number}
                       onChangeText={(number) => this.setState({
                           number
@@ -109,7 +99,7 @@ export default class Payment extends Component {
             </View>
             <View style={styles.slide}>
                 <View style={styles.card}>
-                    <Text style={styles.textName}>CARD HOLDER'S NAME</Text>
+                    <Text style={styles.text}>CARD HOLDER'S NAME</Text>
                     <TextInput
                       ref="name"
                       value={this.state.name}
@@ -120,10 +110,11 @@ export default class Payment extends Component {
             </View>
             <View style={styles.slide}>
                 <View style={styles.card}>
-                    <Text style={styles.textName}>EXPIRY</Text>
+                    <Text style={styles.text}>EXPIRY</Text>
                     <TextInput
                       ref="expiry"
                       value={this.state.expiry}
+                      keyboardType="number-pad"
                       onChangeText={(expiry) => this.setState({
                         expiry
                       })}/>
@@ -131,34 +122,14 @@ export default class Payment extends Component {
             </View>
             <View style={styles.slide}>
                 <View style={styles.card}>
-                    <Text style={styles.textCvc}>CVV/CVC NUMBER</Text>
+                    <Text style={styles.text}>CVV/CVC NUMBER</Text>
                     <TextInput
                       ref="cvc"
                       value={this.state.cvc}
+                      keyboardType="number-pad"
                       onChangeText={(cvc) => this.setState({
                         cvc
                       })}/>
-                </View>
-            </View>
-            <View style={styles.slide}>
-                <View style={styles.card}>
-                    <Text style={styles.textNumber}>CARD TYPE</Text>
-                    <View style={{flexDirection: 'row'}}>
-                        {cardTypes.map((cardType) => {
-                            return (
-                                <TouchableOpacity
-                                  key={cardType.type}
-                                  onPress={() => this.setState({
-                                      type: cardType.type
-                                  })}>
-                                    <View>
-                                        <Image
-                                          source={{uri: cardType.image}}                                            style={styles.img} />
-                                    </View>
-                                </TouchableOpacity>
-                            );
-                        })}
-                    </View>
                 </View>
             </View>
         </Swiper>
@@ -178,7 +149,14 @@ const styles = StyleSheet.create({
       flex: 1,
       paddingTop: 30
   },
-  wrapper: {
+  creditcard: {
+      marginVertical: 10,
+      marginHorizontal: 10,
+      marginBottom: 0,
+      elevation: 3,
+      alignSelf: 'center'
+  },
+  swiper: {
       height: SWIPER_HEIGHT,
       backgroundColor: Colors.Background
   },
@@ -194,12 +172,12 @@ const styles = StyleSheet.create({
   card: {
       marginHorizontal: 10,
       marginBottom: 30,
-      backgroundColor: Colors.ModalBackground,
+      backgroundColor: Colors.Background,
       borderRadius: 3,
       elevation: 3,
       borderBottomWidth: 1,
       borderRightWidth: 1,
-      borderColor: '#ddd',
+      borderColor: Colors.Transparent,
       padding: 10,
   }
 })

@@ -14,24 +14,24 @@ import {
 // components
 import Field from '../../components/common/Field';
 import CaptureView from './CaptureView';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class Capture extends Component {
   render() {
     return (
-      <Field {...this.props}>
-        <View style={styles.container}>
-          <View style={styles.arrowContainer}>
-            <TouchableOpacity
-              onPress={() => Actions.modal({
-                view: <CaptureView />
-              })} >
-              <Text style={styles.text}>
-                >
-              </Text>
-            </TouchableOpacity>
-          </View>
+      <View style={styles.container}>
+        <View style={styles.cameraContainer}>
+          <TouchableOpacity
+            onPress={() => Actions.modal({
+            view: <CaptureView />
+            })} >
+            <Icon
+              name='camera-alt'
+              size={38}
+              color={Colors.Secondary}/>
+          </TouchableOpacity>
         </View>
-      </Field>
+      </View>
     );
   }
 }
@@ -45,10 +45,9 @@ const styles = StyleSheet.create({
     color: Colors.Text,
     textAlign: 'right'
   },
-  arrowContainer: {
+  cameraContainer: {
     justifyContent: 'center',
-    alignItems: 'stretch',
-    alignSelf: 'stretch',
-    paddingRight: Sizes.OuterFrame
+    alignItems: 'center',
+    padding: Sizes.InnerFrame
   }
 });
