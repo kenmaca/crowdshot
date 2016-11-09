@@ -12,25 +12,26 @@ import {
 } from 'react-native-router-flux';
 
 import Field from '../../components/common/Field';
-import LocationView from './LocationView';
+import CaptureLocation from '../../components/common/CaptureLocation'
+import ContestMapView from '../../components/contestant/ContestMapView'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class Location extends Component {
   render() {
     return (
-      <Field {...this.props}>
+      <Field {...this.props}
+        color={Colors.Background}>
         <View style={styles.container}>
-          <View style={styles.arrowContainer}>
             <TouchableOpacity
               onPress={() => Actions.modal({
-                view: <LocationView />
+                view: <CaptureLocation />
               })}>
-              <Icon
-                name='pin-drop'
-                size={18}
-                color={Colors.Primary}/>
+              <View style={styles.locationContainer}>
+                <Text style={styles.text}>
+                  Current Location
+                </Text>
+              </View>
             </TouchableOpacity>
-          </View>
         </View>
       </Field>
     );
@@ -43,14 +44,14 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: Sizes.Text,
-    color: Colors.Text,
+    color: Colors.Location,
     textAlign: 'right'
   },
-  arrowContainer: {
+  locationContainer: {
+    backgroundColor: Colors.Transparent,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'stretch',
-    alignSelf: 'stretch',
-    paddingRight: Sizes.OuterFrame
+    paddingRight: Sizes.InnerFrame
   }
 });

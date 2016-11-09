@@ -14,11 +14,10 @@ import {
 // components
 import DatePicker from '../../components/common/DatePicker';
 import Button from '../../components/common/Button';
-import PricePicker from '../../components/common/PricePicker';
 import Capture from './Capture';
 import Location from './Location';
-import PriceSelect from '../../components/common/PriceSelect';
 import Payment from '../../components/common/Payment';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class NewContest extends Component {
   render() {
@@ -26,10 +25,12 @@ export default class NewContest extends Component {
       <View style={styles.container}>
         <View style={styles.main}>
           <View style={styles.location}>
-            <Location
-              label='Location'
-              isTop
-              />
+            <Location placeholder={
+                <Icon
+                  name='pin-drop'
+                  size={18}
+                  color={Colors.Primary}/>
+              }/>
           </View>
           <View style={styles.capture}>
             <Capture />
@@ -41,9 +42,10 @@ export default class NewContest extends Component {
             onPress={() => Actions.modal({
               view: <Payment />
             })}
-            label='Start a new Photo Contest'
+            label='Start a new Contest'
             squareBorders={10}
-            style={styles.buttonStyle} />
+            style={styles.buttonStyle}>
+          </Button>
         </View>
       </View>
     );
