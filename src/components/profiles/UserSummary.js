@@ -8,6 +8,9 @@ import {
   Colors, Sizes
 } from '../../Const';
 import Database from '../../utils/Database';
+import {
+  Actions
+} from 'react-native-router-flux';
 
 // components
 import Avatar from './Avatar';
@@ -45,6 +48,9 @@ export default class UserSummary extends Component {
           <Avatar
             outline
             outlineColor={Colors.ModalBackground}
+            onPress={() => Actions.profile({
+              uid: this.props.uid
+            })}
             size={48}
             uid={this.props.uid} />
         </View>
