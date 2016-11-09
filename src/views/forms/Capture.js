@@ -7,6 +7,9 @@ import {
 import {
   Colors, Sizes
 } from '../../Const';
+import {
+  Actions
+} from 'react-native-router-flux';
 
 // components
 import Field from '../../components/common/Field';
