@@ -7,13 +7,10 @@ import {
 import {
   Colors, Sizes
 } from '../../Const';
-import {
-  Actions
-} from 'react-native-router-flux';
 
+// components
 import Field from '../../components/common/Field';
 import CaptureLocation from '../../components/common/CaptureLocation'
-import ContestMapView from '../../components/contestant/ContestMapView'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class Location extends Component {
