@@ -202,7 +202,7 @@ export default class ContestCard extends Component {
                       })}>
                       <ContestThumbnail
                         size={80}
-                        rejectedOverlay={Colors.Transparent}
+                        rejectedOverlay={Colors.WhiteOverlay}
                         contestId={this.props.contestId}
                         entryId={data} />
                     </TouchableOpacity>
