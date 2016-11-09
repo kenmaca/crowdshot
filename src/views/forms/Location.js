@@ -13,7 +13,7 @@ import {
 
 import Field from '../../components/common/Field';
 import LocationView from './LocationView';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class Location extends Component {
   render() {
@@ -25,9 +25,10 @@ export default class Location extends Component {
               onPress={() => Actions.modal({
                 view: <LocationView />
               })}>
-              <Text style={styles.text}>
-                >
-              </Text>
+              <Icon
+                name='pin-drop'
+                size={18}
+                color={Colors.Primary}/>
             </TouchableOpacity>
           </View>
         </View>
@@ -46,7 +47,8 @@ const styles = StyleSheet.create({
     textAlign: 'right'
   },
   arrowContainer: {
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     alignItems: 'stretch',
     alignSelf: 'stretch',
     paddingRight: Sizes.OuterFrame
