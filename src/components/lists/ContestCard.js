@@ -105,6 +105,15 @@ export default class ContestCard extends Component {
           style={styles.header}>
           <View style={styles.buttonContainer}>
             <Button
+              onPress={() => Actions.chat({
+                chatId: this.props.contestId,
+                title: 'Contest Chat'
+              })}
+              size={Sizes.H2}
+              style={styles.button}
+              icon='chat'
+              color={Colors.Transparent} />
+            <Button
               size={Sizes.H2}
               style={styles.button}
               icon='delete-forever'
@@ -189,7 +198,7 @@ export default class ContestCard extends Component {
             <View style={styles.instructionContainer}>
               <InputSectionHeader label='Photographers Nearby' />
               <GroupAvatar
-                limit={1}
+                limit={6}
                 uids={[
                   '6P2NtwmzQWh0opdbuy0JwqSgPR02',
                   'eyGDNyiqUBdu9ziuwCQehed13wr1',
