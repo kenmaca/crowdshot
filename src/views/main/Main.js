@@ -28,6 +28,7 @@ import Video from 'react-native-video';
 import Avatar from '../../components/profiles/Avatar';
 import OutlineText from '../../components/common/OutlineText';
 import ContestCard from '../../components/lists/ContestCard';
+import EmptyContestCard from '../../components/lists/EmptyContestCard';
 import CircleIcon from '../../components/common/CircleIcon';
 
 export default class Main extends Component {
@@ -35,12 +36,14 @@ export default class Main extends Component {
     super(props);
 
     let pan = new Animated.ValueXY();
+    let rawData = [false];
     this.state = {
       isDocked: true,
       pan: pan,
+      rawData: rawData,
       data: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
-      }),
+      }).cloneWithRows(rawData),
       animation: pan.y.interpolate({
         inputRange: [-panDiff, 0],
         outputRange: [0, 1],
@@ -66,25 +69,6 @@ export default class Main extends Component {
       ? 'Good evening, '
       : 'Good afternoon, '
     );
-  }
-
-  componentWillMount() {
-
-    // mock data
-    this.setState({
-      data: this.state.data.cloneWithRows([
-        'testContest'
-      ])
-    });
-
-    // profile
-    Database.ref(
-      `profiles/${
-        Firebase.auth().currentUser.uid
-      }/displayName`
-    ).once('value', data => data.exists() && this.setState({
-      displayName: data.val()
-    }));
 
     // PanResponder setup
     this._panResponder = PanResponder.create({
@@ -160,6 +144,38 @@ export default class Main extends Component {
         }
       }
     });
+
+    // data
+    this.ref = Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/contests`
+    );
+  }
+
+  componentDidMount() {
+
+    // data
+    this.listener = this.ref.on('child_added', data => {
+      let rawData = [data.key, ...this.state.rawData];
+      this.setState({
+        rawData: rawData,
+        data: this.state.data.cloneWithRows(rawData)
+      });
+    });
+
+    // profile
+    Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/displayName`
+    ).once('value', data => data.exists() && this.setState({
+      displayName: data.val()
+    }));
+  }
+
+  componentWillUnmount() {
+    this.listener && this.ref.off('child_added', this.listener);
   }
 
   getListViewStyle() {
@@ -233,7 +249,11 @@ export default class Main extends Component {
             </Text>
             <OutlineText
               style={styles.location}
-              text='3 Active Contests' />
+              text={
+                `${
+                  this.state.rawData.length - 1
+                } Active Contests`
+              } />
           </LinearGradient>
           <View style={styles.arrowContainer}>
             <CircleIcon
@@ -257,11 +277,20 @@ export default class Main extends Component {
           renderRow={
             (rowData, s, i) => {
               return (
-                <View
-                  key={i}
-                  style={styles.cardShadow}>
-                  <ContestCard contestId={rowData} />
-                </View>
+                rowData
+                ? (
+                  <View
+                    key={i}
+                    style={styles.cardShadow}>
+                    <ContestCard contestId={rowData} />
+                  </View>
+                ): (
+                  <View
+                    key={i}
+                    style={styles.cardShadow}>
+                    <EmptyContestCard />
+                  </View>
+                )
               );
             }
           } />
