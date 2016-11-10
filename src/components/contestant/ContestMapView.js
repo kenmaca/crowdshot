@@ -120,6 +120,8 @@ export default class ContestMapView extends Component {
           longitudeDelta: LONGITUDE_DELTA,
         };
 
+        contests[0].selected = true;
+
         this.setState({
           currentCoord: position.coords,
           contests,
@@ -199,12 +201,29 @@ export default class ContestMapView extends Component {
                 pinColor={Colors.Primary}
               />
               {contests.map((contest, i) => {
+                const {
+                  selected,
+                  amount,
+                } = contest
+
                 return (
                   <MapView.Marker
                     coordinate={contest.coordinate}
-                    pinColor='red'
-                    key={contest.id}
-                  />
+                    key={contest.id}>
+                    {selected ?
+                    <View style={[styles.markerWrapper, styles.markerSelected]}>
+                      <Text style={styles.selectedText}>
+                        {"$" + amount}
+                      </Text>
+                    </View>
+                    :
+                    <View style={styles.markerWrapper}>
+                      <Text style={styles.text}>
+                        {"$" + amount}
+                      </Text>
+                    </View>
+                    }
+                  </MapView.Marker>
                 );
               })}
             </MapView>
@@ -263,12 +282,32 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
 
+  selectedText: {
+    color: Colors.Text,
+    fontWeight: '800',
+    fontSize: Sizes.H4
+  },
+
   lists: {
     alignSelf: 'flex-end',
     marginBottom: 50,
     paddingHorizontal: 20,
     paddingBottom: 5,
   },
+
+  markerWrapper: {
+    borderRadius: 5,
+    borderWidth: 2,
+    paddingHorizontal: 3,
+    borderColor: Colors.DarkOverlay,
+    backgroundColor: Colors.MediumDarkOverlay,
+  },
+
+  markerSelected: {
+    borderColor: Colors.Primary,
+    backgroundColor: Colors.SubduedText,
+  },
+
 
 
 

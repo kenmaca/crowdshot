@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   header: {
     height: 110,
     alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     alignSelf: 'stretch',
     padding: Sizes.InnerFrame/2
   },
