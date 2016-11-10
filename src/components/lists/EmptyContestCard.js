@@ -14,32 +14,47 @@ import {
 // components
 import CircleIcon from '../common/CircleIcon';
 import Button from '../common/Button';
+import Photo from '../common/Photo';
 
 export default class EmptyContestCard extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <CircleIcon
-          icon='flag'
-          size={48} />
-        <Text style={styles.title}>
-          Get amazing photos
-        </Text>
-        <Text style={styles.description}>
-          Crowdshot taps into the millions of cameras constantly
-          roaming across the planet. Let other people
-          get that perfect shot.
-        </Text>
-        <Text style={styles.description}>
-          You only pay for the best.
-        </Text>
-        <Button
-          style={styles.button}
-          onPress={Actions.mainBroadcast}
-          color={Colors.Primary}
-          rightIcon='arrow-forward'
-          label='Get started now' />
-      </View>
+      <Photo
+        photoId='appLoginBackground'
+        style={styles.container}>
+        <View style={styles.overlay}>
+          <CircleIcon
+            icon='insert-emoticon'
+            size={48} />
+          <Text style={[
+            styles.text,
+            styles.title
+          ]}>
+            Get amazing photos
+          </Text>
+          <Text style={[
+            styles.text,
+            styles.description
+          ]}>
+            Crowdshot taps into the millions of cameras constantly
+            roaming across the planet. Let other people
+            get that perfect shot.
+          </Text>
+          <Text style={[
+            styles.text,
+            styles.description
+          ]}>
+            You only pay for the best.
+          </Text>
+          <Button
+            style={styles.button}
+            onPress={Actions.mainBroadcast}
+            color={Colors.ModalBackground}
+            fontColor={Colors.AlternateText}
+            rightIcon='arrow-forward'
+            label='Get started now' />
+        </View>
+      </Photo>
     );
   }
 }
@@ -48,28 +63,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: Sizes.Width - Sizes.InnerFrame / 2,
-    padding: Sizes.InnerFrame,
-    alignItems: 'center',
-    justifyContent: 'center',
     borderRadius: 5,
     overflow: 'hidden',
     backgroundColor: Colors.Background
   },
 
-  title: {
-    marginTop: Sizes.InnerFrame,
-    textAlign: 'center',
+  overlay: {
+    flex: 1,
+    backgroundColor: Colors.MediumDarkOverlay,
+    padding: Sizes.InnerFrame * 3,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start'
+  },
+
+  text: {
     color: Colors.Text,
-    fontSize: Sizes.H1,
-    fontWeight: '100'
+    fontWeight: '200',
+    marginTop: Sizes.InnerFrame,
+    backgroundColor: Colors.Transparent
+  },
+
+  title: {
+    fontSize: Sizes.H1
   },
 
   description: {
-    marginTop: Sizes.InnerFrame,
-    textAlign: 'center',
-    color: Colors.Text,
-    fontSize: Sizes.H2,
-    fontWeight: '100'
+    fontSize: Sizes.H2
   },
 
   button: {

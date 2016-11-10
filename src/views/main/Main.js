@@ -36,13 +36,14 @@ export default class Main extends Component {
     super(props);
 
     let pan = new Animated.ValueXY();
+    let rawData = [false];
     this.state = {
       isDocked: true,
       pan: pan,
-      rawData: [null],
+      rawData: rawData,
       data: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
-      }),
+      }).cloneWithRows(rawData),
       animation: pan.y.interpolate({
         inputRange: [-panDiff, 0],
         outputRange: [0, 1],
