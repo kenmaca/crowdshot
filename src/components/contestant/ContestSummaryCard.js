@@ -29,6 +29,7 @@ export default class ContestSummaryCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      contest: props.contest,
       dateCreated: Date.now(),
       currentTime: Date.now(),
       progress: 0,
@@ -39,10 +40,10 @@ export default class ContestSummaryCard extends Component {
     };
 
     this.ref = Database.ref(
-      `contests/${this.props.contestId}`
+      `contests/${this.props.contest.contestId}`
     );
     this.entriesRef = Database.ref(
-      `entries/${this.props.contestId}`
+      `entries/${this.props.contest.contestId}`
     );
 
     this.updateProgress = this.updateProgress.bind(this);
@@ -100,41 +101,41 @@ export default class ContestSummaryCard extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Photo
-          photoId={this.state.referencePhotoId}
-          style={styles.header}>
-          <OutlineText
-            text={
-              `$${
-                this.state.bounty || 0
-              } To Top ${
-                this.state.prizes
-                ? Object.keys(this.state.prizes).length
-                : 'Photo'
-              }`} />
-        </Photo>
-        <View style={styles.progressContainer}>
-          {
-            this.state.progress < 1
-            ? (
-              <View style={styles.progressTextContainer}>
+        {this.state.contest.selected ?
+        <View style={[styles.indicator,styles.selected]}/>
+        :
+        <View style={styles.indicator}/>
+        }
+        <View style={styles.card}>
+          <Photo
+            photoId={this.state.referencePhotoId}
+            style={styles.header}>
+            <OutlineText
+              text={
+                `$${
+                  this.state.bounty || 0
+                } To Top ${
+                  this.state.prizes
+                  ? Object.keys(this.state.prizes).length
+                  : 'Photo'
+                }`} />
+          </Photo>
+          <View style={styles.progressContainer}>
+            <View style={styles.progressTextContainer}>
+            {
+              this.state.progress < 1
+              ? (
                 <Text style={styles.progressTextUntil}>
                   {"ENDS ON" + DateFormat(this.state.endDate, 'dddd, h:MMTT')}
                 </Text>
-              </View>
-            ): (
-              <Text style={styles.progressTextUntil}>
-                CONTEST ENDED
-              </Text>
-            )
-          }
-          <Progress.Bar
-            animated
-            progress={this.state.progress}
-            width={Sizes.Width - Sizes.InnerFrame * 4}
-            color={Colors.Primary}
-            unfilledColor={Colors.LightOverlay}
-            borderWidth={0} />
+              ): (
+                <Text style={styles.progressTextUntil}>
+                  CONTEST ENDED
+                </Text>
+              )
+            }
+            </View>
+          </View>
         </View>
       </View>
     );
@@ -142,13 +143,30 @@ export default class ContestSummaryCard extends Component {
 }
 
 const styles = StyleSheet.create({
+
   container: {
+    flex: 1,
+    height: 150,
+  },
+
+  indicator: {
+    height: 5,
+    marginTop: 13,
+    marginBottom: 3,
+    marginHorizontal: Sizes.InnerFrame
+  },
+
+  selected: {
+    backgroundColor: Colors.Primary,
+  },
+
+  card: {
     flex: 1,
     height: 130,
     width: Sizes.Width - Sizes.OuterFrame * 2,
     borderRadius: 5,
     overflow: 'hidden',
-    backgroundColor: Colors.Foreground,
+    backgroundColor: Colors.ModalBackground,
     marginTop: Sizes.InnerFrame / 4,
     marginLeft: Sizes.InnerFrame / 4,
     marginRight: Sizes.InnerFrame / 4,
@@ -159,11 +177,10 @@ const styles = StyleSheet.create({
       height: 5,
       width: 0
     },
-
   },
 
   header: {
-    height: 100,
+    height: 110,
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
     alignSelf: 'stretch',
@@ -176,22 +193,21 @@ const styles = StyleSheet.create({
   },
 
   progressContainer: {
+    alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: Sizes.OuterFrame,
-    paddingVertical: 5,
   },
 
   progressTextContainer: {
     alignSelf: 'stretch',
     alignItems: 'flex-end',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     flexDirection: 'row'
   },
 
   progressTextUntil: {
-    paddingTop: 0,
-    color: Colors.SubduedText,
+    paddingTop: 3,
+    color: Colors.EmphasizedText,
     fontSize: Sizes.SmallText,
     fontWeight: '700'
   },
