@@ -66,25 +66,6 @@ export default class Main extends Component {
       ? 'Good evening, '
       : 'Good afternoon, '
     );
-  }
-
-  componentWillMount() {
-
-    // mock data
-    this.setState({
-      data: this.state.data.cloneWithRows([
-        'testContest'
-      ])
-    });
-
-    // profile
-    Database.ref(
-      `profiles/${
-        Firebase.auth().currentUser.uid
-      }/displayName`
-    ).once('value', data => data.exists() && this.setState({
-      displayName: data.val()
-    }));
 
     // PanResponder setup
     this._panResponder = PanResponder.create({
@@ -160,6 +141,25 @@ export default class Main extends Component {
         }
       }
     });
+  }
+
+  componentDidMount() {
+
+    // mock data
+    this.setState({
+      data: this.state.data.cloneWithRows([
+        'testContest'
+      ])
+    });
+
+    // profile
+    Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/displayName`
+    ).once('value', data => data.exists() && this.setState({
+      displayName: data.val()
+    }));
   }
 
   getListViewStyle() {
