@@ -27,9 +27,10 @@ export default class Location extends Component {
                 view: <CaptureLocation />
               })}>
               <View style={styles.locationContainer}>
-                <Text style={styles.text}>
-                  Current Location
-                </Text>
+                <Icon
+                  name='pin-drop'
+                  size={18}
+                  color={Colors.Location}/>
               </View>
             </TouchableOpacity>
         </View>
