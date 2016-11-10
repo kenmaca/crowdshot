@@ -28,6 +28,7 @@ import Video from 'react-native-video';
 import Avatar from '../../components/profiles/Avatar';
 import OutlineText from '../../components/common/OutlineText';
 import ContestCard from '../../components/lists/ContestCard';
+import EmptyContestCard from '../../components/lists/EmptyContestCard';
 import CircleIcon from '../../components/common/CircleIcon';
 
 export default class Main extends Component {
@@ -38,6 +39,7 @@ export default class Main extends Component {
     this.state = {
       isDocked: true,
       pan: pan,
+      rawData: [null],
       data: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
       }),
@@ -141,15 +143,24 @@ export default class Main extends Component {
         }
       }
     });
+
+    // data
+    this.ref = Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/contests`
+    );
   }
 
   componentDidMount() {
 
-    // mock data
-    this.setState({
-      data: this.state.data.cloneWithRows([
-        'testContest'
-      ])
+    // data
+    this.listener = this.ref.on('child_added', data => {
+      let rawData = [data.key, ...this.state.rawData];
+      this.setState({
+        rawData: rawData,
+        data: this.state.data.cloneWithRows(rawData)
+      });
     });
 
     // profile
@@ -160,6 +171,10 @@ export default class Main extends Component {
     ).once('value', data => data.exists() && this.setState({
       displayName: data.val()
     }));
+  }
+
+  componentWillUnmount() {
+    this.listener && this.ref.off('child_added', this.listener);
   }
 
   getListViewStyle() {
@@ -233,7 +248,11 @@ export default class Main extends Component {
             </Text>
             <OutlineText
               style={styles.location}
-              text='3 Active Contests' />
+              text={
+                `${
+                  this.state.rawData.length - 1
+                } Active Contests`
+              } />
           </LinearGradient>
           <View style={styles.arrowContainer}>
             <CircleIcon
@@ -257,11 +276,20 @@ export default class Main extends Component {
           renderRow={
             (rowData, s, i) => {
               return (
-                <View
-                  key={i}
-                  style={styles.cardShadow}>
-                  <ContestCard contestId={rowData} />
-                </View>
+                rowData
+                ? (
+                  <View
+                    key={i}
+                    style={styles.cardShadow}>
+                    <ContestCard contestId={rowData} />
+                  </View>
+                ): (
+                  <View
+                    key={i}
+                    style={styles.cardShadow}>
+                    <EmptyContestCard />
+                  </View>
+                )
               );
             }
           } />
