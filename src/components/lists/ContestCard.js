@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, ScrollView, ListView,
-  TouchableOpacity
+  TouchableOpacity, Alert
 } from 'react-native';
 import {
   Colors, Sizes
@@ -75,6 +75,9 @@ export default class ContestCard extends Component {
   }
 
   updateProgress() {
+
+    // clear previous, just in case this was an interrupt
+    this.progress && clearTimeout(this.progress);
     let duration = parseInt(this.state.endDate) - parseInt(this.state.dateCreated);
     let elapsed = Date.now() - parseInt(this.state.dateCreated);
     this.setState({
@@ -134,7 +137,30 @@ export default class ContestCard extends Component {
           <TouchableOpacity
             onPress={
               this.state.progress < 1
-              ? Actions.contestPhotos
+
+              // tap into here to verify that a payment method is on file
+              // otherwise, open up add credit card screen
+              ? () => Alert.alert(
+                'Extending your Contest',
+                'By extending your contest below, the credit card on '
+                + 'file will be billed for $1 to extend your contest by an '
+                + 'hour\n\nYou may continue to extend your contest as long '
+                + 'it remains active',
+                [
+                  {
+                    text: 'Cancel',
+                    style: 'cancel'
+                  },
+                  {
+                    text: 'I Agree',
+                    onPress: () => {
+                      this.ref.update({
+                        endDate: this.state.endDate + 3600000
+                      });
+                    }
+                  }
+                ]
+              )
               : () => Actions.contestPhotos({
                 contestId: this.props.contestId
               })
@@ -152,12 +178,13 @@ export default class ContestCard extends Component {
                       ADD AN HOUR
                     </Text>
                     <CircleIcon
+                      style={styles.progressUpsellIcon}
                       size={10}
                       icon='attach-money' />
                   </View>
                 </View>
               ): (
-                <Text style={styles.progressTextUntil}>
+                <Text style={styles.progressUpsellText}>
                   CONTEST ENDED — VOTE FOR THE WINNERS
                 </Text>
               )
@@ -297,10 +324,13 @@ const styles = StyleSheet.create({
   },
 
   progressUpsellText: {
-    marginRight: Sizes.InnerFrame / 3,
     color: Colors.SubduedText,
     fontSize: Sizes.SmallText,
     fontWeight: '700'
+  },
+
+  progressUpsellIcon: {
+    marginLeft: Sizes.InnerFrame / 3,
   },
 
   progressTextEnd: {
