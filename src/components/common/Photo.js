@@ -33,14 +33,26 @@ export default class Photo extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.uri) {
+
+    // prevent the same uri to rerender
+    if (props.uri && props.uri != this.props.uri) {
       this.setState({
         source: props.uri
       });
-    } else if (props.photoId) {
+
+    // prevent the same photoId to rerender
+    } else if (
+      props.photoId
+      && props.photoId != this.props.photoId
+    ) {
+
+      // remove previous listener
+      this.componentWillUnmount();
+
+      // add new listener
       this.ref = Database.ref(
         `photos/${props.photoId}/url`
-      )
+      );
       this.listener = this.ref.on('value', data => {
         data.exists() && this.setState({
           source: data.val()
