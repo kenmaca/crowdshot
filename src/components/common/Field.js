@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    color: Colors.SubduedText,
+    color: Colors.Text,
     fontSize: Sizes.Text,
     fontWeight: '500'
   },
