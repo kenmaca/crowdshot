@@ -355,6 +355,7 @@ const styles = StyleSheet.create({
 
   instructions: {
     marginLeft: Sizes.InnerFrame,
+    marginRight: Sizes.InnerFrame,
     color: Colors.AlternateText,
     fontWeight: '100'
   },
