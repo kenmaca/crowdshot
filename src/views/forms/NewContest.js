@@ -16,6 +16,7 @@ import DatePicker from '../../components/common/DatePicker';
 import Button from '../../components/common/Button';
 import Capture from './Capture';
 import Location from './Location';
+import Bounty from './Bounty';
 import Payment from '../../components/common/Payment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -23,18 +24,25 @@ export default class NewContest extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.main}>
-          <View style={styles.location}>
-            <Location placeholder={
-                <Icon
-                  name='pin-drop'
-                  size={18}
-                  color={Colors.Primary}/>
-              }/>
-          </View>
-          <View style={styles.capture}>
-            <Capture />
-          </View>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>
+            Ok! Let's Setup Your Contest Now!
+          </Text>
+        </View>
+        <View style={styles.checklist}>
+          <Location
+            label='Location'
+            subtitle='Where the contest will be hold'
+            isBottom/>
+          <Capture
+            fontAwesome
+            label='Reference Photo'
+            subtitle='Provide a reference photo for us'
+            isBottom/>
+          <Bounty
+            label='Bounty'
+            subtitle='Reward the Winner for their effort'
+            isBottom/>
         </View>
         <View style={styles.button}>
           <Button
@@ -42,7 +50,7 @@ export default class NewContest extends Component {
             onPress={() => Actions.modal({
               view: <Payment />
             })}
-            label='Start a new Contest'
+            label='Start a new Photo Contest'
             squareBorders={10}
             style={styles.buttonStyle}>
           </Button>
@@ -57,28 +65,32 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.Background
   },
-  main: {
-    flex: 1,
-    width: Sizes.width
+  header: {
+    marginTop: 50,
+    height: 50,
+    paddingLeft: Sizes.OuterFrame,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start'
   },
-  capture: {
+  headerText: {
+    color: Colors.Text,
+    fontWeight: '700',
+    fontSize: Sizes.H3,
+    textAlign: 'left'
+  },
+  checklist: {
     flex: 1,
-    paddingTop: 200,
     alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center'
+    justifyContent: 'flex-start',
+    paddingTop: Sizes.OuterFrame
   },
   button: {
-    marginBottom: Sizes.H3
+    height: 90,
   },
   buttonStyle: {
-    paddingBottom: Sizes.H3 + 20,
-    height: Sizes.H3 + 50,
+    height: 45,
     justifyContent: 'center',
     alignItems: 'stretch',
     alignSelf: 'stretch'
-  },
-  location: {
-    marginTop: 20
   }
 });

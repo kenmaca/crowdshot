@@ -14,27 +14,26 @@ import {
 // components
 import Field from '../../components/common/Field';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import CameraView from '../../components/contestant/CameraView';
+import CaptureView from './CaptureView';
 
 export default class Capture extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.cameraContainer}>
+      <Field {...this.props}>
+        <View style={styles.container}>
           <TouchableOpacity
             onPress={() => Actions.modal({
-            view: <CameraView />
-            })} >
+            view: <CaptureView />
+         })}>
+          <View style={styles.cameraContainer}>
             <Icon
-              name='camera-alt'
-              size={38}
-              color={Colors.Secondary}/>
-          </TouchableOpacity>
-          <Text style={styles.text}>
-            Capture Here!
-          </Text>
+              name='check'
+              size={18}
+              color={Colors.Primary}/>
+          </View>
+        </TouchableOpacity>
         </View>
-      </View>
+      </Field>
     );
   }
 }
@@ -43,14 +42,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  text: {
-    fontSize: Sizes.Text - 2,
-    color: Colors.Text,
-    textAlign: 'center'
-  },
   cameraContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: Sizes.InnerFrame
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'stretch',
+    alignSelf: 'stretch',
+    paddingRight: Sizes.InnerFrame
   }
 });

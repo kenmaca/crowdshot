@@ -8,15 +8,13 @@ import {
   Colors, Sizes
 } from '../../Const';
 
+import ContestMapView from '../../components/contestant/ContestMapView';
+
 export default class LocationView extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.locationContainer}>
-          <Text style={styles.text}>
-            Location
-          </Text>
-        </View>
+        <ContestMapView/>
       </View>
     );
   }

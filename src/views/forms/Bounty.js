@@ -13,19 +13,18 @@ import {
 
 // components
 import Field from '../../components/common/Field';
-import CaptureLocation from '../../components/common/CaptureLocation'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-export default class Location extends Component {
+export default class Bounty extends Component {
   render() {
     return (
       <Field {...this.props}>
         <View style={styles.container}>
           <TouchableOpacity
             onPress={() => Actions.modal({
-            view: <CaptureLocation />
+            view: <CaptureView />
          })}>
-          <View style={styles.locationContainer}>
+          <View style={styles.bountyContainer}>
             <Icon
               name='check'
               size={18}
@@ -42,10 +41,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  locationContainer: {
+  bountyContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'stretch',
+    alignSelf: 'stretch',
     paddingRight: Sizes.InnerFrame
   }
 });
