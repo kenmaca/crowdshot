@@ -22,7 +22,10 @@ export default class Photo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      source: null
+      source: null,
+
+      // used to help prevent rerendering on new same props unchanged
+      initialized: false
     };
 
     this.setNativeProps = this.setNativeProps.bind(this);
@@ -35,7 +38,13 @@ export default class Photo extends Component {
   componentWillReceiveProps(props) {
 
     // prevent the same uri to rerender
-    if (props.uri && props.uri != this.props.uri) {
+    if (
+      props.uri
+      && (
+        (props.uri != this.props.uri)
+        || !this.state.initialized
+      )
+    ) {
       this.setState({
         source: props.uri
       });
@@ -43,7 +52,10 @@ export default class Photo extends Component {
     // prevent the same photoId to rerender
     } else if (
       props.photoId
-      && props.photoId != this.props.photoId
+      && (
+        (props.photoId != this.props.photoId)
+        || !this.state.initialized
+      )
     ) {
 
       // remove previous listener
@@ -59,6 +71,10 @@ export default class Photo extends Component {
         });
       });
     }
+
+    this.setState({
+      initialized: true
+    });
   }
 
   componentWillUnmount() {
