@@ -21,6 +21,7 @@ import Modal from './Modal';
 import Profile from './views/profiles/Profile';
 import ContestPhotos from './views/contests/ContestPhotos';
 import Chat from './views/main/Chat';
+import Settings from './views/main/Settings';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -59,6 +60,9 @@ export default class Navigation extends Component {
             <Scene
               key='chat'
               component={Chat} />
+            <Scene
+              key='settings'
+              component={Settings} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}

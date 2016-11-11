@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
 
   shadow: {
-    shadowColor: Colors.DarkOverlay,
+    shadowColor: Colors.Overlay,
     shadowOpacity: 1,
     shadowRadius: 5,
     shadowOffset: {
