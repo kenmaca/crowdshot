@@ -5,6 +5,7 @@ import {
   StyleSheet, View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import {
   Colors
 } from '../../Const';
@@ -25,14 +26,28 @@ export default class CircleIcon extends Component {
         this.props.style
       ]}>
         <View style={this.props.shadowStyle}>
-          <Icon
-            size={this.props.size && (this.props.size * 0.6) || 12}
-            name={this.props.icon || 'check'}
-            color={
-              this.props.checkColor
-              ? this.props.checkColor
-              : Colors.Text
-            } />
+          {
+            this.props.fontAwesome
+            ? (
+              <FontAwesomeIcon
+                size={this.props.size && (this.props.size * 0.6) || 12}
+                name={this.props.icon || 'check'}
+                color={
+                  this.props.checkColor
+                  ? this.props.checkColor
+                  : Colors.Text
+                } />
+            ): (
+              <Icon
+                size={this.props.size && (this.props.size * 0.6) || 12}
+                name={this.props.icon || 'check'}
+                color={
+                  this.props.checkColor
+                  ? this.props.checkColor
+                  : Colors.Text
+                } />
+            )
+          }
         </View>
       </View>
     );

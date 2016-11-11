@@ -21,9 +21,7 @@ export default class Bounty extends Component {
       <Field {...this.props}>
         <View style={styles.container}>
           <TouchableOpacity
-            onPress={() => Actions.modal({
-            view: <CaptureView />
-         })}>
+            onPress={Actions.payment}>
           <View style={styles.bountyContainer}>
             <Icon
               name='check'

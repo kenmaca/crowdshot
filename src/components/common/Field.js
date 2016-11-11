@@ -32,7 +32,7 @@ export default class Field extends Component {
         ref='c'
         style={[
           styles.container,
-          this.props.noMargin || !this.props.isBottom && {marginBottom: 0},
+          (this.props.noMargin || !this.props.isBottom) && {marginBottom: 0},
         ]}>
         {this.props.isTop && (<Divider />)}
         <View style={[
@@ -69,7 +69,6 @@ export default class Field extends Component {
 const styles = StyleSheet.create({
   container: {
     marginBottom: Sizes.OuterFrame,
-    backgroundColor: Colors.Foreground,
     flexDirection: 'column',
     alignSelf: 'stretch'
   },
