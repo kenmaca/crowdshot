@@ -23,6 +23,7 @@ import OutlineText from '../common/OutlineText';
 import CircleIconInfo from '../common/CircleIconInfo';
 import ContestThumbnail from '../lists/ContestThumbnail';
 import GroupAvatar from '../profiles/GroupAvatar';
+import CircleIcon from '../common/CircleIcon';
 import * as Progress from 'react-native-progress';
 
 export default class ContestCard extends Component {
@@ -130,21 +131,34 @@ export default class ContestCard extends Component {
               }`} />
         </Photo>
         <View style={styles.body}>
-          <View style={styles.progressContainer}>
+          <TouchableOpacity
+            onPress={
+              this.state.progress < 1
+              ? Actions.contestPhotos
+              : () => Actions.contestPhotos({
+                contestId: this.props.contestId
+              })
+            }
+            style={styles.progressContainer}>
             {
               this.state.progress < 1
               ? (
                 <View style={styles.progressTextContainer}>
-                  <Text style={styles.progressTextUntil}>
-                    CONTEST ENDS ON
-                  </Text>
                   <Text style={styles.progressTextEnd}>
-                    {DateFormat(this.state.endDate, 'dddd, h:MMTT')}
+                    Ending {DateFormat(this.state.endDate, 'dddd, h:MMTT')}
                   </Text>
+                  <View style={styles.progressUpsellContainer}>
+                    <Text style={styles.progressUpsellText}>
+                      ADD AN HOUR
+                    </Text>
+                    <CircleIcon
+                      size={10}
+                      icon='attach-money' />
+                  </View>
                 </View>
               ): (
                 <Text style={styles.progressTextUntil}>
-                  CONTEST ENDED
+                  CONTEST ENDED — VOTE FOR THE WINNERS
                 </Text>
               )
             }
@@ -155,7 +169,7 @@ export default class ContestCard extends Component {
               color={Colors.Primary}
               unfilledColor={Colors.LightOverlay}
               borderWidth={0} />
-          </View>
+          </TouchableOpacity>
           <ScrollView style={styles.detailContainer}>
             <View style={styles.summary}>
               <CircleIconInfo
@@ -275,9 +289,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
 
-  progressTextUntil: {
+  progressUpsellContainer: {
     padding: Sizes.InnerFrame / 2,
     paddingTop: 0,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+
+  progressUpsellText: {
+    marginRight: Sizes.InnerFrame / 3,
     color: Colors.SubduedText,
     fontSize: Sizes.SmallText,
     fontWeight: '700'
