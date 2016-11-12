@@ -106,7 +106,7 @@ export default class ContestCard extends Component {
       <View style={this.props.isOwner ? styles.container : styles.container2}>
         <Photo
           photoId={this.state.referencePhotoId}
-          style={styles.header}>
+          style={this.props.isOwner ? styles.header : styles.header2}>
           {this.props.isOwner ?
           <View style={styles.buttonContainer}>
             <Button
@@ -214,7 +214,6 @@ export default class ContestCard extends Component {
                 <Text style={styles.progressStaticText}>
                   CONTEST ENDED
                 </Text>
-
             }
             </View>
             <Divider style={styles.divider} />
@@ -303,6 +302,15 @@ export default class ContestCard extends Component {
             }
           </ScrollView>
         </View>
+        {this.props.button &&
+        <Button
+          color={Colors.Primary}
+          onPress={this.props.buttonOnPress}
+          label={this.props.button}
+          squareBorders={10}
+          style={styles.buttonStyle}>
+        </Button>
+        }
       </View>
     );
   }
@@ -319,7 +327,7 @@ const styles = StyleSheet.create({
   container2: {
     flex: 1,
     alignSelf: 'stretch',
-    overflow: 'hidden'
+    justifyContent: 'flex-end',
   },
 
   header: {
@@ -330,9 +338,17 @@ const styles = StyleSheet.create({
     padding: Sizes.InnerFrame
   },
 
+  header2: {
+    height: Sizes.Height*0.4,
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    alignSelf: 'stretch',
+    padding: Sizes.InnerFrame
+  },
+
   body: {
     flex: 1,
-    backgroundColor: Colors.ModalBackground
+    backgroundColor: Colors.ModalBackground,
   },
 
   progressContainer: {
@@ -388,7 +404,7 @@ const styles = StyleSheet.create({
 
   detailContainer: {
     flex: 1,
-    paddingBottom: Sizes.OuterFrame * 10
+    paddingBottom: Sizes.OuterFrame * 10,
   },
 
   summary: {
@@ -442,4 +458,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center'
   },
+
+  buttonStyle: {
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    alignSelf: 'stretch'
+  }
 });
