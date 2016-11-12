@@ -52,11 +52,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center'
   },
+  
   button: {
     borderRadius: 16,
     width: 32,

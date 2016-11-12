@@ -51,8 +51,8 @@ export default class BillingCard extends Component {
           onPress={() => {
 
             // used on selected card
-            this.props.onSelected && this.props.onSelected(
-              this.state.stripeCardId
+            this.props.onPress && this.props.onPress(
+              this.state
             );
 
             // and exit screen

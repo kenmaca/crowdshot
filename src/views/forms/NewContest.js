@@ -14,9 +14,6 @@ import {
 // components
 import DatePicker from '../../components/common/DatePicker';
 import Button from '../../components/common/Button';
-import Capture from './Capture';
-import Location from './Location';
-import Bounty from './Bounty';
 import Payment from '../../components/common/Payment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ChecklistItem from '../../components/lists/ChecklistItem';
@@ -25,8 +22,7 @@ export default class NewContest extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stripeCardId: null,
-      bounty: null,
+      stripeChargeId: null,
       location: null,
       referencePhotoId: null
     };
@@ -46,7 +42,12 @@ export default class NewContest extends Component {
         </View>
         <View style={styles.checklist}>
           <ChecklistItem
-            checked={this.state.bounty && this.state.stripeCardId}
+            onPress={() => Actions.newBounty({
+              onCharged: stripeChargeId => this.setState({
+                stripeChargeId: stripeChargeId
+              })
+            })}
+            checked={this.state.stripeChargeId}
             photoId='appNewContestBounty'
             title='Set the bounty,'
             subtitle={
@@ -74,8 +75,7 @@ export default class NewContest extends Component {
         </View>
         <Button
           isDisabled={
-            !this.state.stripeCardId
-            || !this.state.bounty
+            !this.state.stripeChargeId
             || !this.state.Location
             || !this.state.referencePhotoId
           }
