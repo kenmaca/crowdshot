@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
   mapContainer: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
-    marginBottom: 50 + 150,
+    marginBottom: 50 + Sizes.Height*0.25,
   },
 
   map: {

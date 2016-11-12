@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    height: 150,
+    height: Sizes.Height*0.25,
   },
 
   indicator: {
