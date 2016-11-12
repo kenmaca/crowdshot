@@ -8,6 +8,9 @@ import {
   Colors, Sizes
 } from '../../Const';
 import Database from '../../utils/Database';
+import {
+  Actions
+} from 'react-native-router-flux';
 
 // components
 import CircleIcon from '../common/CircleIcon';
@@ -45,13 +48,22 @@ export default class BillingCard extends Component {
       this.state.active
       ? (
         <TouchableOpacity
-          onPress={this.props.onPress}
+          onPress={() => {
+
+            // used on selected card
+            this.props.onSelected && this.props.onSelected(
+              this.state.stripeCardId
+            );
+
+            // and exit screen
+            Actions.pop();
+          }}
           style={styles.container}>
           <View style={styles.content}>
             <Icon
               style={styles.cardType}
               name={(() => {
-                switch(this.props.type) {
+                switch(this.state.type) {
                   case 1: return 'cc-mastercard';
                   case 2: return 'cc-amex';
                   default: return 'cc-visa';
@@ -62,18 +74,18 @@ export default class BillingCard extends Component {
             <View style={styles.details}>
               <InformationField
                 color={Colors.Transparent}
-                info={this.props.name || 'Unknown'}
+                info={this.state.name || 'Unknown'}
                 label='Card Holder' />
               <InformationField
                 color={Colors.Transparent}
-                info={`●●●● ●●●● ●●●● ${this.props.lastFour || '●●●●'}`}
+                info={`●●●● ●●●● ●●●● ${this.state.lastFour || '●●●●'}`}
                 label='Number' />
               <InformationField
                 isBottom
                 noLine
                 noMargin
                 color={Colors.Transparent}
-                info={`${this.props.expiryMonth}/${this.props.expiryYear}`}
+                info={`${this.state.expiryMonth}/${this.state.expiryYear}`}
                 label='Expiry' />
             </View>
           </View>

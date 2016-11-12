@@ -8,8 +8,11 @@ const config = {
 const StripePrivateAPI = 'sk_test_ZajBLN6RSgJ3JJr4TNrQZadF';
 
 // start database
-let firebase = require('firebase');
-firebase.initializeApp(config);
+const fetch = require('node-fetch');
+const Base64 = require('base-64');
+const firebase = require('firebase');
+const Firebase = firebase.initializeApp(config);
+const Database = firebase.database();
 firebase.auth().signInWithEmailAndPassword(
   'server@crowdshot.com',
   'GrayHatesLemonade'
@@ -18,8 +21,73 @@ firebase.auth().signInWithEmailAndPassword(
 }).then(() => {
 
   // add billing tokens to Stripe customers
-  console.log('Starting Billing Listener..');
-  firebase.database().ref('billing').on('child_added', data => {
-    console.log(data.val());
+  console.log('Starting New Card Listener..');
+  Database.ref('billing').on('child_added', data => {
+    let token = data.val();
+
+    // convert token into card if inactive (newly added)
+    if (!token.active) {
+      console.log(`New Card found: ${token.stripeToken}`);
+      fetch(
+        `https://api.stripe.com/v1/customers/${
+          token.stripeCustomerId
+        }/sources`,
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Basic ${
+              Base64.encode(`${StripePrivateAPI}:`)
+            }`
+          },
+          body: `${
+            encodeURIComponent('source')
+          }=${
+            encodeURIComponent(token.stripeToken)
+          }`
+        }
+      ).then(response => {
+        return response.json();
+      }).then(json => {
+        if (json.error) {
+
+          // remove token due to error
+          Database.ref(
+            `billing/${data.key}`
+          ).update({
+            error: json.error
+          });
+          Database.ref(
+            `profiles/${
+              token.createdBy
+            }/billing/${
+              data.key
+            }`
+          ).remove();
+        } else {
+
+          // looks good, so convert to card
+          Database.ref(
+            `billing/${data.key}`
+          ).update({
+            active: true,
+            stripeCardId: json.id,
+            stripeToken: null,
+            lastFour: json.last4,
+            name: json.name,
+            expiryMonth: json.exp_month,
+            expiryYear: json.exp_year,
+            type: (() => {
+              switch(json.brand) {
+                case 'MasterCard': return 1;
+                case 'American Express': return 2;
+                default: return 0;
+              }
+            })()
+          });
+        }
+      });
+    }
   });
 });
