@@ -20,6 +20,7 @@ import NewContest from './views/forms/NewContest';
 import Modal from './Modal';
 import Profile from './views/profiles/Profile';
 import ContestPhotos from './views/contests/ContestPhotos';
+import ContestDetail from './views/contestant/ContestDetail';
 import Chat from './views/main/Chat';
 import Settings from './views/main/Settings';
 import Payment from './views/forms/Payment';
@@ -59,6 +60,11 @@ export default class Navigation extends Component {
               key='contestPhotos'
               panHandlers={null}
               component={ContestPhotos} />
+            <Scene
+              key='contestDetail'
+              panHandlers={null}
+              direction='vertical'
+              component={ContestDetail} />
             <Scene
               key='chat'
               component={Chat} />

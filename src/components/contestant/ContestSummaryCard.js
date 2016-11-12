@@ -98,9 +98,11 @@ export default class ContestSummaryCard extends Component {
     this.progress && clearTimeout(this.progress);
   }
 
+
   render() {
     return (
-      <View style={styles.container}>
+      <TouchableOpacity style={styles.container}
+        onPress={() => Actions.contestDetail({contest:this.state.contest})}>
         {this.state.contest.selected ?
         <View style={[styles.indicator,styles.selected]}/>
         :
@@ -137,7 +139,7 @@ export default class ContestSummaryCard extends Component {
             </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

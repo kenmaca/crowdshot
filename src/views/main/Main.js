@@ -372,6 +372,6 @@ const styles = StyleSheet.create({
     shadowOffset: {
       height: 5,
       width: 0
-    }
+    },
   }
 });

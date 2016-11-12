@@ -15,18 +15,19 @@ import Database from '../../utils/Database';
 import DateFormat from 'dateformat';
 
 // components
-import Button from '../common/Button';
-import InputSectionHeader from '../common/InputSectionHeader';
-import Photo from '../common/Photo';
-import Divider from '../common/Divider';
-import OutlineText from '../common/OutlineText';
-import CircleIconInfo from '../common/CircleIconInfo';
-import ContestThumbnail from '../lists/ContestThumbnail';
-import GroupAvatar from '../profiles/GroupAvatar';
-import CircleIcon from '../common/CircleIcon';
+import Button from '../../components/common/Button';
+import InputSectionHeader from '../../components/common/InputSectionHeader';
+import Photo from '../../components/common/Photo';
+import Divider from '../../components/common/Divider';
+import OutlineText from '../../components/common/OutlineText';
+import CircleIconInfo from '../../components/common/CircleIconInfo';
+import ContestThumbnail from '../../components/lists/ContestThumbnail';
+import GroupAvatar from '../../components/profiles/GroupAvatar';
+import CircleIcon from '../../components/common/CircleIcon';
+import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import * as Progress from 'react-native-progress';
 
-export default class ContestCard extends Component {
+export default class ContestDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,10 +41,10 @@ export default class ContestCard extends Component {
     };
 
     this.ref = Database.ref(
-      `contests/${this.props.contestId}`
+      `contests/${this.props.contest.contestId}`
     );
     this.entriesRef = Database.ref(
-      `entries/${this.props.contestId}`
+      `entries/${this.props.contest.contestId}`
     );
 
     this.updateProgress = this.updateProgress.bind(this);
@@ -107,22 +108,6 @@ export default class ContestCard extends Component {
         <Photo
           photoId={this.state.referencePhotoId}
           style={styles.header}>
-          <View style={styles.buttonContainer}>
-            <Button
-              onPress={() => Actions.chat({
-                chatId: this.props.contestId,
-                title: 'Contest Chat'
-              })}
-              size={Sizes.H2}
-              style={styles.button}
-              icon='chat'
-              color={Colors.Transparent} />
-            <Button
-              size={Sizes.H2}
-              style={styles.button}
-              icon='delete-forever'
-              color={Colors.Transparent} />
-          </View>
           <OutlineText
             text={
               `$${
@@ -134,69 +119,22 @@ export default class ContestCard extends Component {
               }`} />
         </Photo>
         <View style={styles.body}>
-          <TouchableOpacity
-            onPress={
-              this.state.progress < 1
-
-              // tap into here to verify that a payment method is on file
-              // otherwise, open up add credit card screen
-              ? () => Alert.alert(
-                'Extending your Contest',
-                'By extending your contest below, the credit card on '
-                + 'file will be billed for $1 to extend your contest by an '
-                + 'hour\n\nYou may continue to extend your contest as long '
-                + 'it remains active',
-                [
-                  {
-                    text: 'Cancel',
-                    style: 'cancel'
-                  },
-                  {
-                    text: 'I Agree',
-                    onPress: () => {
-                      this.ref.update({
-                        endDate: this.state.endDate + 3600000
-                      });
-                    }
-                  }
-                ]
-              )
-              : () => Actions.contestPhotos({
-                contestId: this.props.contestId
-              })
-            }
-            style={styles.progressContainer}>
+          <View>
+            <View style={styles.progressContainer2}>
             {
               this.state.progress < 1
               ? (
-                <View style={styles.progressTextContainer}>
-                  <Text style={styles.progressTextEnd}>
-                    Ending {DateFormat(this.state.endDate, 'dddd, h:MMTT')}
-                  </Text>
-                  <View style={styles.progressUpsellContainer}>
-                    <Text style={styles.progressUpsellText}>
-                      ADD AN HOUR
-                    </Text>
-                    <CircleIcon
-                      style={styles.progressUpsellIcon}
-                      size={10}
-                      icon='attach-money' />
-                  </View>
-                </View>
-              ): (
-                <Text style={styles.progressUpsellText}>
-                  CONTEST ENDED — VOTE FOR THE WINNERS
+                <Text style={styles.progressStaticText}>
+                  Ending {DateFormat(this.state.endDate, 'dddd, h:MMTT')}
                 </Text>
-              )
+              ):
+                <Text style={styles.progressStaticText}>
+                  CONTEST ENDED
+                </Text>
             }
-            <Progress.Bar
-              animated
-              progress={this.state.progress}
-              width={Sizes.Width - Sizes.InnerFrame * 4}
-              color={Colors.Primary}
-              unfilledColor={Colors.LightOverlay}
-              borderWidth={0} />
-          </TouchableOpacity>
+            </View>
+            <Divider style={styles.divider} />
+          </View>
           <ScrollView style={styles.detailContainer}>
             <View style={styles.summary}>
               <CircleIconInfo
@@ -236,65 +174,33 @@ export default class ContestCard extends Component {
                 {this.state.instructions}
               </Text>
             </View>
-            <View>
-              <View style={styles.instructionContainer}>
-                <InputSectionHeader label='Photographers Nearby' />
-                <GroupAvatar
-                  limit={6}
-                  uids={[
-                    '6P2NtwmzQWh0opdbuy0JwqSgPR02',
-                    'eyGDNyiqUBdu9ziuwCQehed13wr1',
-                    'ht33R6YWUWQMc8SZb27o9BOzn6G3'
-                  ]}
-                  size={Sizes.InnerFrame * 3}
-                  color={Colors.Foreground}
-                  outlineColor={Colors.ModalBackground}
-                  style={styles.photographersNearby} />
-              </View>
-              <View style={styles.photoContainer}>
-                <InputSectionHeader label='Contest Entries' />
-                <ListView
-                  horizontal
-                  scrollEnabled={false}
-                  dataSource={this.state.thumbnails}
-                  style={styles.thumbnailContainer}
-                  contentContainerStyle={styles.thumbnails}
-                  renderRow={data => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => Actions.contestPhotos({
-                          contestId: 'testContest',
-                          startCard: data
-                        })}>
-                        <ContestThumbnail
-                          size={80}
-                          rejectedOverlay={Colors.WhiteOverlay}
-                          contestId={this.props.contestId}
-                          entryId={data} />
-                      </TouchableOpacity>
-                    );
-                  }} />
-              </View>
-            </View>
           </ScrollView>
         </View>
+        <Button
+          color={Colors.Primary}
+          onPress={this.buttonOnPress}
+          label={"Participate"}
+          squareBorders={10}
+          style={styles.buttonStyle}>
+        </Button>
+        <CloseFullscreenButton/>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
-    width: Sizes.Width - Sizes.InnerFrame / 2,
-    borderRadius: 5,
-    overflow: 'hidden'
+    alignSelf: 'stretch',
+    justifyContent: 'flex-end',
   },
 
   header: {
-    height: 200,
+    height: Sizes.Height*0.4,
     alignItems: 'flex-end',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignSelf: 'stretch',
     padding: Sizes.InnerFrame
   },
@@ -309,6 +215,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: Sizes.OuterFrame,
     backgroundColor: Colors.DarkOverlay
+  },
+
+  progressContainer2: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: Sizes.OuterFrame,
+    backgroundColor: Colors.ModalBackground
   },
 
   progressTextContainer: {
@@ -405,4 +318,10 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
 
+  buttonStyle: {
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    alignSelf: 'stretch'
+  }
 });
