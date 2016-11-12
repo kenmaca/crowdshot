@@ -59,6 +59,8 @@ export default class CameraView extends Component {
         <Camera
           ref={cam => this.camera = cam}
           style={styles.camera}
+          captureAudio={false} 
+          captureMode={Camera.constants.CaptureMode.still}
           captureTarget={Camera.constants.CaptureTarget.temp}
           aspect={Camera.constants.Aspect.fill}>
           <View style={styles.upperContainer}></View>
@@ -79,8 +81,7 @@ export default class CameraView extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignSelf: 'stretch',
-    marginBottom: 50,
+    alignSelf: 'stretch'
   },
 
   camera: {

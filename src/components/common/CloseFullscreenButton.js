@@ -15,11 +15,15 @@ import {
 import CircleIcon from './CircleIcon';
 
 export default class CloseFullscreenButton extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <TouchableOpacity
         style={styles.container}
-        onPress={Actions.pop}>
+        onPress={this.props.action || Actions.pop}>
         <CircleIcon
           icon='close'
           color={Colors.Transparent}

@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, ScrollView, ListView,
-  TouchableOpacity, Alert
+  TouchableOpacity, Alert, Modal
 } from 'react-native';
 import {
   Colors, Sizes
@@ -21,10 +21,9 @@ import Photo from '../../components/common/Photo';
 import Divider from '../../components/common/Divider';
 import OutlineText from '../../components/common/OutlineText';
 import CircleIconInfo from '../../components/common/CircleIconInfo';
-import ContestThumbnail from '../../components/lists/ContestThumbnail';
-import GroupAvatar from '../../components/profiles/GroupAvatar';
 import CircleIcon from '../../components/common/CircleIcon';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
+import CameraView from '../../components/contestant/CameraView';
 import * as Progress from 'react-native-progress';
 
 export default class ContestDetail extends Component {
@@ -33,6 +32,7 @@ export default class ContestDetail extends Component {
     this.state = {
       dateCreated: Date.now(),
       currentTime: Date.now(),
+      cameraVisible: false,
       progress: 0,
       entries: {},
       thumbnails: new ListView.DataSource({
@@ -119,7 +119,7 @@ export default class ContestDetail extends Component {
         </Photo>
         <View style={styles.body}>
           <ScrollView style={styles.detailContainer}>
-            <View style={styles.progressContainer2}>
+            <View style={styles.progressContainer}>
             {
               this.state.progress < 1
               ? (
@@ -175,12 +175,20 @@ export default class ContestDetail extends Component {
         </View>
         <Button
           color={Colors.Primary}
-          onPress={this.buttonOnPress}
+          onPress={() => this.setState({cameraVisible:true})}
           label={"Participate"}
           squareBorders={10}
           style={styles.buttonStyle}>
         </Button>
         <CloseFullscreenButton/>
+        <Modal
+          transparent
+          animationType='fade'
+          visible={this.state.cameraVisible}>
+          <CameraView/>
+          <CloseFullscreenButton
+            action={() => this.setState({cameraVisible:false})}/>
+        </Modal>
       </View>
     );
   }
@@ -211,50 +219,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: Sizes.OuterFrame,
-    backgroundColor: Colors.DarkOverlay
-  },
-
-  progressContainer2: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: Sizes.OuterFrame,
     backgroundColor: Colors.ModalBackground
-  },
-
-  progressTextContainer: {
-    alignSelf: 'stretch',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    flexDirection: 'row'
-  },
-
-  progressUpsellContainer: {
-    padding: Sizes.InnerFrame / 2,
-    paddingTop: 0,
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-
-  progressUpsellText: {
-    color: Colors.SubduedText,
-    fontSize: Sizes.SmallText,
-    fontWeight: '700'
   },
 
   progressStaticText: {
     color: Colors.SubduedText,
     fontSize: Sizes.Text,
-    fontWeight: '700'
-  },
-
-  progressUpsellIcon: {
-    marginLeft: Sizes.InnerFrame / 3,
-  },
-
-  progressTextEnd: {
-    padding: Sizes.InnerFrame / 2,
-    paddingTop: 0,
-    color: Colors.SubduedText,
     fontWeight: '700'
   },
 
