@@ -23,7 +23,8 @@ export default class NewBounty extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stripeCardId: null
+      stripeCardId: null,
+      bounty: null
     };
   }
 
@@ -45,6 +46,9 @@ export default class NewBounty extends Component {
             isBottom
             noMargin
             label='Bounty'
+            onSelected={bounty => this.setState({
+              bounty: bounty
+            })}
             subtitle='Awarded to the winner' />
           <View style={styles.disclaimerContainer}>
             <Text style={styles.disclaimer}>
@@ -55,6 +59,7 @@ export default class NewBounty extends Component {
             </Text>
           </View>
           <Button
+            isDisabled={this.state.bounty && !this.state.stripeCardId}
             color={Colors.Primary}
             label='Add bounty to contest' />
         </View>
