@@ -16,7 +16,8 @@ export default class CameraView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      preview: null
+      preview: null,
+      flashMode: Camera.constants.TorchMode.off //off or on or auto
     };
 
     this.shutter = this.shutter.bind(this);
@@ -28,6 +29,10 @@ export default class CameraView extends Component {
         preview: data.path
       });
     });
+  }
+
+  handleFocusChanged(){
+
   }
 
   render() {
@@ -59,10 +64,14 @@ export default class CameraView extends Component {
         <Camera
           ref={cam => this.camera = cam}
           style={styles.camera}
-          captureAudio={false} 
+          captureAudio={false}
           captureMode={Camera.constants.CaptureMode.still}
           captureTarget={Camera.constants.CaptureTarget.temp}
-          aspect={Camera.constants.Aspect.fill}>
+          aspect={Camera.constants.Aspect.fill}
+          type={Camera.constants.Type.back}
+          defaultOnFocusComponent={true}
+          flashMode={this.state.flashMode}
+          onFocusChanged={() => this.handleFocusChanged}>
           <View style={styles.upperContainer}></View>
           <View style={styles.lowerContainer}>
             <TouchableOpacity

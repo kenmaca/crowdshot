@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'stretch',
     justifyContent: 'flex-end',
+    backgroundColor: Colors.ModalBackground,
   },
 
   header: {
