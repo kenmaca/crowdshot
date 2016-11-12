@@ -30,14 +30,16 @@ export default class Settings extends Component {
     };
 
     this.ref = Database.ref(
-      `billing/${Firebase.auth().currentUser.uid}`
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/billing`
     );
   }
 
   componentDidMount() {
     this.listener = this.ref.on('child_added', data => {
       if (data.exists()) {
-        let billing = [...this.state.rawBilling, data.val()];
+        let billing = [...this.state.rawBilling, data.key];
         this.setState({
           rawBilling: billing,
           billing: this.state.billing.cloneWithRows(billing)
@@ -74,8 +76,7 @@ export default class Settings extends Component {
             }
           }
         ]}>
-        <BillingCard
-          {...data} />
+        <BillingCard billingId={data} />
       </Swipeout>
     );
   }

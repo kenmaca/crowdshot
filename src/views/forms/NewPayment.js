@@ -2,16 +2,17 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, Alert
 } from 'react-native';
 import {
-  Colors, Sizes
+  Colors, Sizes, Strings
 } from '../../Const';
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 import {
   Actions
 } from 'react-native-router-flux';
+import Base64 from 'base-64';
 
 // components
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
@@ -39,6 +40,86 @@ export default class NewPayment extends Component {
     this.onChangeExpiry = this.onChangeExpiry.bind(this);
     this.onChangeCvc = this.onChangeCvc.bind(this);
     this.onChangeName = this.onChangeName.bind(this);
+    this.addCard = this.addCard.bind(this);
+
+    this.ref = Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/stripeCustomerId`
+    );
+  }
+
+  componentDidMount() {
+    this.listener = this.ref.on('value', data => {
+      this.setState({
+        stripeCustomerId: data.val() || false
+      });
+    })
+  }
+
+  componentWillUnmount() {
+    this.listener && this.ref.off('value', this.listener);
+  }
+
+  addCard() {
+    let card = {
+      'card[number]': this.state.number,
+      'card[exp_month]': this.state.expiry.split('/')[0],
+      'card[exp_year]': this.state.expiry.split('/')[1],
+      'card[cvc]': this.state.cvc,
+      'card[name]': this.state.name
+    }
+
+    fetch(
+      `https://api.stripe.com/v1/tokens`,
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Basic ${
+            Base64.encode(`${Strings.StripeAPI}:`)
+          }`
+        },
+        body: Object.keys(card).map(
+          key => `${encodeURIComponent(key)}=${
+            encodeURIComponent(card[key])
+          }`
+        ).join('&')
+      }
+    ).then(response => {
+      return response.json();
+    }).then(json => {
+      if (json.error) {
+        Alert.alert(
+          'Deposit Failed',
+          json.error.message,
+          [{text: 'OK'}]
+        );
+
+        // and reset button
+        this.refs.submit.reset();
+
+      } else {
+
+        // card token recieved, let server add to
+        // customer object
+        Database.ref(
+          `profiles/${
+            Firebase.auth().currentUser.uid
+          }/billing/${
+            Database.ref('billing').push({
+              stripeToken: json.id,
+              createdBy: Firebase.auth().currentUser.uid,
+              stripeCustomerId: this.state.stripeCustomerId
+            }).key
+          }`
+        ).set(true);
+
+        // exit
+        Actions.pop();
+      }
+    });
   }
 
   onChangeNumber(card) {
@@ -133,6 +214,16 @@ export default class NewPayment extends Component {
   }
 
   render() {
+    if (this.state.stripeCustomerId === false) Alert.alert(
+      'Account under Review',
+      'Please try again in a few minutes as your billing account '
+      + 'is currently under review.',
+      [{
+        text: 'OK',
+        onPress: Actions.pop
+      }]
+    );
+
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
@@ -180,8 +271,9 @@ export default class NewPayment extends Component {
             </Text>
           </View>
           <Button
+            ref='submit'
             isDisabled={!this.state.ready}
-            onPress={Actions.pop}
+            onPress={this.addCard}
             color={Colors.Primary}
             label='Add Credit Card' />
         </View>

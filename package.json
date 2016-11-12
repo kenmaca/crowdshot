@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "base-64": "^0.1.0",
     "dateformat": "^1.0.12",
     "firebase": "^3.5.3",
     "react": "15.3.2",
@@ -14,8 +15,6 @@
     "react-native-animatable": "^0.6.1",
     "react-native-blur": "^1.1.1",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
-    "react-native-credit-card": "^0.1.9",
-    "react-native-credit-card-input": "^0.2.6",
     "react-native-fbsdk": "^0.3.0",
     "react-native-fetch-blob": "^0.10.0-beta.8",
     "react-native-gifted-chat": "0.0.10",
