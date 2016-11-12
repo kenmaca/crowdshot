@@ -7,6 +7,7 @@ import {
 import {
   Sizes, Colors
 } from '../../Const';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // components
 import Camera from 'react-native-camera';
@@ -17,18 +18,39 @@ export default class CameraView extends Component {
     super(props);
     this.state = {
       preview: null,
-      flashMode: Camera.constants.TorchMode.off //off or on or auto
+      flashMode: Camera.constants.FlashMode.auto //off or on or auto
     };
-
-    this.shutter = this.shutter.bind(this);
   }
 
   shutter() {
-    this.camera.capture().then(data => {
-      this.setState({
-        preview: data.path
+    if (!this.state.preview){
+      this.camera.capture().then(data => {
+        this.setState({
+          preview: data.path
+        });
       });
-    });
+    }
+  }
+
+  toggleFlash() {
+    const { flashMode} = this.state;
+    switch (flashMode) {
+      case Camera.constants.FlashMode.off:
+        this.setState({
+          flashMode: Camera.constants.FlashMode.on
+        });
+        break;
+      case Camera.constants.FlashMode.on:
+        this.setState({
+          flashMode: Camera.constants.FlashMode.auto
+        });
+        break;
+      default:
+        this.setState({
+          flashMode: Camera.constants.FlashMode.off
+        });
+    }
+    console.log("flashmode",this.state.flashMode);
   }
 
   handleFocusChanged(){
@@ -75,11 +97,22 @@ export default class CameraView extends Component {
           <View style={styles.upperContainer}></View>
           <View style={styles.lowerContainer}>
             <TouchableOpacity
-              onPress={this.shutter}>
-              <Image
-                style={styles.shutter}
-                source={require('../../../res/img/shutter.png')} />
+              onPress={() => this.toggleFlash()}>
+              <Icon
+                size={40}
+                name={
+                  this.state.flashMode == Camera.constants.FlashMode.off
+                    ? 'flash-off'
+                  : this.state.flashMode == Camera.constants.FlashMode.on
+                    ? 'flash-on'
+                  : 'flash-auto'}
+                color={Colors.Text} />
             </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.shutter()}>
+              <View style={styles.shutter}/>
+            </TouchableOpacity>
+            <View style={styles.placeHolder}/>
           </View>
         </Camera>
       </View>
@@ -97,7 +130,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'stretch',
     justifyContent: 'flex-end',
-    padding: Sizes.InnerFrame,
+    padding: Sizes.OuterFrame,
   },
 
   upperContainer: {
@@ -106,12 +139,24 @@ const styles = StyleSheet.create({
   },
 
   lowerContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'space-between',
+    marginHorizontal: Sizes.OuterFrame
   },
 
   shutter: {
-    height: 60,
-    width: 60
+    width: 56,
+    height: 56,
+    borderRadius: 56/2,
+    backgroundColor: Colors.Transparent,
+    borderColor: Colors.Text,
+    borderWidth: 4,
+    marginBottom: Sizes.InnerFrame
+  },
+
+  placeHolder: {
+    height: 40,
+    width: 40
   }
 });
