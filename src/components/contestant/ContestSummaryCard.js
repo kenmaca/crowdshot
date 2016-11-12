@@ -126,7 +126,7 @@ export default class ContestSummaryCard extends Component {
               this.state.progress < 1
               ? (
                 <Text style={styles.progressTextUntil}>
-                  {"ENDS ON" + DateFormat(this.state.endDate, 'dddd, h:MMTT')}
+                  {"ENDING " + DateFormat(this.state.endDate, 'dddd, h:MMTT')}
                 </Text>
               ): (
                 <Text style={styles.progressTextUntil}>

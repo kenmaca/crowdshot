@@ -23,6 +23,7 @@ export default class ContestMapView extends Component {
 
 
     this.state = {
+      selected: 0,
       currentCoord:{
         latitude: 0,
         longitude: 0,
@@ -140,24 +141,46 @@ export default class ContestMapView extends Component {
     );
   }
 
+  onRegionChange= (region) => {
+    this.setState({region});
+  }
+
   onScroll = (event) => {
-    let {contests, currentCoord} = this.state
+    let {contests, currentCoord, selected, region} = this.state
 
     let index = Math.round(event.nativeEvent.contentOffset.x /
       (Sizes.Width - Sizes.OuterFrame * 2));
 
-    this.map.fitToCoordinates([currentCoord, contests[index].coordinate], {
-      edgePadding: {top:50,right:50,bottom:50,left:50},
-      animated: true,
-    });
+    if (selected != index){
 
-  //  console.log("getoffset ", this.listview.scrollProperties.offset);
+      if (region.latitude - region.latitudeDelta/2
+            > contests[index].coordinate.latitude
+          || region.latitude + region.latitudeDelta/2
+            < contests[index].coordinate.latitude
+          || region.longitude - region.longitudeDelta/2
+            > contests[index].coordinate.longitude
+          || region.longitude + region.longitudeDelta/2
+            < contests[index].coordinate.longitude
+          || region.latitude - region.latitudeDelta/2
+            > currentCoord.latitude
+          || region.latitude + region.latitudeDelta/2
+            < currentCoord.latitude
+          || region.longitude - region.longitudeDelta/2
+            > currentCoord.longitude
+          || region.longitude + region.longitudeDelta/2
+            < currentCoord.longitude){
+        this.map.fitToCoordinates([currentCoord, contests[index].coordinate], {
+          edgePadding: {top:50,right:50,bottom:50,left:50},
+          animated: true,
+        });
+      }
 
-    contests.forEach(contest => {
-      contest.selected = false;
-    });
-    contests[index].selected = true;
-    this.setState({contests})
+      contests.forEach(contest => {
+        contest.selected = false;
+      });
+      contests[index].selected = true;
+      this.setState({contests,selected: index})
+    }
   }
 
 
@@ -195,11 +218,12 @@ export default class ContestMapView extends Component {
             <MapView
               ref={ref => {this.map = ref;}}
               style={styles.map}
-              initialRegion={this.state.region}>
+              initialRegion={this.state.region}
+              onRegionChangeComplete={this.onRegionChange}>
               <MapView.Marker
-                coordinate={currentCoord}
-                pinColor={Colors.Primary}
-              />
+                coordinate={currentCoord}>
+                <View style={styles.ownMarker}/>
+              </MapView.Marker>
               {contests.map((contest, i) => {
                 const {
                   selected,
@@ -211,16 +235,22 @@ export default class ContestMapView extends Component {
                     coordinate={contest.coordinate}
                     key={contest.id}>
                     {selected ?
-                    <View style={[styles.markerWrapper, styles.markerSelected]}>
-                      <Text style={styles.selectedText}>
-                        {"$" + amount}
-                      </Text>
+                    <View style={styles.markerWrapper}>
+                      <View style={[styles.marker, styles.markerSelected]}>
+                        <Text style={styles.selectedText}>
+                          {"$" + amount}
+                        </Text>
+                      </View>
+                      <View style={[styles.markerArrow,styles.selectedArrow]}/>
                     </View>
                     :
                     <View style={styles.markerWrapper}>
-                      <Text style={styles.text}>
-                        {"$" + amount}
-                      </Text>
+                      <View style={styles.marker}>
+                        <Text style={styles.text}>
+                          {"$" + amount}
+                        </Text>
+                      </View>
+                      <View style={styles.markerArrow}/>
                     </View>
                     }
                   </MapView.Marker>
@@ -296,18 +326,51 @@ const styles = StyleSheet.create({
   },
 
   markerWrapper: {
+    alignItems: 'center'
+  },
+
+  marker: {
     borderRadius: 5,
-    borderWidth: 2,
+    borderWidth: 0,
     paddingHorizontal: 3,
-    borderColor: Colors.DarkOverlay,
     backgroundColor: Colors.MediumDarkOverlay,
   },
 
   markerSelected: {
-    borderColor: Colors.Primary,
-    backgroundColor: Colors.SubduedText,
+    backgroundColor: Colors.Primary,
   },
 
+  markerArrow: {
+    width: 0,
+    height: 0,
+    backgroundColor: Colors.Transparent,
+    borderStyle: 'solid',
+    borderTopWidth: 6,
+    borderLeftWidth: 4,
+    borderRightWidth: 4,
+    borderLeftColor: Colors.Transparent,
+    borderRightColor: Colors.Transparent,
+    borderTopColor: Colors.MediumDarkOverlay
+  },
+
+  selectedArrow: {
+    borderTopColor: Colors.Primary
+  },
+
+  ownMarker: {
+    width: 20,
+    height: 20,
+    borderRadius: 20/2,
+    backgroundColor: Colors.Primary,
+    borderColor: Colors.ModalBackground,
+    borderWidth: 3,
+    shadowColor: Colors.DarkOverlay,
+    shadowOpacity: 1,
+    shadowRadius: 3,
+    shadowOffset: {
+      height: 1,
+    },
+  }
 
 
 
