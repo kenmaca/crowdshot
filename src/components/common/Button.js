@@ -2,7 +2,8 @@ import React, {
   Component
 } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, ActivityIndicator
+  View, Text, TouchableOpacity, StyleSheet, ActivityIndicator,
+  TouchableWithoutFeedback
 } from 'react-native';
 import {
   Colors, Sizes
@@ -76,7 +77,7 @@ export default class Button extends Component {
           // prevent press event if shouldBlur or isDisabled
           if (
             !(this.props.shouldBlur && this.state.pressed)
-            || !(this.props.isDisabled)
+            && !(this.props.isDisabled)
           ) {
             this.props.onPress && this.props.onPress();
 
