@@ -20,6 +20,49 @@ firebase.auth().signInWithEmailAndPassword(
   console.log(error);
 }).then(() => {
 
+  // add Stripe customers to new profiles
+  console.log('Starting New User Listener..');
+  Database.ref('profiles').on('child_added', data => {
+    let user = data.val();
+
+    // add Stripe customer if newly created
+    if (!user.stripeCustomerId) {
+      console.log(`New User found: ${
+        user.displayName
+      }; Provisioning Stripe Customer..`);
+      let customer = {
+        description: user.displayName,
+        email: user.email
+      };
+      fetch(
+        'https://api.stripe.com/v1/customers',
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Basic ${
+              Base64.encode(`${StripePrivateAPI}:`)
+            }`
+          },
+          body: Object.keys(customer).map(
+            key => `${encodeURIComponent(key)}=${
+              encodeURIComponent(customer[key])
+            }`
+          ).join('&')
+        }
+      ).then(response => {
+        return response.json();
+      }).then(json => {
+        if (!json.error) {
+          Database.ref(
+            `profiles/${data.key}/stripeCustomerId`
+          ).set(json.id);
+        }
+      });
+    }
+  })
+
   // add billing tokens to Stripe customers
   console.log('Starting New Card Listener..');
   Database.ref('billing').on('child_added', data => {
