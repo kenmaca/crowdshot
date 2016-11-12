@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Image
+  View, StyleSheet, Text
 } from 'react-native';
 import {
   Actions
@@ -19,40 +19,71 @@ import Location from './Location';
 import Bounty from './Bounty';
 import Payment from '../../components/common/Payment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import ChecklistItem from '../../components/lists/ChecklistItem';
 
 export default class NewContest extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      stripeCardId: null,
+      bounty: null,
+      location: null,
+      referencePhotoId: null
+    };
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>
-            Ok! Let's Setup Your Contest Now!
+          <Text style={styles.headerTitle}>
+            Let's setup your contest
+          </Text>
+          <Text style={styles.headerSubtitle}>
+            We'll need a bit of information before
+            we can start:
           </Text>
         </View>
         <View style={styles.checklist}>
-          <Location
-            label='Location'
-            subtitle='Where the contest will be hold'
-            isBottom/>
-          <Capture
-            fontAwesome
-            label='Reference Photo'
-            subtitle='Provide a reference photo for us'
-            isBottom/>
-          <Bounty
-            label='Bounty'
-            subtitle='Reward the Winner for their effort'
-            isBottom/>
+          <ChecklistItem
+            checked={this.state.bounty && this.state.stripeCardId}
+            photoId='appNewContestBounty'
+            title='Set the bounty,'
+            subtitle={
+              'Add a cash prize for the winning entry. '
+              + 'Prizes are only awarded at the end if '
+              + 'there are entries submitted.'
+            } />
+          <ChecklistItem
+            checked={this.state.location}
+            photoId='appNewContestLocation'
+            title='then tell us where,'
+            subtitle={
+              'Set a marker on the map indicating where '
+              + 'contestants should take photos at.'
+            } />
+          <ChecklistItem
+            checked={this.state.referencePhotoId}
+            photoId='appNewContestCamera'
+            title='.. and finally, a photo.'
+            subtitle={
+              'Take a reference photo of what you want '
+              + 'a photo of. It can be anything from an object, '
+              + 'a landmark, — or even your faces.'
+            } />
         </View>
         <Button
+          isDisabled={
+            !this.state.stripeCardId
+            || !this.state.bounty
+            || !this.state.Location
+            || !this.state.referencePhotoId
+          }
           color={Colors.Primary}
+          label='Start a new Photo Contest'
           onPress={() => Actions.modal({
             view: <Payment />
-          })}
-          label='Start a new Photo Contest'
-          squareBorders={10}
-          style={styles.buttonStyle}>
-        </Button>
+          })} />
       </View>
     );
   }
@@ -61,32 +92,34 @@ export default class NewContest extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.Background,
-    marginBottom: 50
-  },
-  header: {
-    marginTop: 50,
-    height: 50,
-    paddingLeft: Sizes.OuterFrame,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start'
-  },
-  headerText: {
-    color: Colors.Text,
-    fontWeight: '700',
-    fontSize: Sizes.H3,
-    textAlign: 'left'
-  },
-  checklist: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingTop: Sizes.OuterFrame
-  },
-  buttonStyle: {
-    height: 45,
     justifyContent: 'center',
-    alignItems: 'stretch',
-    alignSelf: 'stretch'
+    backgroundColor: Colors.Background
+  },
+
+  header: {
+    alignItems: 'center',
+    padding: Sizes.OuterFrame,
+    paddingTop: 0,
+    paddingBottom: Sizes.InnerFrame
+  },
+
+  headerTitle: {
+    textAlign: 'center',
+    marginBottom: Sizes.InnerFrame / 2,
+    color: Colors.Text,
+    fontSize: Sizes.H1
+  },
+
+  headerSubtitle: {
+    textAlign: 'center',
+    color: Colors.SubduedText,
+    fontSize: Sizes.H4
+  },
+
+  checklist: {
+    alignSelf: 'stretch',
+    padding: Sizes.InnerFrame,
+    marginBottom: Sizes.OuterFrame
   }
 });

@@ -6,6 +6,7 @@ export const Sizes = {
 
   // nav bar height
   NavHeight: Navigator.NavigationBar.Styles.General.TotalNavHeight,
+  StatusHeight: 20,
 
   // screen
   Width: Dimensions.get('window').width,
