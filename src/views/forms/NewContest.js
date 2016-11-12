@@ -44,17 +44,15 @@ export default class NewContest extends Component {
             subtitle='Reward the Winner for their effort'
             isBottom/>
         </View>
-        <View style={styles.button}>
-          <Button
-            color={Colors.Primary}
-            onPress={() => Actions.modal({
-              view: <Payment />
-            })}
-            label='Start a new Photo Contest'
-            squareBorders={10}
-            style={styles.buttonStyle}>
-          </Button>
-        </View>
+        <Button
+          color={Colors.Primary}
+          onPress={() => Actions.modal({
+            view: <Payment />
+          })}
+          label='Start a new Photo Contest'
+          squareBorders={10}
+          style={styles.buttonStyle}>
+        </Button>
       </View>
     );
   }
@@ -63,7 +61,8 @@ export default class NewContest extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.Background
+    backgroundColor: Colors.Background,
+    marginBottom: 50
   },
   header: {
     marginTop: 50,
@@ -83,9 +82,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingTop: Sizes.OuterFrame
-  },
-  button: {
-    height: 90,
   },
   buttonStyle: {
     height: 45,

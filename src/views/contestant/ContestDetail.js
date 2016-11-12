@@ -57,7 +57,6 @@ export default class ContestDetail extends Component {
           ...data.val()
         });
 
-        // animated progress
         this.updateProgress();
       }
     });
@@ -119,7 +118,7 @@ export default class ContestDetail extends Component {
               }`} />
         </Photo>
         <View style={styles.body}>
-          <View>
+          <ScrollView style={styles.detailContainer}>
             <View style={styles.progressContainer2}>
             {
               this.state.progress < 1
@@ -134,8 +133,6 @@ export default class ContestDetail extends Component {
             }
             </View>
             <Divider style={styles.divider} />
-          </View>
-          <ScrollView style={styles.detailContainer}>
             <View style={styles.summary}>
               <CircleIconInfo
                 size={Sizes.H2}
