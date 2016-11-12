@@ -2,7 +2,8 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, ListView, TouchableOpacity
+  View, StyleSheet, Text, ListView, TouchableOpacity,
+  Alert
 } from 'react-native';
 import {
   Colors, Sizes
@@ -34,6 +35,21 @@ export default class Settings extends Component {
         Firebase.auth().currentUser.uid
       }/billing`
     );
+
+    this.reset = this.reset.bind(this);
+    this.renderRow = this.renderRow.bind(this);
+  }
+
+  // needed to remove deleted cards
+  reset() {
+    this.setState({
+      rawBilling: [],
+      billing: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1 !== r2
+      })
+    });
+    this.componentWillUnmount();
+    this.componentDidMount();
   }
 
   componentDidMount() {
@@ -62,21 +78,36 @@ export default class Settings extends Component {
             backgroundColor: Colors.Cancel,
             onPress: () => {
               Alert.alert(
-                'Remove this Activity?',
+                'Remove this Card?',
                 null,
                 [
                   {
-                    text: 'Cancel'
+                    text: 'Cancel',
+                    style: 'cancel'
                   }, {
                     text: 'Remove',
-                    onPress: () => {}
+                    onPress: () => {
+                      Database.ref(
+                        `profiles/${
+                          Firebase.auth().currentUser.uid
+                        }/billing/${
+                          data
+                        }`
+                      ).remove();
+                      Database.ref(
+                        `billing/${data}`
+                      ).remove();
+                      this.reset();
+                    }
                   }
                 ]
               );
             }
           }
         ]}>
-        <BillingCard billingId={data} />
+        <BillingCard
+          onPress={this.props.onSelected}
+          billingId={data} />
       </Swipeout>
     );
   }

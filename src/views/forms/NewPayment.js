@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Alert
+  View, StyleSheet, Text, Alert, Modal
 } from 'react-native';
 import {
   Colors, Sizes, Strings
@@ -19,6 +19,7 @@ import CloseFullscreenButton from '../../components/common/CloseFullscreenButton
 import Button from '../../components/common/Button';
 import SingleLineInput from '../../components/common/SingleLineInput';
 import CircleIcon from '../../components/common/CircleIcon';
+import ProgressBlocker from '../../components/common/ProgressBlocker';
 
 export default class NewPayment extends Component {
   constructor(props) {
@@ -33,7 +34,10 @@ export default class NewPayment extends Component {
       numberValid: false,
       nameValid: false,
       expiryValid: false,
-      cvcValid: false
+      cvcValid: false,
+
+      // views
+      processing: false
     };
 
     this.onChangeNumber = this.onChangeNumber.bind(this);
@@ -104,20 +108,54 @@ export default class NewPayment extends Component {
 
         // card token recieved, let server add to
         // customer object
+        let billingId = Database.ref('billing').push({
+          stripeToken: json.id,
+          createdBy: Firebase.auth().currentUser.uid,
+          stripeCustomerId: this.state.stripeCustomerId
+        }).key;
         Database.ref(
           `profiles/${
             Firebase.auth().currentUser.uid
           }/billing/${
-            Database.ref('billing').push({
-              stripeToken: json.id,
-              createdBy: Firebase.auth().currentUser.uid,
-              stripeCustomerId: this.state.stripeCustomerId
-            }).key
+            billingId
           }`
         ).set(true);
 
-        // exit
-        Actions.pop();
+        // block view and wait for successful card add
+        this.setState({
+          processing: true
+        });
+        Database.ref(
+          `billing/${billingId}`
+        ).on('value', data => {
+
+          // successful
+          if (data.exists() && data.val().active) {
+            Actions.pop();
+
+          // declined
+          } else if (data.exists() && data.val().error) {
+            Alert.alert(
+              'Card Declined',
+              'Your card was declined by the issuing bank',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => {
+
+                    // remove the card
+                    Database.ref(
+                      `billing/${data.key}`
+                    ).remove();
+
+                    // and back out
+                    Actions.pop();
+                  }
+                }
+              ]
+            );
+          }
+        })
       }
     });
   }
@@ -226,6 +264,13 @@ export default class NewPayment extends Component {
 
     return (
       <View style={styles.container}>
+        <Modal
+          transparent
+          visible={this.state.processing}
+          animationType='slide'>
+          <ProgressBlocker
+            message='Contacting bank..' />
+        </Modal>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>
             Add a new Credit Card
