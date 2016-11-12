@@ -284,7 +284,7 @@ export default class Main extends Component {
                   <View
                     key={i}
                     style={styles.cardShadow}>
-                    <ContestCard contestId={rowData} />
+                    <ContestCard isOwner={true} contestId={rowData} />
                   </View>
                 ): (
                   <View
@@ -372,6 +372,6 @@ const styles = StyleSheet.create({
     shadowOffset: {
       height: 5,
       width: 0
-    }
+    },
   }
 });

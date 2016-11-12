@@ -15,17 +15,19 @@ import Database from '../../utils/Database';
 import DateFormat from 'dateformat';
 
 // components
-import Button from '../common/Button';
-import InputSectionHeader from '../common/InputSectionHeader';
-import Photo from '../common/Photo';
-import Divider from '../common/Divider';
-import OutlineText from '../common/OutlineText';
-import CircleIconInfo from '../common/CircleIconInfo';
-import ContestThumbnail from '../lists/ContestThumbnail';
-import GroupAvatar from '../profiles/GroupAvatar';
+import Button from '../../components/common/Button';
+import InputSectionHeader from '../../components/common/InputSectionHeader';
+import Photo from '../../components/common/Photo';
+import Divider from '../../components/common/Divider';
+import OutlineText from '../../components/common/OutlineText';
+import CircleIconInfo from '../../components/common/CircleIconInfo';
+import ContestThumbnail from '../../components/lists/ContestThumbnail';
+import GroupAvatar from '../../components/profiles/GroupAvatar';
+import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
+import ContestCard from '../../components/lists/ContestCard';
 import * as Progress from 'react-native-progress';
 
-export default class ContestSummaryCard extends Component {
+export default class ContestDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -98,48 +100,12 @@ export default class ContestSummaryCard extends Component {
     this.progress && clearTimeout(this.progress);
   }
 
-
   render() {
     return (
-      <TouchableOpacity style={styles.container}
-        onPress={() => Actions.contestDetail({contest:this.state.contest})}>
-        {this.state.contest.selected ?
-        <View style={[styles.indicator,styles.selected]}/>
-        :
-        <View style={styles.indicator}/>
-        }
-        <View style={styles.card}>
-          <Photo
-            photoId={this.state.referencePhotoId}
-            style={styles.header}>
-            <OutlineText
-              text={
-                `$${
-                  this.state.bounty || 0
-                } To Top ${
-                  this.state.prizes
-                  ? Object.keys(this.state.prizes).length
-                  : 'Photo'
-                }`} />
-          </Photo>
-          <View style={styles.progressContainer}>
-            <View style={styles.progressTextContainer}>
-            {
-              this.state.progress < 1
-              ? (
-                <Text style={styles.progressTextUntil}>
-                  {"ENDING " + DateFormat(this.state.endDate, 'dddd, h:MMTT')}
-                </Text>
-              ): (
-                <Text style={styles.progressTextUntil}>
-                  CONTEST ENDED
-                </Text>
-              )
-            }
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <View style={styles.container}>
+        <ContestCard contestId={this.props.contest.contestId}/>
+        <CloseFullscreenButton/>
+      </View>
     );
   }
 }
@@ -148,45 +114,15 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    height: 150,
-  },
-
-  indicator: {
-    height: 5,
-    marginTop: 13,
-    marginBottom: 3,
-    marginHorizontal: Sizes.InnerFrame
-  },
-
-  selected: {
-    backgroundColor: Colors.Primary,
-  },
-
-  card: {
-    flex: 1,
-    height: 130,
-    width: Sizes.Width - Sizes.OuterFrame * 2,
-    borderRadius: 5,
-    overflow: 'hidden',
-    backgroundColor: Colors.ModalBackground,
-    marginTop: Sizes.InnerFrame / 4,
-    marginLeft: Sizes.InnerFrame / 4,
-    marginRight: Sizes.InnerFrame / 4,
-    shadowColor: Colors.DarkOverlay,
-    shadowOpacity: 1,
-    shadowRadius: 5,
-    shadowOffset: {
-      height: 5,
-      width: 0
-    },
+    alignSelf: 'stretch',
   },
 
   header: {
-    height: 110,
+    height: Sizes.Height*0.4,
     alignItems: 'flex-end',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     alignSelf: 'stretch',
-    padding: Sizes.InnerFrame/2
+    padding: Sizes.InnerFrame
   },
 
   body: {

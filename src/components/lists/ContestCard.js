@@ -103,10 +103,11 @@ export default class ContestCard extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={this.props.isOwner ? styles.container : styles.container2}>
         <Photo
           photoId={this.state.referencePhotoId}
           style={styles.header}>
+          {this.props.isOwner ?
           <View style={styles.buttonContainer}>
             <Button
               onPress={() => Actions.chat({
@@ -123,6 +124,8 @@ export default class ContestCard extends Component {
               icon='delete-forever'
               color={Colors.Transparent} />
           </View>
+          : <View/>
+          }
           <OutlineText
             text={
               `$${
@@ -134,6 +137,7 @@ export default class ContestCard extends Component {
               }`} />
         </Photo>
         <View style={styles.body}>
+          {this.props.isOwner ?
           <TouchableOpacity
             onPress={
               this.state.progress < 1
@@ -197,6 +201,25 @@ export default class ContestCard extends Component {
               unfilledColor={Colors.LightOverlay}
               borderWidth={0} />
           </TouchableOpacity>
+          :
+          <View>
+            <View style={styles.progressContainer2}>
+            {
+              this.state.progress < 1
+              ? (
+                <Text style={styles.progressStaticText}>
+                  Ending {DateFormat(this.state.endDate, 'dddd, h:MMTT')}
+                </Text>
+              ):
+                <Text style={styles.progressStaticText}>
+                  CONTEST ENDED
+                </Text>
+
+            }
+            </View>
+            <Divider style={styles.divider} />
+          </View>
+          }
           <ScrollView style={styles.detailContainer}>
             <View style={styles.summary}>
               <CircleIconInfo
@@ -236,44 +259,48 @@ export default class ContestCard extends Component {
                 {this.state.instructions}
               </Text>
             </View>
-            <View style={styles.instructionContainer}>
-              <InputSectionHeader label='Photographers Nearby' />
-              <GroupAvatar
-                limit={6}
-                uids={[
-                  '6P2NtwmzQWh0opdbuy0JwqSgPR02',
-                  'eyGDNyiqUBdu9ziuwCQehed13wr1',
-                  'ht33R6YWUWQMc8SZb27o9BOzn6G3'
-                ]}
-                size={Sizes.InnerFrame * 3}
-                color={Colors.Foreground}
-                outlineColor={Colors.ModalBackground}
-                style={styles.photographersNearby} />
+            {this.props.isOwner &&
+            <View>
+              <View style={styles.instructionContainer}>
+                <InputSectionHeader label='Photographers Nearby' />
+                <GroupAvatar
+                  limit={6}
+                  uids={[
+                    '6P2NtwmzQWh0opdbuy0JwqSgPR02',
+                    'eyGDNyiqUBdu9ziuwCQehed13wr1',
+                    'ht33R6YWUWQMc8SZb27o9BOzn6G3'
+                  ]}
+                  size={Sizes.InnerFrame * 3}
+                  color={Colors.Foreground}
+                  outlineColor={Colors.ModalBackground}
+                  style={styles.photographersNearby} />
+              </View>
+              <View style={styles.photoContainer}>
+                <InputSectionHeader label='Contest Entries' />
+                <ListView
+                  horizontal
+                  scrollEnabled={false}
+                  dataSource={this.state.thumbnails}
+                  style={styles.thumbnailContainer}
+                  contentContainerStyle={styles.thumbnails}
+                  renderRow={data => {
+                    return (
+                      <TouchableOpacity
+                        onPress={() => Actions.contestPhotos({
+                          contestId: 'testContest',
+                          startCard: data
+                        })}>
+                        <ContestThumbnail
+                          size={80}
+                          rejectedOverlay={Colors.WhiteOverlay}
+                          contestId={this.props.contestId}
+                          entryId={data} />
+                      </TouchableOpacity>
+                    );
+                  }} />
+              </View>
             </View>
-            <View style={styles.photoContainer}>
-              <InputSectionHeader label='Contest Entries' />
-              <ListView
-                horizontal
-                scrollEnabled={false}
-                dataSource={this.state.thumbnails}
-                style={styles.thumbnailContainer}
-                contentContainerStyle={styles.thumbnails}
-                renderRow={data => {
-                  return (
-                    <TouchableOpacity
-                      onPress={() => Actions.contestPhotos({
-                        contestId: 'testContest',
-                        startCard: data
-                      })}>
-                      <ContestThumbnail
-                        size={80}
-                        rejectedOverlay={Colors.WhiteOverlay}
-                        contestId={this.props.contestId}
-                        entryId={data} />
-                    </TouchableOpacity>
-                  );
-                }} />
-            </View>
+            }
           </ScrollView>
         </View>
       </View>
@@ -286,6 +313,12 @@ const styles = StyleSheet.create({
     flex: 1,
     width: Sizes.Width - Sizes.InnerFrame / 2,
     borderRadius: 5,
+    overflow: 'hidden'
+  },
+
+  container2: {
+    flex: 1,
+    alignSelf: 'stretch',
     overflow: 'hidden'
   },
 
@@ -309,6 +342,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.DarkOverlay
   },
 
+  progressContainer2: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: Sizes.OuterFrame,
+    backgroundColor: Colors.ModalBackground
+  },
+
   progressTextContainer: {
     alignSelf: 'stretch',
     alignItems: 'flex-end',
@@ -326,6 +366,12 @@ const styles = StyleSheet.create({
   progressUpsellText: {
     color: Colors.SubduedText,
     fontSize: Sizes.SmallText,
+    fontWeight: '700'
+  },
+
+  progressStaticText: {
+    color: Colors.SubduedText,
+    fontSize: Sizes.Text,
     fontWeight: '700'
   },
 
