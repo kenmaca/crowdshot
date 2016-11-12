@@ -185,7 +185,7 @@ export default class ContestDetail extends Component {
           transparent
           animationType='fade'
           visible={this.state.cameraVisible}>
-          <CameraView/>
+          <CameraView onUploaded={() => this.setState({cameraVisible:false})}/>
           <CloseFullscreenButton
             action={() => this.setState({cameraVisible:false})}/>
         </Modal>
