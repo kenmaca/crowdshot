@@ -97,7 +97,7 @@ export default class Settings extends Component {
         <CloseFullscreenButton />
         <TouchableOpacity
           style={styles.addButton}
-          onPress={Actions.pop}>
+          onPress={Actions.newPayment}>
           <CircleIcon
             icon='add'
             color={Colors.Transparent}

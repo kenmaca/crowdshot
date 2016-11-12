@@ -39,7 +39,7 @@ export default class BillingCard extends Component {
               label='Card Holder' />
             <InformationField
               color={Colors.Transparent}
-              info={`**** **** **** ${this.props.lastFour || '****'}`}
+              info={`●●●● ●●●● ●●●● ${this.props.lastFour || '****'}`}
               label='Number' />
             <InformationField
               isBottom

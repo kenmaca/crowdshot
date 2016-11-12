@@ -23,6 +23,7 @@ import ContestPhotos from './views/contests/ContestPhotos';
 import Chat from './views/main/Chat';
 import Settings from './views/main/Settings';
 import Payment from './views/forms/Payment';
+import NewPayment from './views/forms/NewPayment';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -67,6 +68,9 @@ export default class Navigation extends Component {
             <Scene
               key='payment'
               component={Payment} />
+            <Scene
+              key='newPayment'
+              component={NewPayment} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}

@@ -33,12 +33,10 @@ export default class Field extends Component {
         style={[
           styles.container,
           (this.props.noMargin || !this.props.isBottom) && {marginBottom: 0},
-        ]}>
-        {this.props.isTop && (<Divider />)}
-        <View style={[
-          styles.innerContainer,
           this.props.color && {backgroundColor: this.props.color}
         ]}>
+        {this.props.isTop && (<Divider />)}
+        <View style={styles.innerContainer}>
           <View style={styles.labelContainer}>
             <Text style={styles.label}>
               {this.props.label || this.props.placeholder}
@@ -68,13 +66,13 @@ export default class Field extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: Colors.Foreground,
     marginBottom: Sizes.OuterFrame,
     flexDirection: 'column',
     alignSelf: 'stretch'
   },
 
   innerContainer: {
-    backgroundColor: Colors.Foreground,
     paddingLeft: Sizes.OuterFrame,
     paddingTop: Sizes.InnerFrame,
     paddingBottom: Sizes.InnerFrame,

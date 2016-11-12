@@ -2,8 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, ActivityIndicator,
-  TouchableWithoutFeedback
+  View, Text, TouchableOpacity, StyleSheet, ActivityIndicator
 } from 'react-native';
 import {
   Colors, Sizes
