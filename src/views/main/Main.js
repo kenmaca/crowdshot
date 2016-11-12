@@ -284,7 +284,7 @@ export default class Main extends Component {
                   <View
                     key={i}
                     style={styles.cardShadow}>
-                    <ContestCard isOwner={true} contestId={rowData} />
+                    <ContestCard contestId={rowData} />
                   </View>
                 ): (
                   <View

@@ -103,11 +103,10 @@ export default class ContestCard extends Component {
 
   render() {
     return (
-      <View style={this.props.isOwner ? styles.container : styles.container2}>
+      <View style={styles.container}>
         <Photo
           photoId={this.state.referencePhotoId}
-          style={this.props.isOwner ? styles.header : styles.header2}>
-          {this.props.isOwner ?
+          style={styles.header}>
           <View style={styles.buttonContainer}>
             <Button
               onPress={() => Actions.chat({
@@ -124,8 +123,6 @@ export default class ContestCard extends Component {
               icon='delete-forever'
               color={Colors.Transparent} />
           </View>
-          : <View/>
-          }
           <OutlineText
             text={
               `$${
@@ -137,7 +134,6 @@ export default class ContestCard extends Component {
               }`} />
         </Photo>
         <View style={styles.body}>
-          {this.props.isOwner ?
           <TouchableOpacity
             onPress={
               this.state.progress < 1
@@ -201,24 +197,6 @@ export default class ContestCard extends Component {
               unfilledColor={Colors.LightOverlay}
               borderWidth={0} />
           </TouchableOpacity>
-          :
-          <View>
-            <View style={styles.progressContainer2}>
-            {
-              this.state.progress < 1
-              ? (
-                <Text style={styles.progressStaticText}>
-                  Ending {DateFormat(this.state.endDate, 'dddd, h:MMTT')}
-                </Text>
-              ):
-                <Text style={styles.progressStaticText}>
-                  CONTEST ENDED
-                </Text>
-            }
-            </View>
-            <Divider style={styles.divider} />
-          </View>
-          }
           <ScrollView style={styles.detailContainer}>
             <View style={styles.summary}>
               <CircleIconInfo
@@ -258,7 +236,6 @@ export default class ContestCard extends Component {
                 {this.state.instructions}
               </Text>
             </View>
-            {this.props.isOwner &&
             <View>
               <View style={styles.instructionContainer}>
                 <InputSectionHeader label='Photographers Nearby' />
@@ -299,18 +276,8 @@ export default class ContestCard extends Component {
                   }} />
               </View>
             </View>
-            }
           </ScrollView>
         </View>
-        {this.props.button &&
-        <Button
-          color={Colors.Primary}
-          onPress={this.props.buttonOnPress}
-          label={this.props.button}
-          squareBorders={10}
-          style={styles.buttonStyle}>
-        </Button>
-        }
       </View>
     );
   }
@@ -324,22 +291,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
 
-  container2: {
-    flex: 1,
-    alignSelf: 'stretch',
-    justifyContent: 'flex-end',
-  },
-
   header: {
     height: 200,
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    alignSelf: 'stretch',
-    padding: Sizes.InnerFrame
-  },
-
-  header2: {
-    height: Sizes.Height*0.4,
     alignItems: 'flex-end',
     justifyContent: 'space-between',
     alignSelf: 'stretch',
@@ -356,13 +309,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: Sizes.OuterFrame,
     backgroundColor: Colors.DarkOverlay
-  },
-
-  progressContainer2: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: Sizes.OuterFrame,
-    backgroundColor: Colors.ModalBackground
   },
 
   progressTextContainer: {
@@ -459,10 +405,4 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
 
-  buttonStyle: {
-    height: 45,
-    justifyContent: 'center',
-    alignItems: 'stretch',
-    alignSelf: 'stretch'
-  }
 });
