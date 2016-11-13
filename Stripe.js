@@ -30,52 +30,62 @@ firebase.auth().signInWithEmailAndPassword(
       console.log(`New Prize found: ${
         data.key
       }; Attempting to charge and approve prize..`);
-      let charge = {
-        amount: prize.value,
-        currency: 'cad',
-        customer: prize.stripeCustomerId,
-        source: prize.stripeCardId,
-        description: `Bounty for Contest Owner ${
-          Firebase.auth().currentUser.uid
-        }`
-      };
-      fetch(
-        'https://api.stripe.com/v1/charges',
-        {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Basic ${
-              Base64.encode(`${StripePrivateAPI}:`)
-            }`
-          },
-          body: Object.keys(charge).map(
-            key => `${encodeURIComponent(key)}=${
-              encodeURIComponent(charge[key])
-            }`
-          ).join('&')
-        }
-      ).then(response => {
-        return response.json();
-      }).then(json => {
-        if (!json.error) {
-          Database.ref(
-            `prizes/${data.key}`
-          ).update({
-            stripeChargeId: json.id,
-            processed: true,
-            approved: true
-          });
-        } else {
-          Database.ref(
-            `prizes/${data.key}`
-          ).update({
-            processed: true,
-            error: json.error
-          });
-        }
-      });
+
+      if (prize.value > 0) {
+        let charge = {
+          amount: prize.value,
+          currency: 'cad',
+          customer: prize.stripeCustomerId,
+          source: prize.stripeCardId,
+          description: `Bounty for Contest Owner ${
+            Firebase.auth().currentUser.uid
+          }`
+        };
+        fetch(
+          'https://api.stripe.com/v1/charges',
+          {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Authorization': `Basic ${
+                Base64.encode(`${StripePrivateAPI}:`)
+              }`
+            },
+            body: Object.keys(charge).map(
+              key => `${encodeURIComponent(key)}=${
+                encodeURIComponent(charge[key])
+              }`
+            ).join('&')
+          }
+        ).then(response => {
+          return response.json();
+        }).then(json => {
+          if (!json.error) {
+            Database.ref(
+              `prizes/${data.key}`
+            ).update({
+              stripeChargeId: json.id,
+              processed: true,
+              approved: true
+            });
+          } else {
+            Database.ref(
+              `prizes/${data.key}`
+            ).update({
+              processed: true,
+              error: json.error
+            });
+          }
+        });
+
+      // automatically approve free contests
+      } else {
+        Database.ref(`prizes/${data.key}`).update({
+          processed: true,
+          approved: true
+        });
+      }
     }
   });
 

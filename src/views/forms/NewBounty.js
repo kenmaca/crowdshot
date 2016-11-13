@@ -25,6 +25,7 @@ export default class NewBounty extends Component {
     super(props);
     this.state = {
       stripeCardId: null,
+      stripeCustomerId: null,
       bounty: null,
       processing: false
     };
