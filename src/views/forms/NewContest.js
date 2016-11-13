@@ -56,6 +56,11 @@ export default class NewContest extends Component {
               + 'there are entries submitted.'
             } />
           <ChecklistItem
+            onPress={() => Actions.mapMarkerDrop({
+              onSelected: location => this.setState({
+                location: location
+              })
+            })}
             checked={this.state.location}
             photoId='appNewContestLocation'
             title='then tell us where,'
@@ -64,6 +69,11 @@ export default class NewContest extends Component {
               + 'contestants should take photos at.'
             } />
           <ChecklistItem
+            onPress={() => Actions.newReferencePhoto({
+              onTaken: photoId => this.setState({
+                referencePhotoId: photoId
+              })
+            })}
             checked={this.state.referencePhotoId}
             photoId='appNewContestCamera'
             title='.. and finally, a photo.'
