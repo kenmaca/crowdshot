@@ -184,9 +184,11 @@ export default class ContestCard extends Component {
                   </View>
                 </View>
               ): (
-                <Text style={styles.progressUpsellText}>
-                  CONTEST ENDED — VOTE FOR THE WINNERS
-                </Text>
+                <View style={styles.progressUpsellContainer}>
+                  <Text style={styles.progressUpsellText}>
+                    CONTEST ENDED — VOTE FOR THE WINNERS
+                  </Text>
+                </View>
               )
             }
             <Progress.Bar
@@ -308,7 +310,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: Sizes.OuterFrame,
-    backgroundColor: Colors.DarkOverlay
+    backgroundColor: Colors.DarkOverlay,
+    minHeight: Sizes.InnerFrame * 6
   },
 
   progressTextContainer: {

@@ -277,18 +277,20 @@ export default class Main extends Component {
           style={this.getListViewStyle()}
           {...this._panResponder.panHandlers}
           renderRow={
-            (rowData, s, i) => {
+            rowData => {
               return (
                 rowData
                 ? (
                   <View
-                    key={i}
+                    key={Math.random()}
                     style={styles.cardShadow}>
-                    <ContestCard contestId={rowData} />
+                    <ContestCard
+                      key={Math.random()}
+                      contestId={rowData} />
                   </View>
                 ): (
                   <View
-                    key={i}
+                    key={Math.random()}
                     style={styles.cardShadow}>
                     <EmptyContestCard />
                   </View>
