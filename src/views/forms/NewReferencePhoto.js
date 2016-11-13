@@ -15,6 +15,7 @@ import {
 
 // components
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
+import CameraView from '../../components/contestant/CameraView';
 
 export default class NewReferencePhoto extends Component {
   constructor(props) {
@@ -30,7 +31,17 @@ export default class NewReferencePhoto extends Component {
           </Text>
         </View>
         <View style={styles.content}>
+          <CameraView
+            onUploaded={photoId => {
 
+              // outer callback
+              this.props.onTaken && this.props.onTaken(
+                photoId
+              );
+
+              // and out
+              Actions.pop();
+            }} />
         </View>
         <CloseFullscreenButton />
       </View>
@@ -56,5 +67,9 @@ const styles = StyleSheet.create({
   title: {
     color: Colors.Text,
     fontSize: Sizes.H3
+  },
+
+  content: {
+    flex: 1
   }
 });
