@@ -72,7 +72,9 @@ export default class MapMarkerDrop extends Component {
             region={this.state.current}
             onRegionChange={this.onRegionChange}>
             <MapView.Marker
-              coordinate={this.state.current} />
+              coordinate={this.state.current}>
+              <View style={styles.ownMarker}/>
+            </MapView.Marker>
           </MapView>
         </View>
         <CloseFullscreenButton />
@@ -148,5 +150,20 @@ const styles = StyleSheet.create({
     color: Colors.Text,
     fontSize: Sizes.H3,
     fontWeight: '500'
+  },
+
+  ownMarker: {
+    width: 20,
+    height: 20,
+    borderRadius: 20/2,
+    backgroundColor: Colors.Primary,
+    borderColor: Colors.ModalBackground,
+    borderWidth: 3,
+    shadowColor: Colors.DarkOverlay,
+    shadowOpacity: 1,
+    shadowRadius: 3,
+    shadowOffset: {
+      height: 1,
+    },
   }
 });
