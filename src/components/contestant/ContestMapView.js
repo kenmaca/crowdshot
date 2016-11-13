@@ -200,7 +200,7 @@ export default class ContestMapView extends Component {
       this.setState({contests,selected: index,markerPress:true});
 
       this.listview.scrollTo({
-        x:(Sizes.Width - Sizes.OuterFrame * 2)*index ,
+        x:(Sizes.Width - Sizes.OuterFrame * 2 + Sizes.InnerFrame / 2)*index ,
         animated:true
       });
     }
