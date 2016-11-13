@@ -60,18 +60,11 @@ export default class ContestSummaryCard extends Component {
         this.updateProgress();
       }
     });
+  }
 
-    this.entriesListener = this.entriesRef.on('value', data => {
-      if (data.exists()) {
-        let entries = data.val();
-        this.setState({
-          entries: entries,
-          thumbnails: this.state.thumbnails.cloneWithRows(
-            Object.keys(entries)
-          )
-        });
-      }
-    });
+  componentWillUnmount() {
+    this.listener && this.ref.off('value', this.listener);
+    this.progress && clearTimeout(this.progress);
   }
 
   updateProgress() {
@@ -91,13 +84,6 @@ export default class ContestSummaryCard extends Component {
     // refresh
     this.progress = setTimeout(this.updateProgress, 20000);
   }
-
-  componentWillUnmount() {
-    this.listener && this.ref.off('value', this.listener);
-    this.entriesListener && this.entriesRef.off('value', this.entriesListener);
-    this.progress && clearTimeout(this.progress);
-  }
-
 
   render() {
     return (

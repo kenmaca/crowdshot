@@ -11,6 +11,7 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
+import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 import DateFormat from 'dateformat';
 
@@ -62,7 +63,8 @@ export default class ContestDetail extends Component {
       }
     });
 
-    this.entriesListener = this.entriesRef.on('value', data => {
+    this.entriesListener = this.entriesRef.orderByChild("createdBy")
+    .equalTo(Firebase.auth().currentUser.uid).on('value', data => {
       if (data.exists()) {
         let entries = data.val();
         this.setState({

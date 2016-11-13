@@ -8,6 +8,8 @@ import {
 import {
   Sizes, Colors
 } from '../../Const';
+import * as Firebase from 'firebase';
+import Database from '../../utils/Database';
 
 // components
 import MapView from 'react-native-maps';
@@ -20,7 +22,6 @@ const LONGITUDE_DELTA = 0.01;
 export default class ContestMapView extends Component {
   constructor(props) {
     super(props);
-
 
     this.state = {
       selected: 0,
@@ -40,105 +41,81 @@ export default class ContestMapView extends Component {
       }),
     };
 
+    this.ref = Database.ref(
+      `contests`
+    );
+
   }
 
   componentDidMount() {
     let contests = [];
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        contests.push({
-          id: 0,
-          contestId: 'testContest',
-          bounty: 5,
-          selected: false,
-          coordinate: {
-            latitude: position.coords.latitude + 0.002,
-            longitude: position.coords.longitude + 0.004,
-          },
-          description: "Contest 1"
+    this.listener = this.ref.on('value', data => {
+      if (data.exists()){
+        var count = 0
+        Object.entries(data.val()).forEach(([key, m]) => {
+          contests.push({
+            index: count,
+            contestId: key,
+            bounty: m.bounty,
+            selected: false,
+            instructions: m.instructions,
+            coordinate: {
+            //  latitude: position.coords.latitude + 0.002,
+            //  longitude: position.coords.longitude + 0.004,
+            // hack before having coord data in contest
+              latitude: 43.6525 + (Math.random()*2-1) / 100,
+              longitude: -79.381667 + (Math.random()*2-1) / 100,
+            },
+          });
+          count++;
         });
-        contests.push({
-          id: 1,
-          contestId: 'testContest',
-          bounty: 10,
-          selected: false,
-          coordinate: {
-            latitude: position.coords.latitude - 0.002,
-            longitude: position.coords.longitude + 0.002,
-          },
-          description: "Contest 2"
-        });
-        contests.push({
-          id: 2,
-          contestId: 'testContest',
-          bounty: 15,
-          selected: false,
-          coordinate: {
-            latitude: position.coords.latitude + 0.003,
-            longitude: position.coords.longitude + 0.001,
-          },
-          description: "Contest 3"
-        });
-        contests.push({
-          id: 3,
-          contestId: 'testContest',
-          bounty: 15,
-          selected: false,
-          coordinate: {
-            latitude: position.coords.latitude + 0.0035,
-            longitude: position.coords.longitude - 0.001,
-          },
-          description: "Contest 4"
-        });
-        contests.push({
-          id: 4,
-          contestId: 'testContest',
-          bounty: 15,
-          selected: false,
-          coordinate: {
-            latitude: position.coords.latitude - 0.004,
-            longitude: position.coords.longitude + 0.001,
-          },
-          description: "Contest 5"
-        });
-        contests.push({
-          id: 5,
-          contestId: 'testContest',
-          bounty: 15,
-          selected: false,
-          coordinate: {
-            latitude: position.coords.latitude + 0.002,
-            longitude: position.coords.longitude + 0.0015,
-          },
-          description: "Contest 6"
-        });
-
-        const region = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        };
 
         contests[0].selected = true;
 
         this.setState({
-          currentCoord: position.coords,
           contests,
-          region,
           data: this.state.data.cloneWithRows(contests),
-          init: true
         });
 
         this.map.fitToCoordinates(contests.map((m,i) => m.coordinate), {
           edgePadding: {top:50,right:50,bottom:50,left:50},
           animated: true,
         });
+      }
+    });
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const region = {
+    //      latitude: position.coords.latitude,
+    //      longitude: position.coords.longitude
+    //    hack until we have coord in firebase
+          latitude: 43.6525,
+          longitude: -79.381667,
+    //
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
+        };
+
+        this.setState({
+          //    hack until we have coord in firebase
+        //  currentCoord: position.coords,
+          currentCoord: {
+            latitude: 43.6525,
+            longitude: -79.381667,
+          },
+          region,
+          init: true
+        });
       },
       (error) => console.log(JSON.stringify(error)),
         {enableHighAccuracy: false, timeout: 50000, maximumAge: 1000}
     );
+  }
+
+  componentWillUnmount() {
+    this.listener && this.ref.off('value', this.listener);
   }
 
   onRegionChange= (region) => {
@@ -189,7 +166,7 @@ export default class ContestMapView extends Component {
   }
 
   onMarkerPress(marker){
-    let index = marker.id;
+    let index = marker.index;
     let { contests, selected } = this.state;
 
     if (selected != index){
@@ -256,7 +233,7 @@ export default class ContestMapView extends Component {
                 return (
                   <MapView.Marker
                     coordinate={contest.coordinate}
-                    key={contest.id}
+                    key={contest.index}
                     onPress={() => this.onMarkerPress(contest)}>
                     {selected ?
                     <View style={styles.markerWrapper}>
