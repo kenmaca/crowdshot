@@ -146,53 +146,64 @@ export default class ContestMapView extends Component {
   }
 
   onScroll = (event) => {
-    let {contests, currentCoord, selected, region} = this.state
+    let {contests, currentCoord, selected, region, markerPress} = this.state
 
     let index = Math.round(event.nativeEvent.contentOffset.x /
       (Sizes.Width - Sizes.OuterFrame * 2));
 
     if (selected != index){
+      if (!markerPress){
+        if (region.latitude - region.latitudeDelta/2
+              > contests[index].coordinate.latitude
+            || region.latitude + region.latitudeDelta/2
+              < contests[index].coordinate.latitude
+            || region.longitude - region.longitudeDelta/2
+              > contests[index].coordinate.longitude
+            || region.longitude + region.longitudeDelta/2
+              < contests[index].coordinate.longitude
+            || region.latitude - region.latitudeDelta/2
+              > currentCoord.latitude
+            || region.latitude + region.latitudeDelta/2
+              < currentCoord.latitude
+            || region.longitude - region.longitudeDelta/2
+              > currentCoord.longitude
+            || region.longitude + region.longitudeDelta/2
+              < currentCoord.longitude){
+          this.map.fitToCoordinates([currentCoord, contests[index].coordinate], {
+            edgePadding: {top:50,right:50,bottom:50,left:50},
+            animated: true,
+          });
+        }
 
-      if (region.latitude - region.latitudeDelta/2
-            > contests[index].coordinate.latitude
-          || region.latitude + region.latitudeDelta/2
-            < contests[index].coordinate.latitude
-          || region.longitude - region.longitudeDelta/2
-            > contests[index].coordinate.longitude
-          || region.longitude + region.longitudeDelta/2
-            < contests[index].coordinate.longitude
-          || region.latitude - region.latitudeDelta/2
-            > currentCoord.latitude
-          || region.latitude + region.latitudeDelta/2
-            < currentCoord.latitude
-          || region.longitude - region.longitudeDelta/2
-            > currentCoord.longitude
-          || region.longitude + region.longitudeDelta/2
-            < currentCoord.longitude){
-        this.map.fitToCoordinates([currentCoord, contests[index].coordinate], {
-          edgePadding: {top:50,right:50,bottom:50,left:50},
-          animated: true,
+        contests.forEach(contest => {
+          contest.selected = false;
         });
+        contests[index].selected = true;
+        this.setState({contests,selected: index})
       }
+    } else {
+      this.setState({markerPress:false})
+    }
 
+
+  }
+
+  onMarkerPress(marker){
+    let index = marker.id;
+    let { contests, selected } = this.state;
+
+    if (selected != index){
       contests.forEach(contest => {
         contest.selected = false;
       });
       contests[index].selected = true;
-      this.setState({contests,selected: index})
+      this.setState({contests,selected: index,markerPress:true});
+
+      this.listview.scrollTo({
+        x:(Sizes.Width - Sizes.OuterFrame * 2)*index ,
+        animated:true
+      });
     }
-  }
-
-  onMarkerPress(marker){
-    console.log("onMarkerPress,",marker);
-    let index = marker.id;
-    let { contests } = this.state;
-
-    contests.forEach(contest => {
-      contest.selected = false;
-    });
-    contests[index].selected = true;
-    this.setState({contests,selected: index})
   }
 
 
