@@ -171,7 +171,9 @@ export default class ContestDetail extends Component {
               <InputSectionHeader label='Your submission' />
               <Photo
                 photoId={this.state.photoId}
-                style={styles.submittedPhoto}/>
+                style={styles.submittedPhoto}
+            //    resizeMode='contain'
+                />
             </View>
             }
             <View style={styles.instructionContainer}>
@@ -279,9 +281,9 @@ const styles = StyleSheet.create({
   },
 
   submittedPhoto: {
-    height: (Sizes.Width-Sizes.InnerFrame*2)*0.6,
-    width: Sizes.Width-Sizes.InnerFrame*2,
+    height: Sizes.Width*0.8,
     margin: Sizes.InnerFrame,
+    backgroundColor: Colors.ModalBackground
   },
 
   buttonContainer: {

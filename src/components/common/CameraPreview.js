@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
     width: Sizes.Width * 0.9,
-    height: Sizes.Height * 0.7,
+    height: Sizes.Width * 0.9 * 4 / 3,
     borderRadius: 5,
     padding: Sizes.InnerFrame,
     flexDirection: 'row',

@@ -93,27 +93,27 @@ export default class CameraView extends Component {
           defaultOnFocusComponent={true}
           flashMode={this.state.flashMode}
           onFocusChanged={() => this.handleFocusChanged}>
-          <View style={styles.upperContainer}></View>
-          <View style={styles.lowerContainer}>
-            <TouchableOpacity
-              onPress={() => this.toggleFlash()}>
-              <Icon
-                size={40}
-                name={
-                  this.state.flashMode == Camera.constants.FlashMode.off
-                    ? 'flash-off'
-                  : this.state.flashMode == Camera.constants.FlashMode.on
-                    ? 'flash-on'
-                  : 'flash-auto'}
-                color={Colors.Text} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.shutter()}>
-              <View style={styles.shutter}/>
-            </TouchableOpacity>
-            <View style={styles.placeHolder}/>
-          </View>
+
         </Camera>
+        <View style={styles.lowerContainer}>
+          <TouchableOpacity
+            onPress={() => this.toggleFlash()}>
+            <Icon
+              size={40}
+              name={
+                this.state.flashMode == Camera.constants.FlashMode.off
+                  ? 'flash-off'
+                : this.state.flashMode == Camera.constants.FlashMode.on
+                  ? 'flash-on'
+                : 'flash-auto'}
+              color={Colors.Text} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.shutter()}>
+            <View style={styles.shutter}/>
+          </TouchableOpacity>
+          <View style={styles.placeHolder}/>
+        </View>
       </View>
     );
   }
@@ -122,12 +122,15 @@ export default class CameraView extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
+    backgroundColor: Colors.Primary
   },
 
   camera: {
     flex: 1,
-    alignSelf: 'stretch',
+    alignSelf: 'flex-start',
+    width: Sizes.Width,
+    height: Sizes.Width*4/3,
     justifyContent: 'flex-end',
     padding: Sizes.OuterFrame,
   },
@@ -141,7 +144,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginHorizontal: Sizes.OuterFrame
+    paddingHorizontal: Sizes.OuterFrame,
+    backgroundColor: 'black'
   },
 
   shutter: {
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Transparent,
     borderColor: Colors.Text,
     borderWidth: 4,
-    marginBottom: Sizes.InnerFrame
+    margin: Sizes.InnerFrame
   },
 
   placeHolder: {
