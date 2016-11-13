@@ -183,6 +183,18 @@ export default class ContestMapView extends Component {
     }
   }
 
+  onMarkerPress(marker){
+    console.log("onMarkerPress,",marker);
+    let index = marker.id;
+    let { contests } = this.state;
+
+    contests.forEach(contest => {
+      contest.selected = false;
+    });
+    contests[index].selected = true;
+    this.setState({contests,selected: index})
+  }
+
 
   render() {
     const {
@@ -233,7 +245,8 @@ export default class ContestMapView extends Component {
                 return (
                   <MapView.Marker
                     coordinate={contest.coordinate}
-                    key={contest.id}>
+                    key={contest.id}
+                    onPress={() => this.onMarkerPress(contest)}>
                     {selected ?
                     <View style={styles.markerWrapper}>
                       <View style={[styles.marker, styles.markerSelected]}>

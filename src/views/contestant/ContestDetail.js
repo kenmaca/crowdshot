@@ -188,7 +188,7 @@ export default class ContestDetail extends Component {
         <Button
           color={Colors.Primary}
           onPress={() => this.setState({cameraVisible:true})}
-          label={"Participate"}
+          label={this.state.photoId ? "Shoot another one" : "Participate"}
           squareBorders={10}
           style={styles.buttonStyle}>
         </Button>
