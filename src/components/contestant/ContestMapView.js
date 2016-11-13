@@ -50,7 +50,7 @@ export default class ContestMapView extends Component {
         contests.push({
           id: 0,
           contestId: 'testContest',
-          amount: 5,
+          bounty: 5,
           selected: false,
           coordinate: {
             latitude: position.coords.latitude + 0.002,
@@ -61,7 +61,7 @@ export default class ContestMapView extends Component {
         contests.push({
           id: 1,
           contestId: 'testContest',
-          amount: 10,
+          bounty: 10,
           selected: false,
           coordinate: {
             latitude: position.coords.latitude - 0.002,
@@ -72,7 +72,7 @@ export default class ContestMapView extends Component {
         contests.push({
           id: 2,
           contestId: 'testContest',
-          amount: 15,
+          bounty: 15,
           selected: false,
           coordinate: {
             latitude: position.coords.latitude + 0.003,
@@ -83,7 +83,7 @@ export default class ContestMapView extends Component {
         contests.push({
           id: 3,
           contestId: 'testContest',
-          amount: 15,
+          bounty: 15,
           selected: false,
           coordinate: {
             latitude: position.coords.latitude + 0.0035,
@@ -94,7 +94,7 @@ export default class ContestMapView extends Component {
         contests.push({
           id: 4,
           contestId: 'testContest',
-          amount: 15,
+          bounty: 15,
           selected: false,
           coordinate: {
             latitude: position.coords.latitude - 0.004,
@@ -105,7 +105,7 @@ export default class ContestMapView extends Component {
         contests.push({
           id: 5,
           contestId: 'testContest',
-          amount: 15,
+          bounty: 15,
           selected: false,
           coordinate: {
             latitude: position.coords.latitude + 0.002,
@@ -250,7 +250,7 @@ export default class ContestMapView extends Component {
               {contests.map((contest, i) => {
                 const {
                   selected,
-                  amount,
+                  bounty,
                 } = contest
 
                 return (
@@ -262,7 +262,7 @@ export default class ContestMapView extends Component {
                     <View style={styles.markerWrapper}>
                       <View style={[styles.marker, styles.markerSelected]}>
                         <Text style={styles.selectedText}>
-                          {"$" + amount}
+                          {"$" + bounty}
                         </Text>
                       </View>
                       <View style={[styles.markerArrow,styles.selectedArrow]}/>
@@ -271,7 +271,7 @@ export default class ContestMapView extends Component {
                     <View style={styles.markerWrapper}>
                       <View style={styles.marker}>
                         <Text style={styles.text}>
-                          {"$" + amount}
+                          {"$" + bounty}
                         </Text>
                       </View>
                       <View style={styles.markerArrow}/>
