@@ -34,6 +34,7 @@ export default class ContestDetail extends Component {
       currentTime: Date.now(),
       cameraVisible: false,
       progress: 0,
+      preview: null,
       entries: {},
       thumbnails: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
@@ -165,6 +166,14 @@ export default class ContestDetail extends Component {
                 } />
             </View>
             <Divider style={styles.divider} />
+            {this.state.photoId &&
+            <View style={styles.instructionContainer}>
+              <InputSectionHeader label='Your submission' />
+              <Photo
+                photoId={this.state.photoId}
+                style={styles.submittedPhoto}/>
+            </View>
+            }
             <View style={styles.instructionContainer}>
               <InputSectionHeader label='Instructions' />
               <Text style={styles.instructions}>
@@ -185,7 +194,14 @@ export default class ContestDetail extends Component {
           transparent
           animationType='fade'
           visible={this.state.cameraVisible}>
-          <CameraView onUploaded={() => this.setState({cameraVisible:false})}/>
+          <CameraView
+            onUploaded={(photoId) => {
+              this.setState({
+                cameraVisible:false,
+                photoId
+              });
+            }}
+            />
           <CloseFullscreenButton
             action={() => this.setState({cameraVisible:false})}/>
         </Modal>
@@ -259,6 +275,11 @@ const styles = StyleSheet.create({
     marginBottom: Sizes.OuterFrame * 3,
     alignItems: 'flex-start',
     justifyContent: 'center'
+  },
+
+  submittedPhoto: {
+    height: (Sizes.Width-Sizes.InnerFrame)*0.6,
+    margin: Sizes.InnerFrame,
   },
 
   buttonContainer: {

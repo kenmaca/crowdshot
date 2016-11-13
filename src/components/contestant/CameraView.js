@@ -50,7 +50,6 @@ export default class CameraView extends Component {
           flashMode: Camera.constants.FlashMode.off
         });
     }
-    console.log("flashmode",this.state.flashMode);
   }
 
   handleFocusChanged(){

@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    height: 110,
+    height: Sizes.Height*0.25 - 45,
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
     alignSelf: 'stretch',
