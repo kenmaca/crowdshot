@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, Modal
 } from 'react-native';
 import {
   Actions
@@ -10,6 +10,8 @@ import {
 import {
   Colors, Sizes
 } from '../../Const';
+import * as Firebase from 'firebase';
+import Database from '../../utils/Database';
 
 // components
 import DatePicker from '../../components/common/DatePicker';
@@ -17,20 +19,85 @@ import Button from '../../components/common/Button';
 import Payment from '../../components/common/Payment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ChecklistItem from '../../components/lists/ChecklistItem';
+import ProgressBlocker from '../../components/common/ProgressBlocker';
 
 export default class NewContest extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stripeChargeId: null,
+      prizeId: null,
       location: null,
-      referencePhotoId: null
+      referencePhotoId: null,
+      processing: false
     };
+
+    this.submit = this.submit.bind(this);
+  }
+
+  submit() {
+
+    // block view as we setup the contest
+    this.setState({
+      processing: true
+    });
+
+    Database.ref(
+      `prizes/${this.state.prizeId}`
+    ).once('value', data => {
+      let prize = data.val();
+      let dateCreated = Date.now();
+
+      // now create it
+      let contestId = Database.ref('contests').push({
+
+        // stripe requires cents to be stored
+        bounty: prize.value / 100,
+        dateCreated: dateCreated,
+
+        // default a hour duration
+        endDate: dateCreated + 360000,
+
+        // TODO: add in Photo upload
+        instructions: 'Not implemented.',
+        prizes: {
+          [this.state.prizeId]: true
+        },
+        referencePhotoId: this.state.referencePhotoId
+      }).key;
+
+      // TODO: use geofire to add location
+
+      // add to owner's list
+      Database.ref(
+        `profiles/${
+          Firebase.auth().currentUser.uid
+        }/contests/${
+          contestId
+        }`
+      ).set(true);
+
+      // and back out
+      // TODO: send directly to the card expanded
+      this.setState({
+        prizeId: null,
+        location: null,
+        referencePhotoId: null,
+        processing: false
+      });
+      Actions.mainMain();
+    });
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <Modal
+          transparent
+          visible={this.state.processing}
+          animationType='slide'>
+          <ProgressBlocker
+            message='Setting up your Contest..' />
+        </Modal>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>
             Let's setup your contest
@@ -43,11 +110,11 @@ export default class NewContest extends Component {
         <View style={styles.checklist}>
           <ChecklistItem
             onPress={() => Actions.newBounty({
-              onCharged: stripeChargeId => this.setState({
-                stripeChargeId: stripeChargeId
+              onCharged: prizeId => this.setState({
+                prizeId: prizeId
               })
             })}
-            checked={this.state.stripeChargeId}
+            checked={this.state.prizeId}
             photoId='appNewContestBounty'
             title='Set the bounty,'
             subtitle={
@@ -56,6 +123,11 @@ export default class NewContest extends Component {
               + 'there are entries submitted.'
             } />
           <ChecklistItem
+            onPress={() => Actions.mapMarkerDrop({
+              onSelected: location => this.setState({
+                location: location
+              })
+            })}
             checked={this.state.location}
             photoId='appNewContestLocation'
             title='then tell us where,'
@@ -64,6 +136,11 @@ export default class NewContest extends Component {
               + 'contestants should take photos at.'
             } />
           <ChecklistItem
+            onPress={() => Actions.newReferencePhoto({
+              onTaken: photoId => this.setState({
+                referencePhotoId: photoId
+              })
+            })}
             checked={this.state.referencePhotoId}
             photoId='appNewContestCamera'
             title='.. and finally, a photo.'
@@ -75,15 +152,13 @@ export default class NewContest extends Component {
         </View>
         <Button
           isDisabled={
-            !this.state.stripeChargeId
-            || !this.state.Location
+            !this.state.prizeId
+            || !this.state.location
             || !this.state.referencePhotoId
           }
           color={Colors.Primary}
           label='Start a new Photo Contest'
-          onPress={() => Actions.modal({
-            view: <Payment />
-          })} />
+          onPress={this.submit} />
       </View>
     );
   }

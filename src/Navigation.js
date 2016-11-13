@@ -26,6 +26,8 @@ import Settings from './views/main/Settings';
 import Payment from './views/forms/Payment';
 import NewPayment from './views/forms/NewPayment';
 import NewBounty from './views/forms/NewBounty';
+import MapMarkerDrop from './views/forms/MapMarkerDrop';
+import NewReferencePhoto from './views/forms/NewReferencePhoto';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -81,6 +83,12 @@ export default class Navigation extends Component {
             <Scene
               key='newBounty'
               component={NewBounty} />
+            <Scene
+              key='mapMarkerDrop'
+              component={MapMarkerDrop} />
+            <Scene
+              key='newReferencePhoto'
+              component={NewReferencePhoto} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}
