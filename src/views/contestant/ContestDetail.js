@@ -180,6 +180,7 @@ export default class ContestDetail extends Component {
                 {this.state.instructions}
               </Text>
             </View>
+            <View style={styles.bottomPadding}/>
           </ScrollView>
         </View>
         <Button
@@ -224,7 +225,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
     alignSelf: 'stretch',
-    padding: Sizes.InnerFrame
+    padding: Sizes.InnerFrame,
   },
 
   body: {
@@ -247,7 +248,7 @@ const styles = StyleSheet.create({
 
   detailContainer: {
     flex: 1,
-    paddingBottom: Sizes.OuterFrame * 10,
+    paddingBottom: Sizes.OuterFrame,
   },
 
   summary: {
@@ -278,7 +279,8 @@ const styles = StyleSheet.create({
   },
 
   submittedPhoto: {
-    height: (Sizes.Width-Sizes.InnerFrame)*0.6,
+    height: (Sizes.Width-Sizes.InnerFrame*2)*0.6,
+    width: Sizes.Width-Sizes.InnerFrame*2,
     margin: Sizes.InnerFrame,
   },
 
@@ -312,5 +314,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'stretch',
     alignSelf: 'stretch'
+  },
+
+  bottomPadding: {
+    paddingBottom: Sizes.OuterFrame
   }
 });
