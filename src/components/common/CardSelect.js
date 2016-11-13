@@ -14,6 +14,7 @@ import {
 // components
 import Field from './Field';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import CircleIcon from './CircleIcon';
 
 export default class CardSelect extends Component {
   constructor(props) {
@@ -77,6 +78,12 @@ export default class CardSelect extends Component {
                 <Text style={styles.textContainer}>
                   Select a Payment Method
                 </Text>
+                <CircleIcon
+                  style={styles.cardType}
+                  size={18}
+                  color={Colors.ModalBackground}
+                  checkColor={Colors.AlternateText}
+                  icon='arrow-forward' />
               </View>
             )
           }

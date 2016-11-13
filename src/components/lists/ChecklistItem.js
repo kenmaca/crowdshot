@@ -33,7 +33,11 @@ export default class ChecklistItem extends Component {
               ? (
                 <CircleIcon size={18} />
               ): (
-                <View />
+                <CircleIcon
+                  size={18}
+                  color={Colors.ModalBackground}
+                  checkColor={Colors.AlternateText}
+                  icon='arrow-forward' />
               )
             }
           </View>
