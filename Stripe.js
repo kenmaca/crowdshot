@@ -31,7 +31,11 @@ firebase.auth().signInWithEmailAndPassword(
         user.displayName
       }; Provisioning Stripe Customer..`);
       let customer = {
-        description: user.displayName,
+        description: `${
+          user.displayName
+        } (${
+          data.key
+        })`,
         email: user.email
       };
       fetch(

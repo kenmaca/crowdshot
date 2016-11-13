@@ -25,6 +25,7 @@ import Chat from './views/main/Chat';
 import Settings from './views/main/Settings';
 import Payment from './views/forms/Payment';
 import NewPayment from './views/forms/NewPayment';
+import NewBounty from './views/forms/NewBounty';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -77,6 +78,9 @@ export default class Navigation extends Component {
             <Scene
               key='newPayment'
               component={NewPayment} />
+            <Scene
+              key='newBounty'
+              component={NewBounty} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}
