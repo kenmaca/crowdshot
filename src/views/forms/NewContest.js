@@ -22,7 +22,7 @@ export default class NewContest extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stripeChargeId: null,
+      prizeId: null,
       location: null,
       referencePhotoId: null
     };
@@ -43,11 +43,11 @@ export default class NewContest extends Component {
         <View style={styles.checklist}>
           <ChecklistItem
             onPress={() => Actions.newBounty({
-              onCharged: stripeChargeId => this.setState({
-                stripeChargeId: stripeChargeId
+              onCharged: prizeId => this.setState({
+                prizeId: prizeId
               })
             })}
-            checked={this.state.stripeChargeId}
+            checked={this.state.prizeId}
             photoId='appNewContestBounty'
             title='Set the bounty,'
             subtitle={
@@ -75,7 +75,7 @@ export default class NewContest extends Component {
         </View>
         <Button
           isDisabled={
-            !this.state.stripeChargeId
+            !this.state.prizeId
             || !this.state.Location
             || !this.state.referencePhotoId
           }

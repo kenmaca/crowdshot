@@ -20,6 +20,65 @@ firebase.auth().signInWithEmailAndPassword(
   console.log(error);
 }).then(() => {
 
+  // charge prizes
+  console.log('Starting Prize Charging Listener..');
+  Database.ref('prizes').on('child_added', data => {
+    let prize = data.val();
+
+    // if not processed
+    if (!prize.processed) {
+      console.log(`New Prize found: ${
+        data.key
+      }; Attempting to charge and approve prize..`);
+      let charge = {
+        amount: prize.value,
+        currency: 'cad',
+        customer: prize.stripeCustomerId,
+        source: prize.stripeCardId,
+        description: `Bounty for Contest Owner ${
+          Firebase.auth().currentUser.uid
+        }`
+      };
+      fetch(
+        'https://api.stripe.com/v1/charges',
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Basic ${
+              Base64.encode(`${StripePrivateAPI}:`)
+            }`
+          },
+          body: Object.keys(charge).map(
+            key => `${encodeURIComponent(key)}=${
+              encodeURIComponent(charge[key])
+            }`
+          ).join('&')
+        }
+      ).then(response => {
+        return response.json();
+      }).then(json => {
+        if (!json.error) {
+          Database.ref(
+            `prizes/${data.key}`
+          ).update({
+            stripeChargeId: json.id,
+            processed: true,
+            approved: true
+          });
+        } else {
+          Database.ref(
+            `prizes/${data.key}`
+          ).update({
+            processed: true,
+            error: json.error
+          });
+        }
+      });
+    }
+  });
+
   // add Stripe customers to new profiles
   console.log('Starting New User Listener..');
   Database.ref('profiles').on('child_added', data => {
