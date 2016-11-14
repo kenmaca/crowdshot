@@ -16,7 +16,6 @@ import Database from '../../utils/Database';
 // components
 import DatePicker from '../../components/common/DatePicker';
 import Button from '../../components/common/Button';
-import Payment from '../../components/common/Payment';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ChecklistItem from '../../components/lists/ChecklistItem';
 import ProgressBlocker from '../../components/common/ProgressBlocker';
