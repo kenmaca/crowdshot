@@ -15,7 +15,7 @@ import {
 
 // components
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
-import CameraView from '../../components/contestant/CameraView';
+import CameraView from '../../components/common/CameraView';
 
 export default class NewReferencePhoto extends Component {
   constructor(props) {

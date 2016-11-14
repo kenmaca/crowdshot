@@ -24,7 +24,7 @@ import OutlineText from '../../components/common/OutlineText';
 import CircleIconInfo from '../../components/common/CircleIconInfo';
 import CircleIcon from '../../components/common/CircleIcon';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
-import CameraView from '../../components/contestant/CameraView';
+import CameraView from '../../components/common/CameraView';
 import * as Progress from 'react-native-progress';
 
 export default class ContestDetail extends Component {
