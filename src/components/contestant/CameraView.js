@@ -145,17 +145,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: Sizes.OuterFrame,
-    backgroundColor: 'black'
+    backgroundColor: 'black',
   },
 
   shutter: {
-    width: 56,
-    height: 56,
-    borderRadius: 56/2,
+    width: 60,
+    height: 60,
+    borderRadius: 60/2,
     backgroundColor: Colors.Transparent,
     borderColor: Colors.Text,
     borderWidth: 4,
-    margin: Sizes.InnerFrame
+    margin: Sizes.OuterFrame
   },
 
   placeHolder: {
