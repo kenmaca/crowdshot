@@ -78,7 +78,7 @@ export default class ContestCard extends Component {
 
     // clear previous, just in case this was an interrupt
     this.progress && clearTimeout(this.progress);
-    let duration = parseInt(endDate || this.state.endDate) 
+    let duration = parseInt(endDate || this.state.endDate)
       - parseInt(this.state.dateCreated);
     let elapsed = Date.now() - parseInt(this.state.dateCreated);
     this.setState({
@@ -168,7 +168,7 @@ export default class ContestCard extends Component {
             }
             style={styles.progressContainer}>
             {
-              this.state.progress < 1
+              this.state.progress < 1 && this.state.progress != 0
               ? (
                 <View style={styles.progressTextContainer}>
                   <Text style={styles.progressTextEnd}>
@@ -184,10 +184,18 @@ export default class ContestCard extends Component {
                       icon='attach-money' />
                   </View>
                 </View>
-              ): (
+              ): this.state.progress > 0
+              ? (
                 <View style={styles.progressUpsellContainer}>
                   <Text style={styles.progressUpsellText}>
                     CONTEST ENDED — VOTE FOR THE WINNERS
+                  </Text>
+                </View>
+              )
+              : (
+                <View style={styles.progressUpsellContainer}>
+                  <Text style={styles.progressUpsellText}>
+                    LOADING
                   </Text>
                 </View>
               )
