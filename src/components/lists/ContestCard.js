@@ -168,7 +168,7 @@ export default class ContestCard extends Component {
             }
             style={styles.progressContainer}>
             {
-              this.state.progress < 1 && this.state.progress != 0
+              this.state.progress < 1 && this.state.progress > 0
               ? (
                 <View style={styles.progressTextContainer}>
                   <Text style={styles.progressTextEnd}>
