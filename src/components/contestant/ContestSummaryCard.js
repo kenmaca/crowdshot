@@ -11,6 +11,7 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
+import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 import DateFormat from 'dateformat';
 
@@ -20,7 +21,7 @@ import InputSectionHeader from '../common/InputSectionHeader';
 import Photo from '../common/Photo';
 import Divider from '../common/Divider';
 import OutlineText from '../common/OutlineText';
-import CircleIconInfo from '../common/CircleIconInfo';
+import CircleIcon from '../common/CircleIcon';
 import ContestThumbnail from '../lists/ContestThumbnail';
 import GroupAvatar from '../profiles/GroupAvatar';
 import * as Progress from 'react-native-progress';
@@ -60,10 +61,18 @@ export default class ContestSummaryCard extends Component {
         this.updateProgress(data.val().endDate);
       }
     });
+
+    this.entriesListener = this.entriesRef.orderByChild("createdBy")
+      .equalTo(Firebase.auth().currentUser.uid).on('value', data => {
+      if (data.exists()) {
+        this.setState({submitted:true})
+      }
+    });
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
+    this.entriesListener && this.entriesRef.off('value', this.entriesListener);
     this.progress && clearTimeout(this.progress);
   }
 
@@ -108,6 +117,9 @@ export default class ContestSummaryCard extends Component {
                   ? Object.keys(this.state.prizes).length
                   : 'Photo'
                 }`} />
+            {this.state.submitted &&
+            <CircleIcon/>
+            }
           </Photo>
           <View style={styles.progressContainer}>
             <View style={styles.progressTextContainer}>
@@ -175,7 +187,7 @@ const styles = StyleSheet.create({
   header: {
     height: Sizes.Height*0.25 - 45,
     alignItems: 'flex-end',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignSelf: 'stretch',
     padding: Sizes.InnerFrame/2
   },
