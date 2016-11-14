@@ -217,6 +217,11 @@ export default class ContestDetail extends Component {
                 thumbnails: this.state.thumbnails.cloneWithRows([photoId]),
                 photoId,
               });
+              let entryId = this.entriesRef.push({
+                createdBy: Firebase.auth().currentUser.uid,
+                dateCreated: Date.now(),
+                photoId: photoId,
+              }).key
             }}
             />
           <CloseFullscreenButton
