@@ -157,12 +157,16 @@ export default class Main extends Component {
   componentDidMount() {
 
     // data
-    this.listener = this.ref.on('child_added', data => {
-      let rawData = [data.key, ...this.state.rawData];
-      this.setState({
-        rawData: rawData,
-        data: this.state.data.cloneWithRows(rawData)
-      });
+    this.listener = this.ref.on('value', data => {
+      if (data.exists()) {
+        let rawData = [...Object.keys(data.val()), false];
+        this.setState({
+          rawData: rawData,
+          data: new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 !== r2
+          }).cloneWithRows(rawData)
+        });
+      }
     });
 
     // profile
@@ -176,7 +180,7 @@ export default class Main extends Component {
   }
 
   componentWillUnmount() {
-    this.listener && this.ref.off('child_added', this.listener);
+    this.listener && this.ref.off('value', this.listener);
   }
 
   getListViewStyle() {
@@ -282,15 +286,14 @@ export default class Main extends Component {
                 rowData
                 ? (
                   <View
-                    key={Math.random()}
+                    key={rowData}
                     style={styles.cardShadow}>
                     <ContestCard
-                      key={Math.random()}
                       contestId={rowData} />
                   </View>
                 ): (
                   <View
-                    key={Math.random()}
+                    key={'emptyCard'}
                     style={styles.cardShadow}>
                     <EmptyContestCard />
                   </View>
