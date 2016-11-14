@@ -57,7 +57,7 @@ export default class ContestSummaryCard extends Component {
         });
 
         // animated progress
-        this.updateProgress();
+        this.updateProgress(data.val().endDate);
       }
     });
   }
@@ -67,8 +67,9 @@ export default class ContestSummaryCard extends Component {
     this.progress && clearTimeout(this.progress);
   }
 
-  updateProgress() {
-    let duration = parseInt(this.state.endDate) - parseInt(this.state.dateCreated);
+  updateProgress(endDate) {
+    let duration = parseInt(endDate || this.state.endDate)
+      - parseInt(this.state.dateCreated);
     let elapsed = Date.now() - parseInt(this.state.dateCreated);
     this.setState({
       progress: (
