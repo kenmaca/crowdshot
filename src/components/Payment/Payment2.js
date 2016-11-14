@@ -12,7 +12,6 @@ import {
 import Button from '../../components/common/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Divider from '../../components/common/Divider';
-import CCInput from 'react-native-credit-card-input';
 
 export default class Payment2 extends Component {
   constructor(props) {
