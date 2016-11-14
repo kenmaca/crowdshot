@@ -180,7 +180,7 @@ export default class ContestDetail extends Component {
                 renderRow={data => {
                   return (
                     <TouchableOpacity
-                      onPress={() => console.log("contest entry, ",data)}>
+                      onPress={() => this.setState({preview:data})}>
                       <Photo
                         photoId={data}
                         style={styles.thumbnails}/>
@@ -221,6 +221,20 @@ export default class ContestDetail extends Component {
             />
           <CloseFullscreenButton
             action={() => this.setState({cameraVisible:false})}/>
+        </Modal>
+        <Modal
+          transparent
+          animationType='fade'
+          visible={this.state.preview != null}>
+          <View style={styles.previewContainer}>
+            <Photo
+              photoId={this.state.preview}
+              style={styles.preview}
+              resizeMode='cover'
+              />
+            <CloseFullscreenButton
+              action={() => this.setState({preview:null})}/>
+          </View>
         </Modal>
       </View>
     );
@@ -325,6 +339,21 @@ const styles = StyleSheet.create({
     marginRight: Sizes.InnerFrame/3,
     marginBottom: Sizes.InnerFrame/3,
     backgroundColor: Colors.Overlay
+  },
+
+  previewContainer: {
+    height: Sizes.Height,
+    width: Sizes.Width,
+    backgroundColor: Colors.DarkOverlay,
+    alignSelf: 'center',
+    justifyContent: 'center'
+  },
+
+  preview: {
+    marginHorizontal: Sizes.InnerFrame,
+    width: Sizes.Width * 0.9,
+    height: Sizes.Width * 0.9 * 4 / 3,
+    backgroundColor: Colors.Transparent
   },
 
   buttonStyle: {
