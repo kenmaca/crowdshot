@@ -63,15 +63,17 @@ export default class ContestDetail extends Component {
       }
     });
 
-    this.entriesListener = this.entriesRef.orderByChild("createdBy")
-    .equalTo(Firebase.auth().currentUser.uid).on('value', data => {
+    this.entriesListener = this.entriesRef.on('value', data => {
       if (data.exists()) {
-        let entries = data.val();
+        let entryPhotos = [];
+        Object.entries(data.val()).forEach(([key, m]) => {
+          if (m.createdBy == Firebase.auth().currentUser.uid){
+            entryPhotos.push(m.photoId);
+          }
+        });
         this.setState({
-          entries: entries,
-      //    thumbnails: this.state.thumbnails.cloneWithRows(
-    //        Object.keys(entries)
-    //      )
+          entries: data.val(),
+          thumbnails: this.state.thumbnails.cloneWithRows(entryPhotos)
         });
       }
     });
@@ -201,7 +203,8 @@ export default class ContestDetail extends Component {
         <Button
           color={Colors.Primary}
           onPress={() => this.setState({cameraVisible:true})}
-          label={this.state.photoId ? "Shoot another one" : "Participate"}
+          label={this.state.thumbnails.getRowCount() > 0
+            ? "Shoot another one" : "Participate"}
           squareBorders={10}
           style={styles.buttonStyle}>
         </Button>
@@ -214,8 +217,6 @@ export default class ContestDetail extends Component {
             onUploaded={(photoId) => {
               this.setState({
                 cameraVisible:false,
-                thumbnails: this.state.thumbnails.cloneWithRows([photoId]),
-                photoId,
               });
               let entryId = this.entriesRef.push({
                 createdBy: Firebase.auth().currentUser.uid,

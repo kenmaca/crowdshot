@@ -100,7 +100,7 @@ export default class CameraPreview extends Component {
                       snapshot: snapshot.bytesTransferred,
                       progress: (
                         (Number(snapshot.bytesTransferred) /
-                        Number(snapshot.totalBytes)) || 0
+                        Number(snapshot.totalBytes)) + 0.05 || 0
                       )
                     });
                   }, err => {
@@ -140,7 +140,7 @@ export default class CameraPreview extends Component {
             borderWidth={0}
             color={Colors.Primary}
             progress={this.state.progress}
-            width={Sizes.Width * 0.9 - 8} />
+            width={Sizes.Width * 0.9} />
         </BlurView>
       </View>
     );
