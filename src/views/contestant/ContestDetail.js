@@ -59,7 +59,7 @@ export default class ContestDetail extends Component {
           ...data.val()
         });
 
-        this.updateProgress();
+        this.updateProgress(data.val().endDate);
       }
     });
 
@@ -79,11 +79,11 @@ export default class ContestDetail extends Component {
     });
   }
 
-  updateProgress() {
-
+  updateProgress(endDate) {
     // clear previous, just in case this was an interrupt
     this.progress && clearTimeout(this.progress);
-    let duration = parseInt(this.state.endDate) - parseInt(this.state.dateCreated);
+    let duration = parseInt(endDate || this.state.endDate)
+      - parseInt(this.state.dateCreated);
     let elapsed = Date.now() - parseInt(this.state.dateCreated);
     this.setState({
       progress: (
@@ -206,6 +206,8 @@ export default class ContestDetail extends Component {
           label={this.state.thumbnails.getRowCount() > 0
             ? "Shoot another one" : "Participate"}
           squareBorders={10}
+          isDisabled={this.state.progress >= 1}
+          disabledColor={Colors.MediumDarkOverlay}
           style={styles.buttonStyle}>
         </Button>
         <CloseFullscreenButton/>
@@ -366,7 +368,7 @@ const styles = StyleSheet.create({
     height: 45,
     justifyContent: 'center',
     alignItems: 'stretch',
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
   },
 
   bottomPadding: {
