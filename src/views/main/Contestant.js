@@ -13,7 +13,7 @@ import {
 } from '../../Const';
 import * as Firebase from 'firebase';
 
-import CameraView from '../../components/contestant/CameraView';
+import CameraView from '../../components/common/CameraView';
 import ContestMapView from '../../components/contestant/ContestMapView';
 
 export default class Contestant extends Component {

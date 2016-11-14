@@ -11,6 +11,7 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
+import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 import DateFormat from 'dateformat';
 
@@ -23,7 +24,7 @@ import OutlineText from '../../components/common/OutlineText';
 import CircleIconInfo from '../../components/common/CircleIconInfo';
 import CircleIcon from '../../components/common/CircleIcon';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
-import CameraView from '../../components/contestant/CameraView';
+import CameraView from '../../components/common/CameraView';
 import * as Progress from 'react-native-progress';
 
 export default class ContestDetail extends Component {
@@ -64,12 +65,15 @@ export default class ContestDetail extends Component {
 
     this.entriesListener = this.entriesRef.on('value', data => {
       if (data.exists()) {
-        let entries = data.val();
+        let entryPhotos = [];
+        Object.entries(data.val()).forEach(([key, m]) => {
+          if (m.createdBy == Firebase.auth().currentUser.uid){
+            entryPhotos.push(m.photoId);
+          }
+        });
         this.setState({
-          entries: entries,
-          thumbnails: this.state.thumbnails.cloneWithRows(
-            Object.keys(entries)
-          )
+          entries: data.val(),
+          thumbnails: this.state.thumbnails.cloneWithRows(entryPhotos)
         });
       }
     });
@@ -166,14 +170,25 @@ export default class ContestDetail extends Component {
                 } />
             </View>
             <Divider style={styles.divider} />
-            {this.state.photoId &&
+            {this.state.thumbnails.getRowCount() > 0 &&
             <View style={styles.instructionContainer}>
-              <InputSectionHeader label='Your submission' />
-              <Photo
-                photoId={this.state.photoId}
-                style={styles.submittedPhoto}
-            //    resizeMode='contain'
-                />
+              <InputSectionHeader label='Your submissions' />
+              <ListView
+                horizontal
+                scrollEnabled={false}
+                dataSource={this.state.thumbnails}
+                style={styles.thumbnailList}
+                contentContainerStyle={styles.thumbnailContainer}
+                renderRow={data => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => this.setState({preview:data})}>
+                      <Photo
+                        photoId={data}
+                        style={styles.thumbnails}/>
+                    </TouchableOpacity>
+                  );
+                }} />
             </View>
             }
             <View style={styles.instructionContainer}>
@@ -188,7 +203,8 @@ export default class ContestDetail extends Component {
         <Button
           color={Colors.Primary}
           onPress={() => this.setState({cameraVisible:true})}
-          label={this.state.photoId ? "Shoot another one" : "Participate"}
+          label={this.state.thumbnails.getRowCount() > 0
+            ? "Shoot another one" : "Participate"}
           squareBorders={10}
           style={styles.buttonStyle}>
         </Button>
@@ -201,12 +217,30 @@ export default class ContestDetail extends Component {
             onUploaded={(photoId) => {
               this.setState({
                 cameraVisible:false,
-                photoId
               });
+              let entryId = this.entriesRef.push({
+                createdBy: Firebase.auth().currentUser.uid,
+                dateCreated: Date.now(),
+                photoId: photoId,
+              }).key
             }}
             />
           <CloseFullscreenButton
             action={() => this.setState({cameraVisible:false})}/>
+        </Modal>
+        <Modal
+          transparent
+          animationType='fade'
+          visible={this.state.preview != null}>
+          <View style={styles.previewContainer}>
+            <Photo
+              photoId={this.state.preview}
+              style={styles.preview}
+              resizeMode='cover'
+              />
+            <CloseFullscreenButton
+              action={() => this.setState({preview:null})}/>
+          </View>
         </Modal>
       </View>
     );
@@ -273,13 +307,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
 
-  photoContainer: {
-    marginTop: Sizes.InnerFrame,
-    marginBottom: Sizes.OuterFrame * 3,
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  },
-
   submittedPhoto: {
     height: Sizes.Width*0.8,
     margin: Sizes.InnerFrame,
@@ -298,17 +325,41 @@ const styles = StyleSheet.create({
     paddingRight: Sizes.InnerFrame / 2
   },
 
-  thumbnailContainer: {
+  thumbnailList: {
     flex: 1,
     marginLeft: Sizes.InnerFrame,
     marginRight: Sizes.InnerFrame,
     alignSelf: 'stretch'
   },
 
-  thumbnails: {
+  thumbnailContainer: {
     flex: 1,
     flexWrap: 'wrap',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: Sizes.InnerFrame/2
+  },
+
+  thumbnails: {
+    height: 80,
+    width: 80,
+    marginRight: Sizes.InnerFrame/3,
+    marginBottom: Sizes.InnerFrame/3,
+    backgroundColor: Colors.Overlay
+  },
+
+  previewContainer: {
+    height: Sizes.Height,
+    width: Sizes.Width,
+    backgroundColor: Colors.DarkOverlay,
+    alignSelf: 'center',
+    justifyContent: 'center'
+  },
+
+  preview: {
+    marginHorizontal: Sizes.InnerFrame,
+    width: Sizes.Width * 0.9,
+    height: Sizes.Width * 0.9 * 4 / 3,
+    backgroundColor: Colors.Transparent
   },
 
   buttonStyle: {

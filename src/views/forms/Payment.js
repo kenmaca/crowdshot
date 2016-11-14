@@ -16,7 +16,7 @@ import {
 
 // components
 import Swipeout from 'react-native-swipeout';
-import BillingCard from '../../components/Payment/BillingCard';
+import BillingCard from '../../components/payment/BillingCard';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import CircleIcon from '../../components/common/CircleIcon';
 
