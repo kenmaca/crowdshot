@@ -69,9 +69,9 @@ export default class ContestDetail extends Component {
         let entries = data.val();
         this.setState({
           entries: entries,
-          thumbnails: this.state.thumbnails.cloneWithRows(
-            Object.keys(entries)
-          )
+      //    thumbnails: this.state.thumbnails.cloneWithRows(
+    //        Object.keys(entries)
+    //      )
         });
       }
     });
@@ -168,14 +168,25 @@ export default class ContestDetail extends Component {
                 } />
             </View>
             <Divider style={styles.divider} />
-            {this.state.photoId &&
+            {this.state.thumbnails.getRowCount() > 0 &&
             <View style={styles.instructionContainer}>
-              <InputSectionHeader label='Your submission' />
-              <Photo
-                photoId={this.state.photoId}
-                style={styles.submittedPhoto}
-            //    resizeMode='contain'
-                />
+              <InputSectionHeader label='Your submissions' />
+              <ListView
+                horizontal
+                scrollEnabled={false}
+                dataSource={this.state.thumbnails}
+                style={styles.thumbnailList}
+                contentContainerStyle={styles.thumbnailContainer}
+                renderRow={data => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => console.log("contest entry, ",data)}>
+                      <Photo
+                        photoId={data}
+                        style={styles.thumbnails}/>
+                    </TouchableOpacity>
+                  );
+                }} />
             </View>
             }
             <View style={styles.instructionContainer}>
@@ -203,7 +214,8 @@ export default class ContestDetail extends Component {
             onUploaded={(photoId) => {
               this.setState({
                 cameraVisible:false,
-                photoId
+                thumbnails: this.state.thumbnails.cloneWithRows([photoId]),
+                photoId,
               });
             }}
             />
@@ -275,13 +287,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
 
-  photoContainer: {
-    marginTop: Sizes.InnerFrame,
-    marginBottom: Sizes.OuterFrame * 3,
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  },
-
   submittedPhoto: {
     height: Sizes.Width*0.8,
     margin: Sizes.InnerFrame,
@@ -300,17 +305,26 @@ const styles = StyleSheet.create({
     paddingRight: Sizes.InnerFrame / 2
   },
 
-  thumbnailContainer: {
+  thumbnailList: {
     flex: 1,
     marginLeft: Sizes.InnerFrame,
     marginRight: Sizes.InnerFrame,
     alignSelf: 'stretch'
   },
 
-  thumbnails: {
+  thumbnailContainer: {
     flex: 1,
     flexWrap: 'wrap',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: Sizes.InnerFrame/2
+  },
+
+  thumbnails: {
+    height: 80,
+    width: 80,
+    marginRight: Sizes.InnerFrame/3,
+    marginBottom: Sizes.InnerFrame/3,
+    backgroundColor: Colors.Overlay
   },
 
   buttonStyle: {
