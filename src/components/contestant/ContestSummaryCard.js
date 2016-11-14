@@ -112,14 +112,18 @@ export default class ContestSummaryCard extends Component {
           <View style={styles.progressContainer}>
             <View style={styles.progressTextContainer}>
             {
-              this.state.progress < 1
+              this.state.progress < 1 && this.state.progress > 0
               ? (
                 <Text style={styles.progressTextUntil}>
                   {"ENDING " + DateFormat(this.state.endDate, 'dddd, h:MMTT')}
                 </Text>
-              ): (
+              ): this.state.progress > 0 ?(
                 <Text style={styles.progressTextUntil}>
                   CONTEST ENDED
+                </Text>
+              ): (
+                <Text style={styles.progressTextUntil}>
+                  LOADING
                 </Text>
               )
             }

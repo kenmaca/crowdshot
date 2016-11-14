@@ -126,15 +126,20 @@ export default class ContestDetail extends Component {
           <ScrollView style={styles.detailContainer}>
             <View style={styles.progressContainer}>
             {
-              this.state.progress < 1
+              this.state.progress < 1 && this.state.progress > 0
               ? (
                 <Text style={styles.progressStaticText}>
                   Ending {DateFormat(this.state.endDate, 'dddd, h:MMTT')}
                 </Text>
-              ):
+              ): this.state.progress > 0 ? (
                 <Text style={styles.progressStaticText}>
                   CONTEST ENDED
                 </Text>
+              ): (
+                <Text style={styles.progressStaticText}>
+                  LOADING
+                </Text>
+              )
             }
             </View>
             <Divider style={styles.divider} />
@@ -206,7 +211,7 @@ export default class ContestDetail extends Component {
           label={this.state.thumbnails.getRowCount() > 0
             ? "Shoot another one" : "Participate"}
           squareBorders={10}
-          isDisabled={this.state.progress >= 1}
+          isDisabled={this.state.progress >= 1 || this.state.progress <= 0}
           disabledColor={Colors.MediumDarkOverlay}
           style={styles.buttonStyle}>
         </Button>

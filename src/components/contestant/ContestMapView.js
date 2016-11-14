@@ -48,11 +48,10 @@ export default class ContestMapView extends Component {
   }
 
   componentDidMount() {
-    let contests = [];
-
     this.listener = this.ref.on('value', data => {
       if (data.exists()){
-        var count = 0
+        let contests = [];
+        let count = 0
         Object.entries(data.val()).forEach(([key, m]) => {
           contests.push({
             index: count,
