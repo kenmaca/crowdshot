@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, Animated, PanResponder,
-  ListView
+  ListView, TouchableOpacity
 } from 'react-native';
 import {
   Actions
@@ -288,8 +288,11 @@ export default class Main extends Component {
                   <View
                     key={rowData}
                     style={styles.cardShadow}>
-                    <ContestCard
-                      contestId={rowData} />
+                    <View style={styles.cardContainer}>
+                      <ContestCard
+                        isCard
+                        contestId={rowData} />
+                    </View>
                   </View>
                 ): (
                   <View
@@ -378,5 +381,12 @@ const styles = StyleSheet.create({
       height: 5,
       width: 0
     },
+  },
+
+  cardContainer: {
+    flex: 1,
+    width: Sizes.Width - Sizes.InnerFrame / 2,
+    borderRadius: 5,
+    overflow: 'hidden'
   }
 });

@@ -83,7 +83,9 @@ export default class NewContest extends Component {
         referencePhotoId: null,
         processing: false
       });
-      Actions.mainMain();
+      Actions.contest({
+        contestId: contestId
+      });
     });
   }
 

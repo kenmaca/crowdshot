@@ -28,6 +28,7 @@ import NewPayment from './views/forms/NewPayment';
 import NewBounty from './views/forms/NewBounty';
 import MapMarkerDrop from './views/forms/MapMarkerDrop';
 import NewReferencePhoto from './views/forms/NewReferencePhoto';
+import Contest from './views/contests/Contest';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -89,6 +90,9 @@ export default class Navigation extends Component {
             <Scene
               key='newReferencePhoto'
               component={NewReferencePhoto} />
+            <Scene
+              key='contest'
+              component={Contest} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}

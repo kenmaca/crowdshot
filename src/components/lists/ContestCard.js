@@ -23,6 +23,7 @@ import CircleIconInfo from '../common/CircleIconInfo';
 import ContestThumbnail from '../lists/ContestThumbnail';
 import GroupAvatar from '../profiles/GroupAvatar';
 import ContestProgressBar from '../contests/ContestProgressBar';
+import CloseFullscreenButton from '../common/CloseFullscreenButton';
 
 export default class ContestCard extends Component {
   constructor(props) {
@@ -98,7 +99,12 @@ export default class ContestCard extends Component {
                 }`} />
           </TouchableOpacity>
         </Photo>
-        <View style={styles.body}>
+        <View style={[
+          styles.body,
+          !this.props.isCard && {
+            paddingBottom: 0
+          }
+        ]}>
           <ContestProgressBar
             start={this.state.dateCreated}
             end={this.state.endDate}
@@ -230,6 +236,9 @@ export default class ContestCard extends Component {
             </View>
           </ScrollView>
         </View>
+        {!this.props.isCard && (
+          <CloseFullscreenButton />
+        )}
       </View>
     );
   }
@@ -237,10 +246,7 @@ export default class ContestCard extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: Sizes.Width - Sizes.InnerFrame / 2,
-    borderRadius: 5,
-    overflow: 'hidden'
+    flex: 1
   },
 
   header: {
