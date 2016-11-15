@@ -195,7 +195,7 @@ export default class ContestCard extends Component {
                     return (
                       <TouchableOpacity
                         onPress={() => Actions.contestPhotos({
-                          contestId: 'testContest',
+                          contestId: this.props.contestId,
                           startCard: data
                         })}>
                         <ContestThumbnail
