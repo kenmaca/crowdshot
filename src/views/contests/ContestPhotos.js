@@ -160,12 +160,10 @@ export default class ContestPhotos extends Component {
           contestId={this.props.contestId} />
         <Button
           squareBorders
-          fontAwesome
           onPress={() => this.refs.finalize.finalize()}
-          icon='trophy'
           style={styles.endButton}
           color={Colors.Primary}
-          label='End Contest & Announce Winners' />
+          label='End Contest and Announce the Winners' />
       </View>
     );
   }
