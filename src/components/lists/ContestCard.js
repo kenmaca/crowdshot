@@ -208,6 +208,18 @@ export default class ContestCard extends Component {
                   }} />
               </View>
             </View>
+            <View style={styles.footerContainer}>
+              <Button
+                isDisabled={
+                  Object.keys(this.state.entries).length
+                  > 0
+                }
+                squareBorders
+                color={Colors.Cancel}
+                fontColor={Colors.Text}
+                style={styles.cancelButton}
+                label='Cancel this Contest and Refund all Prizes' />
+            </View>
           </ScrollView>
         </View>
       </View>
@@ -234,11 +246,11 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: Colors.ModalBackground,
+    paddingBottom: Sizes.NavHeight - Sizes.InnerFrame
   },
 
   detailContainer: {
-    flex: 1,
-    paddingBottom: Sizes.OuterFrame * 10,
+    flex: 1
   },
 
   summary: {
@@ -263,7 +275,6 @@ const styles = StyleSheet.create({
 
   photoContainer: {
     marginTop: Sizes.InnerFrame,
-    marginBottom: Sizes.OuterFrame * 3,
     alignItems: 'flex-start',
     justifyContent: 'center'
   },
@@ -293,4 +304,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
 
+  footerContainer: {
+    margin: Sizes.InnerFrame,
+    alignSelf: 'stretch'
+  }
 });

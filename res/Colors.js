@@ -31,7 +31,7 @@ export const Colors = {
   AlternateText: '#222222',
   EmphasizedText: '#6D6C6C',
   Facebook: '#3B5998',
-  Cancel: 'red',
+  Cancel: '#D63230',
 
   // disabled
   Disabled: 'rgba(200, 200, 200, 0.1)',

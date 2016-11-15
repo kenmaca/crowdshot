@@ -202,8 +202,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.Transparent,
     borderRadius: 50,
-    paddingTop: 8,
-    paddingBottom: 8,
+    paddingTop: Sizes.InnerFrame,
+    paddingBottom: Sizes.InnerFrame,
     paddingRight: 20,
     paddingLeft: 20
   },
