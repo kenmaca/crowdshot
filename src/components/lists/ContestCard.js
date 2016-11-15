@@ -75,22 +75,6 @@ export default class ContestCard extends Component {
         <Photo
           photoId={this.state.referencePhotoId}
           style={styles.header}>
-          <View style={styles.buttonContainer}>
-            <Button
-              onPress={() => Actions.chat({
-                chatId: this.props.contestId,
-                title: 'Contest Chat'
-              })}
-              size={Sizes.H2}
-              style={styles.button}
-              icon='chat'
-              color={Colors.Transparent} />
-            <Button
-              size={Sizes.H2}
-              style={styles.button}
-              icon='delete-forever'
-              color={Colors.Transparent} />
-          </View>
           <OutlineText
             text={
               `$${
@@ -160,6 +144,17 @@ export default class ContestCard extends Component {
                     ).filter(key => key != 'undefined').length
                   } photographers`
                 } />
+              <TouchableOpacity
+                onPress={() => Actions.chat({
+                  chatId: this.props.contestId,
+                  title: 'Contest Chat'
+                })}>
+                <CircleIconInfo
+                  size={Sizes.H2}
+                  color={Colors.Foreground}
+                  icon='message'
+                  label='Open contest chat' />
+              </TouchableOpacity>
             </View>
             <Divider style={styles.divider} />
             <View style={styles.instructionContainer}>
@@ -238,7 +233,7 @@ const styles = StyleSheet.create({
   header: {
     height: 200,
     alignItems: 'flex-end',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignSelf: 'stretch',
     padding: Sizes.InnerFrame
   },
