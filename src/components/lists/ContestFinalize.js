@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Modal, Image, Text,
-  TouchableWithoutFeedback, Alert
+  TouchableWithoutFeedback, TouchableOpacity, Alert
 } from 'react-native';
 import {
   Colors, Sizes
@@ -123,9 +123,29 @@ export default class ContestFinalize extends Component {
                         select less winning photos.
                       </Text>
                     </View>
-                    <CircleIcon
-                      icon='add'
-                      size={Sizes.InnerFrame * 3} />
+                    <TouchableOpacity
+                      onPress={() => {
+
+                        // close upsell
+                        this.setState({
+                          upsellVisible: false
+                        });
+
+                        // now ask for money
+                        Actions.newBounty({
+                          onCharged: prizeId => Database.ref(
+                            `contests/${
+                              this.props.contestId
+                            }/prizes/${
+                              prizeId
+                            }`
+                          ).set(true)
+                        });
+                      }}>
+                      <CircleIcon
+                        icon='add'
+                        size={Sizes.InnerFrame * 3} />
+                    </TouchableOpacity>
                   </View>
                 </View>
               </TouchableWithoutFeedback>
