@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, TouchableOpacity
+  View, StyleSheet, TouchableOpacity, Text
 } from 'react-native';
 import {
   Colors, Sizes
@@ -69,25 +69,31 @@ export default class BillingCard extends Component {
                   default: return 'cc-visa';
                 }
               })()}
-              size={12}
-              color={Colors.Primary} />
-            <View style={styles.details}>
-              <InformationField
-                color={Colors.Transparent}
-                info={this.state.name || 'Unknown'}
-                label='Card Holder' />
-              <InformationField
-                color={Colors.Transparent}
-                info={`●●●● ●●●● ●●●● ${this.state.lastFour || '●●●●'}`}
-                label='Number' />
-              <InformationField
-                isBottom
-                noLine
-                noMargin
-                color={Colors.Transparent}
-                info={`${this.state.expiryMonth}/${this.state.expiryYear}`}
-                label='Expiry' />
-            </View>
+              size={24}
+              color={Colors.Text} />
+            <Text style={styles.textContainer}>
+              <Text style={styles.bold}>
+                {(() => {
+                  switch(this.state.type) {
+                    case 1: return 'MasterCard';
+                    case 2: return 'American Express';
+                    default: return 'Visa';
+                  }
+                })()}
+              </Text>
+              <Text>
+                {' ending in '}
+              </Text>
+              <Text style={styles.bold}>
+                {this.state.lastFour}
+              </Text>
+            </Text>
+            <CircleIcon
+              size={18}
+              style={styles.button}              
+              color={Colors.ModalBackground}
+              checkColor={Colors.AlternateText}
+              icon='arrow-forward' />
           </View>
           <Divider />
         </TouchableOpacity>
@@ -107,15 +113,20 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
+    padding: Sizes.OuterFrame,
     paddingTop: Sizes.InnerFrame,
     paddingBottom: Sizes.InnerFrame,
+    backgroundColor: Colors.Foreground
   },
 
-  cardType: {
-    margin: Sizes.InnerFrame
+  textContainer: {
+    flex: 1,
+    marginLeft: Sizes.InnerFrame,
+    color: Colors.Text
   },
 
-  details: {
-    flex: 1
+  bold: {
+    fontWeight: '700'
   }
 });

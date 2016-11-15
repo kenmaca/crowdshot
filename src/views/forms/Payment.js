@@ -19,6 +19,7 @@ import Swipeout from 'react-native-swipeout';
 import BillingCard from '../../components/payment/BillingCard';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import CircleIcon from '../../components/common/CircleIcon';
+import Divider from '../../components/common/Divider';
 
 export default class Settings extends Component {
   constructor(props) {
@@ -125,18 +126,20 @@ export default class Settings extends Component {
             scrollEnabled={false}
             dataSource={this.state.billing}
             renderRow={this.renderRow} />
+          <TouchableOpacity
+            style={styles.addContainer}
+            onPress={Actions.newPayment}>
+            <CircleIcon
+              style={styles.addContainerIcon}
+              color={Colors.Transparent}
+              icon='add'
+              size={24} />
+            <Text style={styles.addContainerText}>
+              Add a new Payment Method
+            </Text>
+          </TouchableOpacity>
         </View>
         <CloseFullscreenButton />
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={Actions.newPayment}>
-          <CircleIcon
-            icon='add'
-            color={Colors.Transparent}
-            checkColor={Colors.Text}
-            shadowStyle={styles.addButtonShadow}
-            size={50} />
-        </TouchableOpacity>
       </View>
     );
   }
@@ -162,19 +165,18 @@ const styles = StyleSheet.create({
     fontSize: Sizes.H3
   },
 
-  addButton: {
-    top: Sizes.InnerFrame,
-    right: 0,
-    position: 'absolute'
+  addContainer: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    padding: Sizes.OuterFrame,
+    paddingTop: Sizes.InnerFrame,
+    paddingBottom: Sizes.InnerFrame,
+    backgroundColor: Colors.Transparent
   },
 
-  addButtonShadow: {
-    shadowColor: Colors.Overlay,
-    shadowOpacity: 1,
-    shadowRadius: 5,
-    shadowOffset: {
-      height: 1,
-      width: 0
-    }
+  addContainerText: {
+    marginLeft: Sizes.InnerFrame,
+    color: Colors.Text
   }
 });
