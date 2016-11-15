@@ -26,6 +26,7 @@ import CircleIcon from '../../components/common/CircleIcon';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import CameraView from '../../components/common/CameraView';
 import * as Progress from 'react-native-progress';
+import Geocoder from 'react-native-geocoder';
 
 export default class ContestDetail extends Component {
   constructor(props) {
@@ -36,6 +37,7 @@ export default class ContestDetail extends Component {
       cameraVisible: false,
       progress: 0,
       preview: null,
+      near: '...',
       entries: {},
       thumbnails: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
@@ -48,6 +50,16 @@ export default class ContestDetail extends Component {
     this.entriesRef = Database.ref(
       `entries/${this.props.contest.contestId}`
     );
+
+    let coord = {
+      lat: this.props.contest.coordinate.latitude,
+      lng: this.props.contest.coordinate.longitude
+    };
+
+    Geocoder.geocodePosition(coord).then(res => {
+      this.setState({near:res[0].feature + ' @ ' + res[0].subLocality})
+    })
+    .catch(err => console.log('geocode error ', err))
 
     this.updateProgress = this.updateProgress.bind(this);
   }
@@ -77,6 +89,9 @@ export default class ContestDetail extends Component {
         });
       }
     });
+
+
+
   }
 
   updateProgress(endDate) {
@@ -148,7 +163,9 @@ export default class ContestDetail extends Component {
                 size={Sizes.H2}
                 color={Colors.Foreground}
                 icon='location-city'
-                label='Near Queen St W and Spadina' />
+              //  label='Near Queen St W and Spadina'
+                label={'Near ' + this.state.near}
+                />
               <CircleIconInfo
                 size={Sizes.H2}
                 color={Colors.Foreground}

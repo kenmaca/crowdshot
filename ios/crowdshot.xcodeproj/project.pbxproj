@@ -42,6 +42,7 @@
 		C6ECF2145EFF4FBE8E500E8A /* libReactNativeIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B597872D4F5E4EECB0E4E88B /* libReactNativeIcons.a */; };
 		CE5AD4D340CF410B8108BDA0 /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9412CF190C5A4F6A89100472 /* libAirMaps.a */; };
 		D18A801F541F498FADE656BE /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27447B0ABA854CADAFF4F95E /* libRCTFBSDK.a */; };
+		DC65DFA01DDABFF3006970DA /* libRNGeocoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC65DF9E1DDABFB1006970DA /* libRNGeocoder.a */; };
 		E115DA583F3C48DD99954F36 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F7482DC7B0E94F2EB7DD08E1 /* EvilIcons.ttf */; };
 		F6B5D19D3F9F4D16A43F5D28 /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9985555E80164971A30A33FE /* libRCTCamera.a */; };
 		F719B1FB235B4C4085356237 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C794A1C407B40A19B54DE99 /* libBVLinearGradient.a */; };
@@ -216,6 +217,13 @@
 			remoteGlobalIDString = 9350E0F11CE3B0920041D815;
 			remoteInfo = RCTFBSDK;
 		};
+		DC65DF9D1DDABFB1006970DA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DC65DF801DDABFB1006970DA /* RNGeocoder.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BF8FCF941BFFB184000FCD37;
+			remoteInfo = RNGeocoder;
+		};
 		DC68B0C01DD00414009ED4D1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 38B051B472334682B874D0D1 /* ReactNativeIcons.xcodeproj */;
@@ -290,6 +298,7 @@
 		BE622B261DC92B410021F735 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../../Documents/FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
 		D0DA520C94174F829DCC374F /* AirMaps.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AirMaps.xcodeproj; path = "../node_modules/react-native-maps/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; };
 		D693BA1AD0DA4FAAB7F09EFC /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		DC65DF801DDABFB1006970DA /* RNGeocoder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGeocoder.xcodeproj; path = "../node_modules/react-native-geocoder/ios/RNGeocoder.xcodeproj"; sourceTree = "<group>"; };
 		DCD41A2F1DCDA6DC0010CA94 /* crowdshot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = crowdshot.entitlements; path = crowdshot/crowdshot.entitlements; sourceTree = "<group>"; };
 		F7482DC7B0E94F2EB7DD08E1 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		F85B1752880645858DE8D625 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBSDK.xcodeproj; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; };
@@ -308,6 +317,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC65DFA01DDABFF3006970DA /* libRNGeocoder.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				BE622B2A1DC92B410021F735 /* FBSDKShareKit.framework in Frameworks */,
@@ -466,6 +476,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				DC65DF801DDABFB1006970DA /* RNGeocoder.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
 				00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */,
@@ -578,6 +589,14 @@
 				BE622B261DC92B410021F735 /* FBSDKShareKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DC65DF811DDABFB1006970DA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DC65DF9E1DDABFB1006970DA /* libRNGeocoder.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		DC68B0A61DD00414009ED4D1 /* Products */ = {
@@ -752,6 +771,10 @@
 					ProjectRef = 5CEDD2AAD3EF47838412F3DF /* RNFetchBlob.xcodeproj */;
 				},
 				{
+					ProductGroup = DC65DF811DDABFB1006970DA /* Products */;
+					ProjectRef = DC65DF801DDABFB1006970DA /* RNGeocoder.xcodeproj */;
+				},
+				{
 					ProductGroup = BE1E1F661DC96D6F000D4DD2 /* Products */;
 					ProjectRef = 32A75BD704A14176ACEE1686 /* RNVectorIcons.xcodeproj */;
 				},
@@ -924,6 +947,13 @@
 			fileType = archive.ar;
 			path = libRCTFBSDK.a;
 			remoteRef = BED93B411DC926AF00EF2203 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DC65DF9E1DDABFB1006970DA /* libRNGeocoder.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNGeocoder.a;
+			remoteRef = DC65DF9D1DDABFB1006970DA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		DC68B0C11DD00414009ED4D1 /* libReactNativeIcons.a */ = {

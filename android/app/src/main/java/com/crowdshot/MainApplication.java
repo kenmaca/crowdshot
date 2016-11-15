@@ -18,6 +18,7 @@ import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.appevents.AppEventsLogger;
 import com.brentvatne.react.ReactVideoPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
+import com.devfd.RNGeocoder.RNGeocoderPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,6 +47,7 @@ public class MainApplication extends Application implements ReactApplication {
             new RCTCameraPackage(),
             new ReactVideoPackage(),
             new LinearGradientPackage(),
+            new RNGeocoderPackage(),
             new FBSDKPackage(mCallbackManager)
       );
     }
