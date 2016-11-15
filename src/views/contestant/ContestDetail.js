@@ -376,7 +376,8 @@ const styles = StyleSheet.create({
     width: Sizes.Width,
     backgroundColor: Colors.DarkOverlay,
     alignSelf: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
   preview: {
