@@ -71,7 +71,7 @@ export default class Login extends Component {
                       // update profile
                       Database.ref(
                         `profiles/${user.uid}`
-                      ).set({
+                      ).update({
                         displayName: user.displayName,
                         email: user.email,
                       }).then(result => {
