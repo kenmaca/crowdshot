@@ -54,7 +54,7 @@ export default class NewContest extends Component {
         dateCreated: dateCreated,
 
         // default a hour duration
-        endDate: dateCreated + 360000,
+        endDate: dateCreated + 3600000,
 
         // TODO: add in Photo upload
         instructions: 'Not implemented.',
