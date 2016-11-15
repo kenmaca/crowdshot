@@ -75,15 +75,28 @@ export default class ContestCard extends Component {
         <Photo
           photoId={this.state.referencePhotoId}
           style={styles.header}>
-          <OutlineText
-            text={
-              `$${
-                this.state.bounty || 0
-              } Bounty To Top ${
-                this.state.prizes
-                ? Object.keys(this.state.prizes).length
-                : 'Photo'
-              }`} />
+          <TouchableOpacity
+            onPress={() => {
+              Actions.newBounty({
+                onCharged: prizeId => Database.ref(
+                  `contests/${
+                    this.props.contestId
+                  }/prizes/${
+                    prizeId
+                  }`
+                ).set(true)
+              });
+            }}>
+            <OutlineText
+              text={
+                `$${
+                  this.state.bounty || 0
+                } Bounty To Top ${
+                  this.state.prizes
+                  ? Object.keys(this.state.prizes).length
+                  : 'Photo'
+                }`} />
+          </TouchableOpacity>
         </Photo>
         <View style={styles.body}>
           <ContestProgressBar
