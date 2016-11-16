@@ -11,6 +11,7 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
+import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 
 // components
@@ -76,6 +77,34 @@ export default class ContestFinalize extends Component {
     ) {
 
       // ready to finalize the contest
+      Database.ref(
+        `contests/${
+          this.props.contestId
+        }`
+      ).update({
+        isComplete: true,
+        isProcessed: false
+      });
+
+      // update user's list of contests
+      Database.ref(
+        `profiles/${
+          Firebase.auth().currentUser.uid
+        }/contests/${
+          this.props.contestId
+        }`
+      ).remove();
+
+      // add to completed list
+      Database.ref(
+        `profiles/${
+          Firebase.auth().currentUser.uid
+        }/completedContests/${
+          this.props.contestId
+        }`
+      ).set(true);
+
+      // show view
       this.setState({
         finalizedVisible: true
       });
@@ -167,11 +196,23 @@ export default class ContestFinalize extends Component {
                 styles.text,
                 styles.description
               ]}>
-                You've picked the best and your contest is now complete. We hope you love
-                the photos as much as we do!
+                You've picked the best and your contest is now complete.
+                We hope you love the photos as much as we do!
               </Text>
               <Button
-                onPress={Actions.main}
+                onPress={() => {
+
+                  // remove overlay
+                  this.setState({
+                    finalizedVisible: false
+                  });
+
+                  // and show completed contest view
+                  // TODO: a dedicated completed view of contest
+                  Actions.contest({
+                    contestId: this.props.contestId
+                  });
+                }}
                 label='View the winning photos'
                 color={Colors.Background} />
             </View>

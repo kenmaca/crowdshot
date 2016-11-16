@@ -11,6 +11,7 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
+import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 
 // components
@@ -228,6 +229,49 @@ export default class ContestCard extends Component {
                   Object.keys(this.state.entries).length
                   > 0
                 }
+                onPress={() => Alert.alert(
+                  'Contest Cancellation',
+                  'You may cancel your contest at any time if there '
+                  + 'have been no entries submitted. All prizes are '
+                  + 'refunded back to your original method of payment',
+                  [
+                    {
+                      text: 'Cancel my Contest',
+                      onPress: () => {
+
+                        // TODO: wait until refunds are processed
+                        this.ref.update({
+                          isCancelled: true,
+                          isProcessed: false
+                        });
+
+                        // update user's list of contests
+                        Database.ref(
+                          `profiles/${
+                            Firebase.auth().currentUser.uid
+                          }/contests/${
+                            this.props.contestId
+                          }`
+                        ).remove();
+
+                        // add to cancelled list
+                        Database.ref(
+                          `profiles/${
+                            Firebase.auth().currentUser.uid
+                          }/cancelledContests/${
+                            this.props.contestId
+                          }`
+                        ).set(true);
+
+                        // and out
+                        Actions.mainMain();
+                      }
+                    }, {
+                      text: 'Cancel',
+                      style: 'cancel'
+                    }
+                  ]
+                )}
                 squareBorders
                 color={Colors.Cancel}
                 fontColor={Colors.Text}
