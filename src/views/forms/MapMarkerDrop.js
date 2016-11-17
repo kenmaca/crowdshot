@@ -48,7 +48,13 @@ export default class MapMarkerDrop extends Component {
           latitudeDelta: LAT_DELTA,
           longitudeDelta: LONG_DELTA
         }
-      })
+      }),
+      error => console.log(error),
+      {
+        enableHighAccuracy: true,
+        timeout: 20000,
+        maximumAge: 1000
+      }
     );
   }
 
