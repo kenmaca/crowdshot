@@ -12,6 +12,7 @@ import {
 } from '../../Const';
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
+import GeoFire from 'geofire';
 
 // components
 import DatePicker from '../../components/common/DatePicker';
@@ -61,10 +62,24 @@ export default class NewContest extends Component {
         prizes: {
           [this.state.prizeId]: true
         },
-        referencePhotoId: this.state.referencePhotoId
+        referencePhotoId: this.state.referencePhotoId,
+        createdBy: Firebase.auth().currentUser.uid
       }).key;
 
-      // TODO: use geofire to add location
+      // location via GeoFire
+      new GeoFire(Database.ref('locations')).set(
+        contestId, this.state.location
+      );
+      Database.ref(
+        `locations/${
+          contestId
+        }`
+      ).update({
+        lastReported: dateCreated,
+        validUntil: dateCreated + 3600000,
+        createdBy: Firebase.auth().currentUser.uid,
+        contestId: contestId
+      });
 
       // add to owner's list
       Database.ref(

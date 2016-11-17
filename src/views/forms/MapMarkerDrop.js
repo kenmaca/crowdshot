@@ -85,7 +85,10 @@ export default class MapMarkerDrop extends Component {
 
                     // outer callback
                     this.props.onSelected && this.props.onSelected(
-                      this.state.current
+                      [
+                        this.state.current.latitude,
+                        this.state.current.longitude
+                      ]
                     );
 
                     // and out
