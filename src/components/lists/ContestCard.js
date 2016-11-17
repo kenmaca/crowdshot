@@ -13,6 +13,7 @@ import {
 } from 'react-native-router-flux';
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
+import Geocoder from 'react-native-geocoder';
 
 // components
 import Button from '../common/Button';
@@ -42,6 +43,9 @@ export default class ContestCard extends Component {
     this.entriesRef = Database.ref(
       `entries/${this.props.contestId}`
     );
+    this.locationRef = Database.ref(
+      `locations/${this.props.contestId}/l`
+    );
   }
 
   componentDidMount() {
@@ -64,11 +68,34 @@ export default class ContestCard extends Component {
         });
       }
     });
+
+    this.locationListener = this.locationRef.on('value', data => {
+      if (data.exists()) {
+        let coords = data.val();
+        console.log(coords);
+        coords = {
+          lat: coords[0],
+          lng: coords[1]
+        };
+        console.log(coords);
+
+        Geocoder.geocodePosition(coords).then(location => {
+          this.setState({
+            near: `${
+              location[0].feature
+            } at ${
+              location[0].subLocality
+            }`
+          });
+        });
+      }
+    });
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
     this.entriesListener && this.entriesRef.off('value', this.entriesListener);
+    this.locationListener && this.locationRef.off('value', this.locationListener);
   }
 
   render() {
@@ -135,11 +162,15 @@ export default class ContestCard extends Component {
             )} />
           <ScrollView style={styles.detailContainer}>
             <View style={styles.summary}>
-              <CircleIconInfo
-                size={Sizes.H2}
-                color={Colors.Foreground}
-                icon='location-city'
-                label='Near Queen St W and Spadina' />
+              {
+                this.state.near && (
+                  <CircleIconInfo
+                    size={Sizes.H2}
+                    color={Colors.Foreground}
+                    icon='location-city'
+                    label={`Near ${this.state.near}`} />
+                )
+              }
               <CircleIconInfo
                 size={Sizes.H2}
                 color={Colors.Foreground}
