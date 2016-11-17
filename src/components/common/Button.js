@@ -2,7 +2,8 @@ import React, {
   Component
 } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, ActivityIndicator
+  View, Text, TouchableOpacity, StyleSheet, ActivityIndicator,
+  TouchableWithoutFeedback
 } from 'react-native';
 import {
   Colors, Sizes
@@ -38,53 +39,37 @@ export default class Button extends Component {
     this.state = {
       pressed: false
     };
-  }
 
-  componentDidMount() {
-
-    // bind methods
+    // methods
     this.reset = this.reset.bind(this);
+    this.renderButtonContents = this.renderButtonContents.bind(this);
   }
 
   /**
    * Allows this Button to be pressed again.
    */
   reset() {
-    this.setState({pressed: false});
+    this.setState({
+      pressed: false
+    });
   }
 
-  render() {
+  renderButtonContents() {
     return (
-      <TouchableOpacity
-        hitSlop={{top: 20, right: 20, bottom: 20, left: 20}}
-        style={[
-          this.props.container || styles.container,
-          this.props.style,
-          this.props.color && {backgroundColor: this.props.color},
-          this.props.isDisabled && {
-            backgroundColor: this.props.disabledColor || Colors.Disabled
-          },
-          this.state.pressed && {
-            backgroundColor: Colors.Transparent
-          },
-          this.props.squareBorders && {
-            borderRadius: 0
-          }
-        ]}
-        onPress={() => {
-
-          // prevent press event if shouldBlur or isDisabled
-          if (
-            !(this.props.shouldBlur && this.state.pressed)
-            && !(this.props.isDisabled)
-          ) {
-            this.props.onPress && this.props.onPress();
-
-            // only setState if this Button shouldBlur
-            this.props.shouldBlur && this.setState({pressed: true});
-          }
-        }}>
-
+      <View style={[
+        this.props.container || styles.container,
+        this.props.style,
+        this.props.color && {backgroundColor: this.props.color},
+        this.props.isDisabled && {
+          backgroundColor: this.props.disabledColor || Colors.Disabled
+        },
+        this.state.pressed && {
+          backgroundColor: Colors.Transparent
+        },
+        this.props.squareBorders && {
+          borderRadius: 0
+        }
+      ]}>
         {/* show a spinner if blurred */}
         {this.props.shouldBlur && this.state.pressed ?
           (
@@ -193,7 +178,37 @@ export default class Button extends Component {
             </View>
           )
         }
-      </TouchableOpacity>
+      </View>
+    );
+  }
+
+  render() {
+    return (
+      this.props.isDisabled
+      ? (
+        <TouchableWithoutFeedback
+          onPress={this.props.onPressDisabled}>
+          {this.renderButtonContents()}
+        </TouchableWithoutFeedback>
+      ): (
+        <TouchableOpacity
+          hitSlop={{top: 20, right: 20, bottom: 20, left: 20}}
+          onPress={() => {
+
+            // prevent press event if shouldBlur or isDisabled
+            if (
+              !(this.props.shouldBlur && this.state.pressed)
+              && !(this.props.isDisabled)
+            ) {
+              this.props.onPress && this.props.onPress();
+
+              // only setState if this Button shouldBlur
+              this.props.shouldBlur && this.setState({pressed: true});
+            }
+          }}>
+          {this.renderButtonContents()}
+        </TouchableOpacity>
+      )
     );
   }
 }

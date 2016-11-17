@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Modal
+  View, StyleSheet, Text, Modal, Alert
 } from 'react-native';
 import {
   Actions
@@ -159,6 +159,10 @@ export default class NewContest extends Component {
           }
           color={Colors.Primary}
           label='Start a new Photo Contest'
+          onPressDisabled={() => Alert.alert(
+            'Missing contest details',
+            'Please fill in the details above'
+          )}
           onPress={this.submit} />
       </View>
     );
