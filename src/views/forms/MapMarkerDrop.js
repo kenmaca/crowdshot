@@ -20,6 +20,7 @@ const LONG_DELTA = 0.01;
 // components
 import MapView from 'react-native-maps';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
+import OutlineText from '../../components/common/OutlineText';
 
 export default class MapMarkerDrop extends Component {
   constructor(props) {
@@ -71,31 +72,28 @@ export default class MapMarkerDrop extends Component {
             style={styles.map}
             region={this.state.current}
             onRegionChange={this.onRegionChange}>
-            <MapView.Marker
-              coordinate={this.state.current}>
-              <View style={styles.ownMarker}/>
-            </MapView.Marker>
+            <View style={styles.pinShadow}>
+              <View style={styles.pinContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+
+                    // outer callback
+                    this.props.onSelected && this.props.onSelected(
+                      this.state.current
+                    );
+
+                    // and out
+                    Actions.pop();
+                  }}
+                  style={styles.pinContent}>
+                  <OutlineText text='Set as Contest Location' />
+                </TouchableOpacity>
+                <View style={styles.pin} />
+              </View>
+            </View>
           </MapView>
         </View>
         <CloseFullscreenButton />
-        <TouchableOpacity
-          style={styles.doneButton}
-          onPress={() => {
-
-            // outer callback
-            this.props.onSelected && this.props.onSelected(
-              this.state.current
-            );
-
-            // and out
-            Actions.pop();
-          }}>
-          <View style={styles.doneButtonShadow}>
-            <Text style={styles.doneButtonText}>
-              Done
-            </Text>
-          </View>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -126,44 +124,45 @@ const styles = StyleSheet.create({
   },
 
   map: {
-    flex: 1
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 
-  doneButton: {
-    top: Sizes.InnerFrame,
-    right: 0,
-    position: 'absolute',
-    padding: Sizes.InnerFrame
+  pinContainer: {
+    top: -Sizes.InnerFrame * 1.2,
+    alignItems: 'center'
   },
 
-  doneButtonShadow: {
+  pin: {
+    top: -Sizes.InnerFrame / 4,
+    zIndex: -100,
+    width: Sizes.InnerFrame / 2,
+    height: Sizes.InnerFrame / 2,
+    backgroundColor: Colors.Foreground,
+    transform: [
+      {
+        rotate: '45deg'
+      }
+    ]
+  },
+
+  pinContent: {
+    minWidth: Sizes.InnerFrame * 10,
+    padding: Sizes.InnerFrame / 2,
+    backgroundColor: Colors.Foreground,
+    borderRadius: 20,
+    overflow: 'hidden'
+  },
+
+  pinShadow: {
+    backgroundColor: Colors.Transparent,
     shadowColor: Colors.Overlay,
     shadowOpacity: 1,
     shadowRadius: 5,
     shadowOffset: {
-      height: 1,
+      height: Sizes.InnerFrame / 2,
       width: 0
     }
-  },
-
-  doneButtonText: {
-    color: Colors.Text,
-    fontSize: Sizes.H3,
-    fontWeight: '500'
-  },
-
-  ownMarker: {
-    width: 20,
-    height: 20,
-    borderRadius: 20/2,
-    backgroundColor: Colors.Primary,
-    borderColor: Colors.ModalBackground,
-    borderWidth: 3,
-    shadowColor: Colors.DarkOverlay,
-    shadowOpacity: 1,
-    shadowRadius: 3,
-    shadowOffset: {
-      height: 1,
-    },
   }
 });
