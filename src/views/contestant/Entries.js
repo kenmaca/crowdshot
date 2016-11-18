@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, ListView
 } from 'react-native';
 import {
   Colors, Sizes
@@ -15,24 +15,36 @@ import {
 
 // components
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
+import EntryCard from '../../components/lists/EntryCard';
 
 export default class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {}
+      rawEntries: {},
+      entries: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1 !== r2
+      })
     };
 
     this.ref = Database.ref(
-      `profiles/${Firebase.auth().currentUser.uid}`
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/entries`
     );
   }
 
   componentDidMount() {
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
+        let blob = data.val();
         this.setState({
-          user: data.val()
+          rawEntries: blob,
+          entries: new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 !== r2
+          }).cloneWithRows(
+            Object.keys(blob)
+          )
         });
       }
     });
@@ -40,6 +52,14 @@ export default class Settings extends Component {
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
+  }
+
+  renderRow(entryId) {
+    return (
+      <EntryCard
+        contestId={this.state.rawEntries[entryId]}
+        entryId={entryId} />
+    );
   }
 
   render() {
@@ -51,7 +71,11 @@ export default class Settings extends Component {
           </Text>
         </View>
         <View style={styles.content}>
-
+          <ListView
+            scrollEnabled
+            dataSource={this.state.entries}
+            style={styles.entries}
+            renderRow={this.renderRow.bind(this)} />
         </View>
         <CloseFullscreenButton />
       </View>
@@ -77,5 +101,13 @@ const styles = StyleSheet.create({
   title: {
     color: Colors.Text,
     fontSize: Sizes.H3
+  },
+
+  content: {
+    flex: 1
+  },
+
+  entries: {
+    flex: 1
   }
 });

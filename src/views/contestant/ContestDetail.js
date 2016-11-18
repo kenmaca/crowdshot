@@ -220,7 +220,7 @@ export default class ContestDetail extends Component {
                 }/entries/${
                   entryId
                 }`
-              ).set(true);
+              ).set(this.props.contestId);
             }}
             />
           <CloseFullscreenButton
