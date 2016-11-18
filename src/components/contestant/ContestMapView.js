@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   StyleSheet, View, Text, Animated, PanResponder,
-  ListView, TouchableOpacity, Alert
+  TouchableOpacity, Alert
 } from 'react-native';
 import {
   Sizes, Colors
@@ -17,7 +17,7 @@ import {
 
 // components
 import MapView from 'react-native-maps';
-import ContestMapCard from '../lists/ContestMapCard';
+import ContestMapMarker from './ContestMapMarker';
 
 const LAT_DELTA = 0.01;
 const LNG_DELTA = 0.01;
@@ -36,9 +36,6 @@ export default class ContestMapView extends Component {
       },
       contests: {},
       inView: {},
-      data: new ListView.DataSource({
-        rowHasChanged: (r1, r2) => r1 !== r2
-      }),
     };
 
     this.ref = new GeoFire(
@@ -61,7 +58,6 @@ export default class ContestMapView extends Component {
 
     // methods
     this.onRegionChange = this.onRegionChange.bind(this);
-    this.rebuild = this.rebuild.bind(this);
   }
 
   onRegionChange(region) {
@@ -84,14 +80,6 @@ export default class ContestMapView extends Component {
     });
   }
 
-  rebuild() {
-    this.setState({
-      data: new ListView.DataSource({
-        rowHasChanged: (r1, r2) => r1 !== r2
-      }).cloneWithRows(Object.keys(this.state.inView))
-    });
-  }
-
   componentDidMount() {
 
     // setup default location
@@ -103,10 +91,6 @@ export default class ContestMapView extends Component {
           latitudeDelta: this.state.region.latitudeDelta,
           longitudeDelta: this.state.region.longitudeDelta
         };
-        this.setState({
-          current: region,
-          region: region
-        });
 
         // trigger initial load
         this.onRegionChange(region);
@@ -131,30 +115,16 @@ export default class ContestMapView extends Component {
         },
         distance: distance
       };
-
-      this.rebuild();
     });
 
     // remove when out of view
     this.ref.on('key_exited', (key, location, distance) => {
       delete this.state.inView[key];
-      this.rebuild();
     });
   }
 
   componentWillUnmount() {
     this.ref.cancel();
-  }
-
-  renderRow(contestId) {
-    return (
-      <TouchableOpacity
-        onPress={() => Actions.contestDetail({
-          contestId: contestId
-        })}>
-        <ContestMapCard contestId={contestId} />
-      </TouchableOpacity>
-    );
   }
 
   render() {
@@ -169,36 +139,13 @@ export default class ContestMapView extends Component {
             {
               Object.keys(this.state.contests).map((contest, i) => {
                 return (
-                  <MapView.Marker
+                  <ContestMapMarker
                     coordinate={this.state.contests[contest].location}
-                    key={contest}
-                    onPress={null}>
-                    <View style={styles.markerWrapper}>
-                      <View style={[styles.marker, styles.markerSelected]}>
-                        <Text style={styles.selectedText}>
-                          $10
-                        </Text>
-                      </View>
-                      <View style={[styles.markerArrow,styles.selectedArrow]}/>
-                    </View>
-                  </MapView.Marker>
+                    contestId={contest}
+                    key={contest} />
                 );
               })
             }
-            <View style={styles.listContainer}>
-              <ListView
-                ref='list'
-                horizontal
-                enableEmptySections
-                renderSeparator={() => (
-                  <View
-                    key={Math.random()}
-                    style={styles.separator} />
-                )}
-                contentContainerStyle={styles.listContent}
-                dataSource={this.state.data}
-                renderRow={this.renderRow} />
-            </View>
           </MapView>
         </View>
       </View>
@@ -263,56 +210,5 @@ const styles = StyleSheet.create({
     color: Colors.Text,
     fontWeight: '800',
     fontSize: Sizes.H4
-  },
-
-
-  markerWrapper: {
-    alignItems: 'center'
-  },
-
-  marker: {
-    borderRadius: 5,
-    borderWidth: 0,
-    paddingHorizontal: 3,
-    backgroundColor: Colors.MediumDarkOverlay,
-  },
-
-  markerSelected: {
-    backgroundColor: Colors.Primary,
-  },
-
-  markerArrow: {
-    width: 0,
-    height: 0,
-    backgroundColor: Colors.Transparent,
-    borderStyle: 'solid',
-    borderTopWidth: 6,
-    borderLeftWidth: 4,
-    borderRightWidth: 4,
-    borderLeftColor: Colors.Transparent,
-    borderRightColor: Colors.Transparent,
-    borderTopColor: Colors.MediumDarkOverlay
-  },
-
-  selectedArrow: {
-    borderTopColor: Colors.Primary
-  },
-
-  ownMarker: {
-    width: 20,
-    height: 20,
-    borderRadius: 20/2,
-    backgroundColor: Colors.Primary,
-    borderColor: Colors.ModalBackground,
-    borderWidth: 3,
-    shadowColor: Colors.DarkOverlay,
-    shadowOpacity: 1,
-    shadowRadius: 3,
-    shadowOffset: {
-      height: 1,
-    },
   }
-
-
-
 });

@@ -15,6 +15,7 @@ export const Colors = {
   Primary: '#66C75C',
   Secondary: '#F5F5F5',
   Tertiary: '#F5F5F5',
+  Trophy: '#EEC584',
 
   // backgrounds
   Background: '#222222',
