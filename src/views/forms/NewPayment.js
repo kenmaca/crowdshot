@@ -19,18 +19,29 @@ import CloseFullscreenButton from '../../components/common/CloseFullscreenButton
 import PriceSelect from '../../components/common/PriceSelect';
 import CardSelect from '../../components/common/CardSelect';
 import Button from '../../components/common/Button';
+import InformationField from '../../components/common/InformationField';
 
-export default class NewBounty extends Component {
+export default class NewPayment extends Component {
   constructor(props) {
     super(props);
     this.state = {
       stripeCardId: null,
       stripeCustomerId: null,
-      bounty: null,
+      value: null,
       processing: false
     };
 
     this.charge = this.charge.bind(this);
+  }
+
+  componentDidMount() {
+    this.componentWillReceiveProps(this.props);
+  }
+
+  componentWillReceiveProps(props) {
+    if (props.fixedValue) this.setState({
+      value: props.fixedValue
+    });
   }
 
   charge() {
@@ -40,17 +51,17 @@ export default class NewBounty extends Component {
       processing: true
     });
 
-    let prizeId = Database.ref('prizes').push({
+    let transactionId = Database.ref('transactions').push({
       createdBy: Firebase.auth().currentUser.uid,
 
       // stripe asks for cents
-      value: this.state.bounty * 100,
+      value: this.state.value * 100,
       stripeCardId: this.state.stripeCardId,
       stripeCustomerId: this.state.stripeCustomerId,
       dateCreated: Date.now(),
     }).key;
     let ref = Database.ref(
-      `prizes/${prizeId}`
+      `transactions/${transactionId}`
     );
 
     let listener = ref.on('value', data => {
@@ -96,7 +107,9 @@ export default class NewBounty extends Component {
         </Modal>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>
-            Set the Bounty Amount
+            {
+              this.props.titleText || 'Set the Bounty Amount'
+            }
           </Text>
         </View>
         <View style={styles.content}>
@@ -106,31 +119,53 @@ export default class NewBounty extends Component {
               stripeCardId: card.stripeCardId
             })}
             label='Payment Method' />
-          <PriceSelect
-            isBottom
-            noMargin
-            label='Bounty'
-            onSelected={bounty => this.setState({
-              bounty: bounty
-            })}
-            subtitle='Awarded to the winner' />
+          {
+            !this.props.fixedValue ? (
+              <PriceSelect
+                isBottom
+                noMargin
+                label={
+                  this.props.priceText
+                  || 'Amount'
+                }
+                onSelected={amount => this.setState({
+                  value: amount
+                })}
+                subtitle={
+                  this.props.priceSubtext
+                  || 'Awarded to the winner'
+                } />
+            ): (
+              <InformationField
+                label='Amount'
+                info={`$${this.props.fixedValue}`} />
+            )
+          }
           <View style={styles.disclaimerContainer}>
             <Text style={styles.disclaimer}>
-              This will be charged immediately to your
-              chosen payment method at the start of your contest.
-              This amount can be refunded if the contest is cancelled
-              due a lack of photos submitted by contestants.
+              {
+                this.props.disclaimerText
+                || (
+                  'This will be charged immediately to your '
+                  + 'chosen payment method at the start of your contest. '
+                  + 'This amount can be refunded if the contest is cancelled '
+                  + 'due a lack of photos submitted by contestants.'
+                )
+              }
             </Text>
           </View>
           <Button
             isDisabled={
-              this.state.bounty
+              this.state.value
               && !this.state.stripeCardId
               && !this.state.stripeCustomerId
             }
             onPress={this.charge}
             color={Colors.Primary}
-            label='Add bounty to contest' />
+            label={
+              this.props.submitText
+              || 'Add bounty to contest'
+            } />
         </View>
         <CloseFullscreenButton />
       </View>

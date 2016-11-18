@@ -138,9 +138,9 @@ export default class NewContest extends Component {
         </View>
         <View style={styles.checklist}>
           <ChecklistItem
-            onPress={() => Actions.newBounty({
-              onCharged: prizeId => this.setState({
-                prizeId: prizeId
+            onPress={() => Actions.newPayment({
+              onCharged: transactionId => this.setState({
+                prizeId: transactionId
               })
             })}
             checked={this.state.prizeId}

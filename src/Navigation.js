@@ -25,7 +25,7 @@ import Chat from './views/main/Chat';
 import Settings from './views/main/Settings';
 import PaymentMethods from './views/forms/PaymentMethods';
 import NewPaymentMethod from './views/forms/NewPaymentMethod';
-import NewBounty from './views/forms/NewBounty';
+import NewPayment from './views/forms/NewPayment';
 import MapMarkerDrop from './views/forms/MapMarkerDrop';
 import NewReferencePhoto from './views/forms/NewReferencePhoto';
 import Contest from './views/contests/Contest';
@@ -82,8 +82,8 @@ export default class Navigation extends Component {
               key='newPaymentMethod'
               component={NewPaymentMethod} />
             <Scene
-              key='newBounty'
-              component={NewBounty} />
+              key='newPayment'
+              component={NewPayment} />
             <Scene
               key='mapMarkerDrop'
               component={MapMarkerDrop} />

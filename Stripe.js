@@ -20,25 +20,25 @@ firebase.auth().signInWithEmailAndPassword(
   console.log(error);
 }).then(() => {
 
-  // charge prizes
-  console.log('Starting Prize Charging Listener..');
-  Database.ref('prizes').on('child_added', data => {
-    let prize = data.val();
+  // charge transactions
+  console.log('Starting Transaction Charging Listener..');
+  Database.ref('transactions').on('child_added', data => {
+    let transaction = data.val();
 
     // if not processed
-    if (!prize.processed) {
-      console.log(`New Prize found: ${
+    if (!transaction.processed) {
+      console.log(`New Transaction Attempt found: ${
         data.key
-      }; Attempting to charge and approve prize..`);
+      }; Attempting to charge and approve transaction..`);
 
-      if (prize.value > 0) {
+      if (transaction.value > 0) {
         let charge = {
-          amount: prize.value,
+          amount: transaction.value,
           currency: 'cad',
-          customer: prize.stripeCustomerId,
-          source: prize.stripeCardId,
-          description: `Bounty for Contest Owner ${
-            Firebase.auth().currentUser.uid
+          customer: transaction.stripeCustomerId,
+          source: transaction.stripeCardId,
+          description: `Transaction for ${
+            transaction.createdBy
           }`
         };
         fetch(
@@ -63,7 +63,7 @@ firebase.auth().signInWithEmailAndPassword(
         }).then(json => {
           if (!json.error) {
             Database.ref(
-              `prizes/${data.key}`
+              `transactions/${data.key}`
             ).update({
               stripeChargeId: json.id,
               processed: true,
@@ -71,7 +71,7 @@ firebase.auth().signInWithEmailAndPassword(
             });
           } else {
             Database.ref(
-              `prizes/${data.key}`
+              `transactions/${data.key}`
             ).update({
               processed: true,
               error: json.error
@@ -81,7 +81,7 @@ firebase.auth().signInWithEmailAndPassword(
 
       // automatically approve free contests
       } else {
-        Database.ref(`prizes/${data.key}`).update({
+        Database.ref(`transactions/${data.key}`).update({
           processed: true,
           approved: true
         });

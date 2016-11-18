@@ -95,7 +95,12 @@ export default class ContestCard extends Component {
           style={styles.header}>
           <TouchableOpacity
             onPress={() => {
-              Actions.newBounty({
+              Actions.newPayment({
+                titleText: 'Add another Prize',
+                disclaimerText: 'This will be charged to your '
+                  + 'chosen payment method immediately. Unused bounties '
+                  + 'will be refunded at the end of the contest.',
+                fixedValue: this.state.bounty,
                 onCharged: prizeId => Database.ref(
                   `contests/${
                     this.props.contestId
