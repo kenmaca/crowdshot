@@ -30,7 +30,8 @@ import OutlineText from '../../components/common/OutlineText';
 import ContestCard from '../../components/lists/ContestCard';
 import EmptyContestCard from '../../components/lists/EmptyContestCard';
 import CircleIcon from '../../components/common/CircleIcon';
-import SettingsButton from '../../components/common/SettingsButton';
+import HeaderButtons from '../../components/common/HeaderButtons';
+import HeaderButton from '../../components/common/HeaderButton';
 
 export default class Main extends Component {
   constructor(props) {
@@ -239,7 +240,6 @@ export default class Main extends Component {
               Colors.Background,
             ]}
             style={styles.headerContent}>
-            <SettingsButton />
             <Avatar
               size={30}
               onPress={() => Actions.profile({
@@ -304,6 +304,11 @@ export default class Main extends Component {
               );
             }
           } />
+        <HeaderButtons>
+          <HeaderButton
+            icon='sliders'
+            onPress={Actions.settings} />
+        </HeaderButtons>
       </View>
     );
   }

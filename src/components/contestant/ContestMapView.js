@@ -18,6 +18,8 @@ import {
 // components
 import MapView from 'react-native-maps';
 import ContestMapMarker from './ContestMapMarker';
+import HeaderButtons from '../common/HeaderButtons';
+import HeaderButton from '../common/HeaderButton';
 
 const LAT_DELTA = 0.01;
 const LNG_DELTA = 0.01;
@@ -173,6 +175,9 @@ export default class ContestMapView extends Component {
               )
             }
           </MapView>
+          <HeaderButtons>
+            <HeaderButton icon='trophy' />
+          </HeaderButtons>
         </View>
       </View>
     );
