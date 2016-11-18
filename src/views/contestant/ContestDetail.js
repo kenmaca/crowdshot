@@ -204,13 +204,23 @@ export default class ContestDetail extends Component {
           <CameraView
             onUploaded={(photoId) => {
               this.setState({
-                cameraVisible:false,
+                cameraVisible: false,
               });
+
               let entryId = this.entriesRef.push({
                 createdBy: Firebase.auth().currentUser.uid,
                 dateCreated: Date.now(),
                 photoId: photoId,
               }).key
+
+              // and add to profile's list of entries
+              Database.ref(
+                `profiles/${
+                  Firebase.auth().currentUser.uid
+                }/entries/${
+                  entryId
+                }`
+              ).set(true);
             }}
             />
           <CloseFullscreenButton
