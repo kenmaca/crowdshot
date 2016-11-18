@@ -7,6 +7,7 @@ import {
 import {
   Colors, Sizes
 } from '../../Const';
+import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 import {
   Actions
@@ -56,13 +57,26 @@ export default class ContestMapMarker extends Component {
             y: -Sizes.InnerFrame * 2
           }}
           coordinate={this.props.coordinate}
-          onPress={() => Actions.contestDetail({
-            contestId: this.props.contestId
-          })}>
+          onPress={() => {
+            if (this.state.createdBy === Firebase.auth().currentUser.uid) {
+              Actions.contest({
+                contestId: this.props.contestId
+              });
+            } else {
+              Actions.contestDetail({
+                contestId: this.props.contestId
+              });
+            }
+          }}>
           <View style={styles.shadow}>
             <View style={styles.container}>
               <View style={styles.outline}>
-                <View style={styles.content}>
+                <View style={[
+                  styles.content,
+                  this.state.createdBy === Firebase.auth().currentUser.uid && {
+                    backgroundColor: Colors.Primary
+                  }
+                ]}>
                   <Avatar
                     size={48}
                     uid={this.state.createdBy} />

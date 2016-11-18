@@ -25,19 +25,14 @@ import CircleIconInfo from '../../components/common/CircleIconInfo';
 import CircleIcon from '../../components/common/CircleIcon';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import CameraView from '../../components/common/CameraView';
-import * as Progress from 'react-native-progress';
-import Geocoder from 'react-native-geocoder';
+import ContestProgressBar from '../../components/contests/ContestProgressBar';
 
 export default class ContestDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dateCreated: Date.now(),
-      currentTime: Date.now(),
       cameraVisible: false,
-      progress: 0,
       preview: null,
-      near: '...',
       entries: {},
       thumbnails: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
@@ -99,9 +94,21 @@ export default class ContestDetail extends Component {
               }`} />
         </Photo>
         <View style={styles.body}>
+          <ContestProgressBar
+            start={this.state.dateCreated}
+            end={this.state.endDate}
+            interval={20000} />
           <ScrollView style={styles.detailContainer}>
-            <Divider style={styles.divider} />
             <View style={styles.summary}>
+              {
+                this.state.near && (
+                  <CircleIconInfo
+                    size={Sizes.H2}
+                    color={Colors.Foreground}
+                    icon='location-city'
+                    label={`Near ${this.state.near}`} />
+                )
+              }
               <CircleIconInfo
                 size={Sizes.H2}
                 color={Colors.Foreground}
@@ -126,6 +133,17 @@ export default class ContestDetail extends Component {
                     ).filter(key => key != 'undefined').length
                   } photographers`
                 } />
+              <TouchableOpacity
+                onPress={() => Actions.chat({
+                  chatId: this.props.contestId,
+                  title: 'Contest Chat'
+                })}>
+                <CircleIconInfo
+                  size={Sizes.H2}
+                  color={Colors.Foreground}
+                  icon='message'
+                  label='Open contest chat' />
+              </TouchableOpacity>
             </View>
             <Divider style={styles.divider} />
             {

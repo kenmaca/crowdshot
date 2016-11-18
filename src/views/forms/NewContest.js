@@ -13,6 +13,7 @@ import {
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 import GeoFire from 'geofire';
+import Geocoder from 'react-native-geocoder';
 
 // components
 import DatePicker from '../../components/common/DatePicker';
@@ -41,65 +42,77 @@ export default class NewContest extends Component {
       processing: true
     });
 
-    Database.ref(
-      `prizes/${this.state.prizeId}`
-    ).once('value', data => {
-      let prize = data.val();
-      let dateCreated = Date.now();
-
-      // now create it
-      let contestId = Database.ref('contests').push({
-
-        // stripe requires cents to be stored
-        bounty: prize.value / 100,
-        dateCreated: dateCreated,
-
-        // default a hour duration
-        endDate: dateCreated + 3600000,
-
-        // TODO: add in Photo upload
-        instructions: 'Not implemented.',
-        prizes: {
-          [this.state.prizeId]: true
-        },
-        referencePhotoId: this.state.referencePhotoId,
-        createdBy: Firebase.auth().currentUser.uid
-      }).key;
-
-      // location via GeoFire
-      new GeoFire(Database.ref('locations')).set(
-        contestId, this.state.location
-      );
+    // prepare geocoder first before submission
+    let coords = {
+      lat: this.state.location[0],
+      lng: this.state.location[1]
+    };
+    Geocoder.geocodePosition(coords).then(location => {
       Database.ref(
-        `locations/${
-          contestId
-        }`
-      ).update({
-        lastReported: dateCreated,
-        validUntil: dateCreated + 3600000,
-        createdBy: Firebase.auth().currentUser.uid,
-        contestId: contestId
-      });
+        `prizes/${this.state.prizeId}`
+      ).once('value', data => {
+        let prize = data.val();
+        let dateCreated = Date.now();
 
-      // add to owner's list
-      Database.ref(
-        `profiles/${
-          Firebase.auth().currentUser.uid
-        }/contests/${
-          contestId
-        }`
-      ).set(true);
+        // now create it
+        let contestId = Database.ref('contests').push({
 
-      // and back out
-      // TODO: send directly to the card expanded
-      this.setState({
-        prizeId: null,
-        location: null,
-        referencePhotoId: null,
-        processing: false
-      });
-      Actions.contest({
-        contestId: contestId
+          // stripe requires cents to be stored
+          bounty: prize.value / 100,
+          dateCreated: dateCreated,
+
+          // default a hour duration
+          endDate: dateCreated + 3600000,
+
+          // TODO: add in Photo upload
+          instructions: 'Not implemented.',
+          prizes: {
+            [this.state.prizeId]: true
+          },
+          referencePhotoId: this.state.referencePhotoId,
+          createdBy: Firebase.auth().currentUser.uid,
+          near: `${
+            location[0].feature
+          } at ${
+            location[0].subLocality
+          }`
+        }).key;
+
+        // location via GeoFire
+        new GeoFire(Database.ref('locations')).set(
+          contestId, this.state.location
+        );
+        Database.ref(
+          `locations/${
+            contestId
+          }`
+        ).update({
+          lastReported: dateCreated,
+          validUntil: dateCreated + 3600000,
+          createdBy: Firebase.auth().currentUser.uid,
+          contestId: contestId
+        });
+
+        // add to owner's list
+        Database.ref(
+          `profiles/${
+            Firebase.auth().currentUser.uid
+          }/contests/${
+            contestId
+          }`
+        ).set(true);
+
+        // and back out
+        // TODO: send directly to the card expanded
+        this.setState({
+          prizeId: null,
+          location: null,
+          referencePhotoId: null,
+          processing: false
+        });
+        Actions.contest({
+          contestId: contestId
+        });
       });
     });
   }

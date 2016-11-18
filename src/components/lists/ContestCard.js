@@ -43,9 +43,6 @@ export default class ContestCard extends Component {
     this.entriesRef = Database.ref(
       `entries/${this.props.contestId}`
     );
-    this.locationRef = Database.ref(
-      `locations/${this.props.contestId}/l`
-    );
   }
 
   componentDidMount() {
@@ -68,34 +65,11 @@ export default class ContestCard extends Component {
         });
       }
     });
-
-    this.locationListener = this.locationRef.on('value', data => {
-      if (data.exists()) {
-        let coords = data.val();
-        console.log(coords);
-        coords = {
-          lat: coords[0],
-          lng: coords[1]
-        };
-        console.log(coords);
-
-        Geocoder.geocodePosition(coords).then(location => {
-          this.setState({
-            near: `${
-              location[0].feature
-            } at ${
-              location[0].subLocality
-            }`
-          });
-        });
-      }
-    });
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
     this.entriesListener && this.entriesRef.off('value', this.entriesListener);
-    this.locationListener && this.locationRef.off('value', this.locationListener);
   }
 
   render() {

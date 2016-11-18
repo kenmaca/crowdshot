@@ -102,7 +102,13 @@ export default class ContestProgress extends Component {
           ): (
             <View style={styles.progressUpsellContainer}>
               <Text style={styles.progressUpsellText}>
-                CONTEST ENDED — VOTE FOR THE WINNERS
+                {
+                  `CONTEST ENDED${
+                    this.props.isOwn
+                    ? '— VOTE FOR THE WINNERS'
+                    : ''
+                  }`
+                }
               </Text>
             </View>
           )
