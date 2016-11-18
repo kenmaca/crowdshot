@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   },
 
   endButton: {
-    alignSelf: 'stretch',
+    width: Sizes.Width,
     paddingTop: Sizes.InnerFrame,
     paddingBottom: Sizes.InnerFrame
   }

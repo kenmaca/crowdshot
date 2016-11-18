@@ -172,7 +172,7 @@ export default class NewContest extends Component {
             })}
             checked={this.state.referencePhotoId}
             photoId='appNewContestCamera'
-            title='.. and finally, a photo.'
+            title='.. and finally, a reference photo.'
             subtitle={
               'Take a reference photo of what you want '
               + 'a photo of. It can be anything from an object, '
