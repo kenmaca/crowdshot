@@ -146,6 +146,21 @@ export default class ContestMapView extends Component {
                 );
               })
             }
+            {
+              (
+                Object.keys(this.state.inView).length > 0
+              ) ? (
+                <View />
+              ): (
+                <View style={styles.shadow}>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.text}>
+                      No active contests found — try moving the map around
+                    </Text>
+                  </View>
+                </View>
+              )
+            }
           </MapView>
         </View>
       </View>
@@ -171,44 +186,30 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end'
   },
 
-  listContainer: {
-    height: 200,
-    marginBottom: Sizes.OuterFrame * 2,
-    alignSelf: 'stretch',
+  shadow: {
     backgroundColor: Colors.Transparent,
-    overflow: 'hidden'
+    shadowColor: Colors.Overlay,
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    shadowOffset: {
+      height: Sizes.InnerFrame / 2,
+      width: 0
+    }
   },
 
-  listContent: {
-    paddingLeft: Sizes.InnerFrame
-  },
-
-  separator: {
-    marginRight: Sizes.InnerFrame / 4
-  },
-
-  bubble: {
-    backgroundColor: Colors.Overlay,
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 15,
-  },
-
-  buttonContainer: {
-    flexDirection: 'row',
-    marginVertical: 20,
-    alignSelf: 'center',
-    backgroundColor: 'transparent',
+  textContainer: {
+    marginBottom: Sizes.OuterFrame * 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: Sizes.InnerFrame * 2,
+    paddingTop: Sizes.InnerFrame / 2,
+    paddingBottom: Sizes.InnerFrame / 2,
+    backgroundColor: Colors.Foreground,
+    borderRadius: 18
   },
 
   text: {
     color: Colors.Text,
-    fontWeight: '600'
-  },
-
-  selectedText: {
-    color: Colors.Text,
-    fontWeight: '800',
-    fontSize: Sizes.H4
+    fontSize: Sizes.Text
   }
 });
