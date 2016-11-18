@@ -21,7 +21,7 @@ import SingleLineInput from '../../components/common/SingleLineInput';
 import CircleIcon from '../../components/common/CircleIcon';
 import ProgressBlocker from '../../components/common/ProgressBlocker';
 
-export default class NewPayment extends Component {
+export default class NewPaymentMethod extends Component {
   constructor(props) {
     super(props);
     this.state = {

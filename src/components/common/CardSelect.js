@@ -29,7 +29,7 @@ export default class CardSelect extends Component {
       <Field
         {...this.props}>
         <TouchableOpacity
-          onPress={() => Actions.payment({
+          onPress={() => Actions.paymentMethods({
             onSelected: cardSelected => {
               this.setState({
                 cardSelected: cardSelected

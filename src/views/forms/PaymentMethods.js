@@ -21,7 +21,7 @@ import CloseFullscreenButton from '../../components/common/CloseFullscreenButton
 import CircleIcon from '../../components/common/CircleIcon';
 import Divider from '../../components/common/Divider';
 
-export default class Settings extends Component {
+export default class PaymentMethods extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -128,7 +128,7 @@ export default class Settings extends Component {
             renderRow={this.renderRow} />
           <TouchableOpacity
             style={styles.addContainer}
-            onPress={Actions.newPayment}>
+            onPress={Actions.newPaymentMethod}>
             <CircleIcon
               style={styles.addContainerIcon}
               color={Colors.Transparent}

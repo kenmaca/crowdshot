@@ -23,8 +23,8 @@ import ContestPhotos from './views/contests/ContestPhotos';
 import ContestDetail from './views/contestant/ContestDetail';
 import Chat from './views/main/Chat';
 import Settings from './views/main/Settings';
-import Payment from './views/forms/Payment';
-import NewPayment from './views/forms/NewPayment';
+import PaymentMethods from './views/forms/PaymentMethods';
+import NewPaymentMethod from './views/forms/NewPaymentMethod';
 import NewBounty from './views/forms/NewBounty';
 import MapMarkerDrop from './views/forms/MapMarkerDrop';
 import NewReferencePhoto from './views/forms/NewReferencePhoto';
@@ -76,11 +76,11 @@ export default class Navigation extends Component {
               key='settings'
               component={Settings} />
             <Scene
-              key='payment'
-              component={Payment} />
+              key='paymentMethods'
+              component={PaymentMethods} />
             <Scene
-              key='newPayment'
-              component={NewPayment} />
+              key='newPaymentMethod'
+              component={NewPaymentMethod} />
             <Scene
               key='newBounty'
               component={NewBounty} />
