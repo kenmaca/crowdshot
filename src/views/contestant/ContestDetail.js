@@ -45,23 +45,11 @@ export default class ContestDetail extends Component {
     };
 
     this.ref = Database.ref(
-      `contests/${this.props.contest.contestId}`
+      `contests/${this.props.contestId}`
     );
     this.entriesRef = Database.ref(
-      `entries/${this.props.contest.contestId}`
+      `entries/${this.props.contestId}`
     );
-
-    let coord = {
-      lat: this.props.contest.coordinate.latitude,
-      lng: this.props.contest.coordinate.longitude
-    };
-
-    Geocoder.geocodePosition(coord).then(res => {
-      this.setState({near:res[0].feature + ' @ ' + res[0].subLocality})
-    })
-    .catch(err => console.log('geocode error ', err))
-
-    this.updateProgress = this.updateProgress.bind(this);
   }
 
   componentDidMount() {
@@ -70,8 +58,6 @@ export default class ContestDetail extends Component {
         this.setState({
           ...data.val()
         });
-
-        this.updateProgress(data.val().endDate);
       }
     });
 
@@ -89,36 +75,11 @@ export default class ContestDetail extends Component {
         });
       }
     });
-
-
-
-  }
-
-  updateProgress(endDate) {
-    // clear previous, just in case this was an interrupt
-    this.progress && clearTimeout(this.progress);
-    let duration = parseInt(endDate || this.state.endDate)
-      - parseInt(this.state.dateCreated);
-    let elapsed = Date.now() - parseInt(this.state.dateCreated);
-    this.setState({
-      progress: (
-        (duration !== 0)
-        ? (
-          (elapsed < duration)
-          ? elapsed / duration
-          : 1
-        ): 0
-      )
-    });
-
-    // refresh
-    this.progress = setTimeout(this.updateProgress, 20000);
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
     this.entriesListener && this.entriesRef.off('value', this.entriesListener);
-    this.progress && clearTimeout(this.progress);
   }
 
   render() {
@@ -139,33 +100,8 @@ export default class ContestDetail extends Component {
         </Photo>
         <View style={styles.body}>
           <ScrollView style={styles.detailContainer}>
-            <View style={styles.progressContainer}>
-            {
-              this.state.progress < 1 && this.state.progress > 0
-              ? (
-                <Text style={styles.progressStaticText}>
-                  Ending {DateFormat(this.state.endDate, 'dddd, h:MMTT')}
-                </Text>
-              ): this.state.progress > 0 ? (
-                <Text style={styles.progressStaticText}>
-                  CONTEST ENDED
-                </Text>
-              ): (
-                <Text style={styles.progressStaticText}>
-                  LOADING
-                </Text>
-              )
-            }
-            </View>
             <Divider style={styles.divider} />
             <View style={styles.summary}>
-              <CircleIconInfo
-                size={Sizes.H2}
-                color={Colors.Foreground}
-                icon='location-city'
-              //  label='Near Queen St W and Spadina'
-                label={'Near ' + this.state.near}
-                />
               <CircleIconInfo
                 size={Sizes.H2}
                 color={Colors.Foreground}
@@ -192,26 +128,28 @@ export default class ContestDetail extends Component {
                 } />
             </View>
             <Divider style={styles.divider} />
-            {this.state.thumbnails.getRowCount() > 0 &&
-            <View style={styles.instructionContainer}>
-              <InputSectionHeader label='Your submissions' />
-              <ListView
-                horizontal
-                scrollEnabled={false}
-                dataSource={this.state.thumbnails}
-                style={styles.thumbnailList}
-                contentContainerStyle={styles.thumbnailContainer}
-                renderRow={data => {
-                  return (
-                    <TouchableOpacity
-                      onPress={() => this.setState({preview:data})}>
-                      <Photo
-                        photoId={data}
-                        style={styles.thumbnails}/>
-                    </TouchableOpacity>
-                  );
-                }} />
-            </View>
+            {
+              this.state.thumbnails.getRowCount() > 0 && (
+                <View style={styles.instructionContainer}>
+                  <InputSectionHeader label='Your submissions' />
+                  <ListView
+                    horizontal
+                    scrollEnabled={false}
+                    dataSource={this.state.thumbnails}
+                    style={styles.thumbnailList}
+                    contentContainerStyle={styles.thumbnailContainer}
+                    renderRow={data => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() => this.setState({preview:data})}>
+                          <Photo
+                            photoId={data}
+                            style={styles.thumbnails}/>
+                        </TouchableOpacity>
+                      );
+                    }} />
+                </View>
+              )
             }
             <View style={styles.instructionContainer}>
               <InputSectionHeader label='Instructions' />
@@ -223,14 +161,22 @@ export default class ContestDetail extends Component {
           </ScrollView>
         </View>
         <Button
+          squareBorders
           color={Colors.Primary}
-          onPress={() => this.setState({cameraVisible:true})}
-          label={this.state.thumbnails.getRowCount() > 0
-            ? "Shoot another one" : "Participate"}
-          squareBorders={10}
-          isDisabled={this.state.progress >= 1 || this.state.progress <= 0}
-          disabledColor={Colors.MediumDarkOverlay}
-          style={styles.buttonStyle}>
+          onPress={() => this.setState({
+            cameraVisible: true
+          })}
+          label={
+            this.state.thumbnails.getRowCount() > 0
+            ? 'Submit another Entry': 'Participate'
+          }
+          isDisabled={
+            !this.state.referencePhotoId
+            || Date.now() > this.state.endDate
+            || this.state.isComplete
+            || this.state.isCancelled
+          }
+          disabledColor={Colors.MediumDarkOverlay}>
         </Button>
         <CloseFullscreenButton/>
         <Modal

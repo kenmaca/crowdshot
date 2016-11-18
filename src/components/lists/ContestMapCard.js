@@ -43,8 +43,12 @@ export default class ContestMapCard extends Component {
 
   render() {
     return (
-      this.state.referencePhotoId
-      ? (
+      (
+        this.state.referencePhotoId
+        && Date.now() < this.state.endDate
+        && !this.state.isComplete
+        && !this.state.isCancelled
+      ) ? (
         <Photo
           photoId={this.state.referencePhotoId}
           style={styles.container}>

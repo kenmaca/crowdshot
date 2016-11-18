@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   StyleSheet, View, Text, Animated, PanResponder,
-  ListView, TouchableOpacity
+  ListView, TouchableOpacity, Alert
 } from 'react-native';
 import {
   Sizes, Colors
@@ -11,6 +11,9 @@ import {
 import * as Firebase from 'firebase';
 import GeoFire from 'geofire';
 import Database from '../../utils/Database';
+import {
+  Actions
+} from 'react-native-router-flux';
 
 // components
 import MapView from 'react-native-maps';
@@ -23,7 +26,7 @@ export default class ContestMapView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: {
+      region: {
 
         // default location is Toronto
         latitude: 43.6525,
@@ -42,16 +45,16 @@ export default class ContestMapView extends Component {
       Database.ref('locations')
     ).query({
       center: [
-        this.state.current.latitude,
-        this.state.current.longitude
+        this.state.region.latitude,
+        this.state.region.longitude
       ],
       radius: GeoFire.distance(
-        [this.state.current.latitude, this.state.current.longitude],
+        [this.state.region.latitude, this.state.region.longitude],
         [
-          this.state.current.latitude
-            + this.state.current.latitudeDelta / 2,
-          this.state.current.longitude
-            + this.state.current.longitudeDelta / 2
+          this.state.region.latitude
+            + this.state.region.latitudeDelta / 2,
+          this.state.region.longitude
+            + this.state.region.longitudeDelta / 2
         ]
       )
     });
@@ -77,7 +80,7 @@ export default class ContestMapView extends Component {
     });
 
     this.setState({
-      current: region
+      region: region
     });
   }
 
@@ -93,15 +96,22 @@ export default class ContestMapView extends Component {
 
     // setup default location
     navigator.geolocation.getCurrentPosition(
-      position => this.setState({
-        current: {
+      position => {
+        let region = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          latitudeDelta: LAT_DELTA,
-          longitudeDelta: LNG_DELTA
-        }
-      }),
-      error => console.log(error),
+          latitudeDelta: this.state.region.latitudeDelta,
+          longitudeDelta: this.state.region.longitudeDelta
+        };
+        this.setState({
+          current: region,
+          region: region
+        });
+
+        // trigger initial load
+        this.onRegionChange(region);
+      },
+      error => Alert.alert(error),
       {
         enableHighAccuracy: true,
         timeout: 20000,
@@ -139,20 +149,22 @@ export default class ContestMapView extends Component {
   renderRow(contestId) {
     return (
       <TouchableOpacity
-        onPress={() => {}}>
+        onPress={() => Actions.contestDetail({
+          contestId: contestId
+        })}>
         <ContestMapCard contestId={contestId} />
       </TouchableOpacity>
     );
   }
 
   render() {
-   return (
+    return (
       <View style={styles.wrapper}>
         <View style={styles.container}>
           <MapView
             ref='map'
             style={styles.map}
-            initialRegion={this.state.current}
+            region={this.state.region}
             onRegionChangeComplete={this.onRegionChange}>
             {
               Object.keys(this.state.contests).map((contest, i) => {
@@ -214,14 +226,14 @@ const styles = StyleSheet.create({
 
   listContainer: {
     height: 200,
-    marginBottom: Sizes.OuterFrame * 3,
+    marginBottom: Sizes.OuterFrame * 2,
     alignSelf: 'stretch',
     backgroundColor: Colors.Transparent,
     overflow: 'hidden'
   },
 
   listContent: {
-    paddingLeft: Sizes.Width * 0.125
+    paddingLeft: Sizes.InnerFrame
   },
 
   separator: {
