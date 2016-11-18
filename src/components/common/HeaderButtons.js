@@ -24,7 +24,11 @@ export default class HeaderButtons extends Component {
         style={[
           styles.container,
           this.props.style
-        ]} />
+        ]}>
+        <View
+          children={this.props.children}
+          style={styles.buttonContainer} />
+      </LinearGradient>
     );
   }
 }
@@ -38,6 +42,13 @@ const styles = StyleSheet.create({
     padding: Sizes.InnerFrame,
     paddingTop: Sizes.OuterFrame,
     flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end'
+  },
+
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-end'
   }
 });

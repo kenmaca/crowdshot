@@ -176,7 +176,14 @@ export default class ContestMapView extends Component {
             }
           </MapView>
           <HeaderButtons>
-            <HeaderButton icon='trophy' />
+            <HeaderButton
+              icon='trophy'
+              onPress={Actions.entries} />
+            <View style={styles.winningsContainer}>
+              <Text style={styles.winnings}>
+                $1000
+              </Text>
+            </View>
           </HeaderButtons>
         </View>
       </View>
@@ -227,5 +234,17 @@ const styles = StyleSheet.create({
   text: {
     color: Colors.Text,
     fontSize: Sizes.Text
+  },
+
+  winningsContainer: {
+    padding: Sizes.InnerFrame / 2,
+    marginLeft: Sizes.InnerFrame / 2,
+    backgroundColor: Colors.Primary,
+    borderRadius: 14
+  },
+
+  winnings: {
+    fontWeight: '700',
+    color: Colors.Text
   }
 });

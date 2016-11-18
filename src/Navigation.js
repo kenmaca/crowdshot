@@ -29,6 +29,7 @@ import NewPayment from './views/forms/NewPayment';
 import MapMarkerDrop from './views/forms/MapMarkerDrop';
 import NewReferencePhoto from './views/forms/NewReferencePhoto';
 import Contest from './views/contests/Contest';
+import Entries from './views/contestant/Entries';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -90,6 +91,9 @@ export default class Navigation extends Component {
             <Scene
               key='newReferencePhoto'
               component={NewReferencePhoto} />
+            <Scene
+              key='entries'
+              component={Entries} />
             <Scene
               key='contest'
               component={Contest} />
