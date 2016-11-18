@@ -26,6 +26,7 @@ import ContestThumbnail from '../lists/ContestThumbnail';
 import GroupAvatar from '../profiles/GroupAvatar';
 import ContestProgressBar from '../contests/ContestProgressBar';
 import CloseFullscreenButton from '../common/CloseFullscreenButton';
+import NearbyAvatars from '../profiles/NearbyAvatars';
 
 export default class ContestCard extends Component {
   constructor(props) {
@@ -42,6 +43,9 @@ export default class ContestCard extends Component {
     );
     this.entriesRef = Database.ref(
       `entries/${this.props.contestId}`
+    );
+    this.locationRef = Database.ref(
+      `locations/${this.props.contestId}/l`
     );
   }
 
@@ -65,11 +69,22 @@ export default class ContestCard extends Component {
         });
       }
     });
+
+    this.locationListener = this.locationRef.on('value', data => {
+      if (data.exists()) {
+        let location = data.val();
+        this.setState({
+          latitude: location[0],
+          longitude: location[1]
+        });
+      }
+    })
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
     this.entriesListener && this.entriesRef.off('value', this.entriesListener);
+    this.locationListener && this.locationRef.off('value', this.locationListener);
   }
 
   render() {
@@ -189,45 +204,45 @@ export default class ContestCard extends Component {
                 {this.state.instructions}
               </Text>
             </View>
-            <View>
-              <View style={styles.instructionContainer}>
-                <InputSectionHeader label='Photographers Nearby' />
-                <GroupAvatar
-                  limit={6}
-                  uids={[
-                    '6P2NtwmzQWh0opdbuy0JwqSgPR02',
-                    'eyGDNyiqUBdu9ziuwCQehed13wr1',
-                    'ht33R6YWUWQMc8SZb27o9BOzn6G3'
-                  ]}
-                  size={Sizes.InnerFrame * 3}
-                  color={Colors.Foreground}
-                  outlineColor={Colors.ModalBackground}
-                  style={styles.photographersNearby} />
-              </View>
-              <View style={styles.photoContainer}>
-                <InputSectionHeader label='Contest Entries' />
-                <ListView
-                  horizontal
-                  scrollEnabled={false}
-                  dataSource={this.state.thumbnails}
-                  style={styles.thumbnailContainer}
-                  contentContainerStyle={styles.thumbnails}
-                  renderRow={data => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => Actions.contestPhotos({
-                          contestId: this.props.contestId,
-                          startCard: data
-                        })}>
-                        <ContestThumbnail
-                          size={80}
-                          rejectedOverlay={Colors.WhiteOverlay}
-                          contestId={this.props.contestId}
-                          entryId={data} />
-                      </TouchableOpacity>
-                    );
-                  }} />
-              </View>
+            {
+              this.state.latitude && this.state.longitude
+              && (
+                <View style={styles.instructionContainer}>
+                  <InputSectionHeader label='Photographers Nearby' />
+                  <NearbyAvatars
+                    limit={6}
+                    latitude={this.state.latitude}
+                    longitude={this.state.longitude}
+                    size={Sizes.InnerFrame * 3}
+                    color={Colors.Foreground}
+                    outlineColor={Colors.ModalBackground}
+                    style={styles.photographersNearby} />
+                </View>
+              )
+            }
+            <View style={styles.photoContainer}>
+              <InputSectionHeader label='Contest Entries' />
+              <ListView
+                horizontal
+                scrollEnabled={false}
+                dataSource={this.state.thumbnails}
+                style={styles.thumbnailContainer}
+                contentContainerStyle={styles.thumbnails}
+                renderRow={data => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => Actions.contestPhotos({
+                        contestId: this.props.contestId,
+                        startCard: data
+                      })}>
+                      <ContestThumbnail
+                        size={80}
+                        rejectedOverlay={Colors.WhiteOverlay}
+                        contestId={this.props.contestId}
+                        entryId={data} />
+                    </TouchableOpacity>
+                  );
+                }} />
             </View>
             <View style={styles.footerContainer}>
               <Button

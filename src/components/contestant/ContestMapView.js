@@ -94,6 +94,12 @@ export default class ContestMapView extends Component {
 
         // trigger initial load
         this.onRegionChange(region);
+
+        // and update server about contestant whereabouts
+        new GeoFire(Database.ref('profileLocations')).set(
+          Firebase.auth().currentUser.uid,
+          [position.coords.latitude, position.coords.longitude]
+        );
       },
       error => Alert.alert(error),
       {
