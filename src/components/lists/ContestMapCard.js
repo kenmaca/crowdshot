@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: Sizes.Width * 0.75,
     height: Sizes.Width * 0.45,
-    borderRadius: 10,
+    borderRadius: 5,
     overflow: 'hidden'
   },
 
