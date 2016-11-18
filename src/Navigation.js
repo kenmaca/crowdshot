@@ -117,7 +117,7 @@ export default class Navigation extends Component {
                 hideNavBar
                 key='mainContestant'
                 component={Contestant}
-                title='Shoot Away'
+                title='Join a Contest'
                 iconName='camera'
                 icon={TabButton} />
             </Scene>

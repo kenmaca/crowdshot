@@ -49,16 +49,16 @@ export default class NewContest extends Component {
     };
     Geocoder.geocodePosition(coords).then(location => {
       Database.ref(
-        `prizes/${this.state.prizeId}`
+        `transactions/${this.state.prizeId}`
       ).once('value', data => {
-        let prize = data.val();
+        let transaction = data.val();
         let dateCreated = Date.now();
 
         // now create it
         let contestId = Database.ref('contests').push({
 
           // stripe requires cents to be stored
-          bounty: prize.value / 100,
+          bounty: transaction.value / 100,
           dateCreated: dateCreated,
 
           // default a hour duration

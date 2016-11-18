@@ -121,6 +121,11 @@ export default class ContestMapView extends Component {
         },
         distance: distance
       };
+
+      // helps trigger initial load
+      this.setState({
+        updated: true
+      });
     });
 
     // remove when out of view
