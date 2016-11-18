@@ -3,268 +3,191 @@ import React, {
 } from 'react';
 import {
   StyleSheet, View, Text, Animated, PanResponder,
-  ListView
+  ListView, TouchableOpacity
 } from 'react-native';
 import {
   Sizes, Colors
 } from '../../Const';
 import * as Firebase from 'firebase';
+import GeoFire from 'geofire';
 import Database from '../../utils/Database';
 
 // components
 import MapView from 'react-native-maps';
-import ContestSummaryCard from '../../components/contestant/ContestSummaryCard';
+import ContestMapCard from '../lists/ContestMapCard';
 
-const LATITUDE_DELTA = 0.01;
-const LONGITUDE_DELTA = 0.01;
-
+const LAT_DELTA = 0.01;
+const LNG_DELTA = 0.01;
 
 export default class ContestMapView extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      selected: 0,
-      currentCoord:{
-        latitude: 0,
-        longitude: 0,
+      current: {
+
+        // default location is Toronto
+        latitude: 43.6525,
+        longitude: -79.381667,
+        latitudeDelta: LAT_DELTA,
+        longitudeDelta: LNG_DELTA,
       },
-      region: {
-        latitude: 0,
-        longitude: 0,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      },
-      contests: [],
+      contests: {},
+      inView: {},
       data: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
       }),
     };
 
-    this.ref = Database.ref(
-      `contests`
-    );
+    this.ref = new GeoFire(
+      Database.ref('locations')
+    ).query({
+      center: [
+        this.state.current.latitude,
+        this.state.current.longitude
+      ],
+      radius: GeoFire.distance(
+        [this.state.current.latitude, this.state.current.longitude],
+        [
+          this.state.current.latitude
+            + this.state.current.latitudeDelta / 2,
+          this.state.current.longitude
+            + this.state.current.longitudeDelta / 2
+        ]
+      )
+    });
 
+    // methods
+    this.onRegionChange = this.onRegionChange.bind(this);
+    this.rebuild = this.rebuild.bind(this);
+  }
+
+  onRegionChange(region) {
+    this.ref.updateCriteria({
+      center: [
+        region.latitude,
+        region.longitude
+      ],
+      radius: GeoFire.distance(
+        [region.latitude, region.longitude],
+        [
+          region.latitude + region.latitudeDelta / 2,
+          region.longitude + region.longitudeDelta / 2
+        ]
+      )
+    });
+
+    this.setState({
+      current: region
+    });
+  }
+
+  rebuild() {
+    this.setState({
+      data: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1 !== r2
+      }).cloneWithRows(Object.keys(this.state.inView))
+    });
   }
 
   componentDidMount() {
-    this.listener = this.ref.on('value', data => {
-      if (data.exists()){
-        let contests = [];
-        let count = 0
-        Object.entries(data.val()).forEach(([key, m]) => {
-          contests.push({
-            index: count,
-            contestId: key,
-            bounty: m.bounty,
-            selected: false,
-            instructions: m.instructions,
-            coordinate: {
-            //  latitude: position.coords.latitude + 0.002,
-            //  longitude: position.coords.longitude + 0.004,
-            // hack before having coord data in contest
-              latitude: 43.6525 + (Math.random()*2-1) / 100,
-              longitude: -79.381667 + (Math.random()*2-1) / 100,
-            },
-          });
-          count++;
-        });
 
-        contests[0].selected = true;
-
-        this.setState({
-          contests,
-          data: this.state.data.cloneWithRows(contests),
-        });
-
-        this.map.fitToCoordinates(contests.map((m,i) => m.coordinate), {
-          edgePadding: {top:50,right:50,bottom:50,left:50},
-          animated: true,
-        });
+    // setup default location
+    navigator.geolocation.getCurrentPosition(
+      position => this.setState({
+        current: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          latitudeDelta: LAT_DELTA,
+          longitudeDelta: LNG_DELTA
+        }
+      }),
+      error => console.log(error),
+      {
+        enableHighAccuracy: true,
+        timeout: 20000,
+        maximumAge: 1000
       }
+    );
+
+    // and update when a new contest comes into view
+    this.ref.on('key_entered', (key, location, distance) => {
+
+      // add to in view
+      this.state.inView[key] = true;
+      this.state.contests[key] = {
+        location: {
+          latitude: location[0],
+          longitude: location[1]
+        },
+        distance: distance
+      };
+
+      this.rebuild();
     });
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const region = {
-    //      latitude: position.coords.latitude,
-    //      longitude: position.coords.longitude
-    //    hack until we have coord in firebase
-          latitude: 43.6525,
-          longitude: -79.381667,
-    //
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        };
-
-        this.setState({
-          //    hack until we have coord in firebase
-        //  currentCoord: position.coords,
-          currentCoord: {
-            latitude: 43.6525,
-            longitude: -79.381667,
-          },
-          region,
-          init: true
-        });
-      },
-      (error) => console.log(JSON.stringify(error)),
-        {enableHighAccuracy: false, timeout: 50000, maximumAge: 1000}
-    );
+    // remove when out of view
+    this.ref.on('key_exited', (key, location, distance) => {
+      delete this.state.inView[key];
+      this.rebuild();
+    });
   }
 
   componentWillUnmount() {
-    this.listener && this.ref.off('value', this.listener);
+    this.ref.cancel();
   }
 
-  onRegionChange= (region) => {
-    this.setState({region});
+  renderRow(contestId) {
+    return (
+      <TouchableOpacity
+        onPress={() => {}}>
+        <ContestMapCard contestId={contestId} />
+      </TouchableOpacity>
+    );
   }
-
-  onScroll = (event) => {
-    let {contests, currentCoord, selected, region, markerPress} = this.state
-
-    let index = Math.round(event.nativeEvent.contentOffset.x /
-      (Sizes.Width - Sizes.OuterFrame * 2));
-
-    if (selected != index){
-      if (!markerPress){
-        if (region.latitude - region.latitudeDelta/2
-              > contests[index].coordinate.latitude
-            || region.latitude + region.latitudeDelta/2
-              < contests[index].coordinate.latitude
-            || region.longitude - region.longitudeDelta/2
-              > contests[index].coordinate.longitude
-            || region.longitude + region.longitudeDelta/2
-              < contests[index].coordinate.longitude
-            || region.latitude - region.latitudeDelta/2
-              > currentCoord.latitude
-            || region.latitude + region.latitudeDelta/2
-              < currentCoord.latitude
-            || region.longitude - region.longitudeDelta/2
-              > currentCoord.longitude
-            || region.longitude + region.longitudeDelta/2
-              < currentCoord.longitude){
-          this.map.fitToCoordinates([currentCoord, contests[index].coordinate], {
-            edgePadding: {top:50,right:50,bottom:50,left:50},
-            animated: true,
-          });
-        }
-
-        contests.forEach(contest => {
-          contest.selected = false;
-        });
-        contests[index].selected = true;
-        this.setState({contests,selected: index})
-      }
-    } else {
-      this.setState({markerPress:false})
-    }
-
-
-  }
-
-  onMarkerPress(marker){
-    let index = marker.index;
-    let { contests, selected } = this.state;
-
-    if (selected != index){
-      contests.forEach(contest => {
-        contest.selected = false;
-      });
-      contests[index].selected = true;
-      this.setState({contests,selected: index,markerPress:true});
-
-      this.listview.scrollTo({
-        x:(Sizes.Width - Sizes.OuterFrame * 2 + Sizes.InnerFrame / 2)*index ,
-        animated:true
-      });
-    }
-  }
-
 
   render() {
-    const {
-      contests,
-      region,
-      currentCoord,
-    } = this.state;
-
    return (
       <View style={styles.wrapper}>
         <View style={styles.container}>
-          <ListView
-            ref={ref => {this.listview = ref;}}
-            horizontal
-          //  pagingEnabled
-          //  pageSize={3}
-            removeClippedSubviews={true}
-            dataSource={this.state.data}
-        //    style={this.getListViewStyle()}
-            contentContainerStyle={styles.lists}
-            onScroll={this.onScroll}
-            renderRow={
-              (rowData, s, i) => {
-                return (
-                  <View
-                    key={i}>
-                    <ContestSummaryCard contest={rowData} />
-                  </View>
-                );
-              }
-            } />
-          <View style={styles.mapContainer}>
-            <MapView
-              ref={ref => {this.map = ref;}}
-              style={styles.map}
-              initialRegion={this.state.region}
-              onRegionChangeComplete={this.onRegionChange}>
-              <MapView.Marker
-                coordinate={currentCoord}>
-                <View style={styles.ownMarker}/>
-              </MapView.Marker>
-              {contests.map((contest, i) => {
-                const {
-                  selected,
-                  bounty,
-                } = contest
-
+          <MapView
+            ref='map'
+            style={styles.map}
+            initialRegion={this.state.current}
+            onRegionChangeComplete={this.onRegionChange}>
+            {
+              Object.keys(this.state.contests).map((contest, i) => {
                 return (
                   <MapView.Marker
-                    coordinate={contest.coordinate}
-                    key={contest.index}
-                    onPress={() => this.onMarkerPress(contest)}>
-                    {selected ?
+                    coordinate={this.state.contests[contest].location}
+                    key={contest}
+                    onPress={null}>
                     <View style={styles.markerWrapper}>
                       <View style={[styles.marker, styles.markerSelected]}>
                         <Text style={styles.selectedText}>
-                          {"$" + bounty}
+                          $10
                         </Text>
                       </View>
                       <View style={[styles.markerArrow,styles.selectedArrow]}/>
                     </View>
-                    :
-                    <View style={styles.markerWrapper}>
-                      <View style={styles.marker}>
-                        <Text style={styles.text}>
-                          {"$" + bounty}
-                        </Text>
-                      </View>
-                      <View style={styles.markerArrow}/>
-                    </View>
-                    }
                   </MapView.Marker>
                 );
-              })}
-            </MapView>
-            {this.state.init ||
-            <View style={styles.buttonContainer}>
-              <View style={styles.bubble}>
-                <Text style={styles.text}>Loading</Text>
-              </View>
-            </View>
+              })
             }
-          </View>
+            <View style={styles.listContainer}>
+              <ListView
+                ref='list'
+                horizontal
+                enableEmptySections
+                renderSeparator={() => (
+                  <View
+                    key={Math.random()}
+                    style={styles.separator} />
+                )}
+                contentContainerStyle={styles.listContent}
+                dataSource={this.state.data}
+                renderRow={this.renderRow} />
+            </View>
+          </MapView>
         </View>
       </View>
     );
@@ -283,14 +206,26 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
 
-  mapContainer: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    marginBottom: 50 + Sizes.Height*0.25,
+  map: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end'
   },
 
-  map: {
-    ...StyleSheet.absoluteFillObject,
+  listContainer: {
+    height: 200,
+    marginBottom: Sizes.OuterFrame * 3,
+    alignSelf: 'stretch',
+    backgroundColor: Colors.Transparent,
+    overflow: 'hidden'
+  },
+
+  listContent: {
+    paddingLeft: Sizes.Width * 0.125
+  },
+
+  separator: {
+    marginRight: Sizes.InnerFrame / 4
   },
 
   bubble: {
@@ -318,12 +253,6 @@ const styles = StyleSheet.create({
     fontSize: Sizes.H4
   },
 
-  lists: {
-    alignSelf: 'flex-end',
-    marginBottom: 50,
-    paddingHorizontal: 20,
-    paddingBottom: 5,
-  },
 
   markerWrapper: {
     alignItems: 'center'

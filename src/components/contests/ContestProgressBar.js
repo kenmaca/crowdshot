@@ -21,6 +21,7 @@ export default class ContestProgress extends Component {
     };
 
     this.update = this.update.bind(this);
+    this.renderContent = this.renderContent.bind(this);
   }
 
   componentDidMount() {
@@ -72,15 +73,9 @@ export default class ContestProgress extends Component {
     );
   }
 
-  render() {
+  renderContent() {
     return (
-      <TouchableOpacity
-        onPress={(
-          this.state.progress < 1
-          ? this.props.onPressIncomplete
-          : this.props.onPressComplete
-        )}
-        style={styles.container}>
+      <View style={styles.container}>
         {
           this.state.progress < 1
           ? (
@@ -90,15 +85,19 @@ export default class ContestProgress extends Component {
                   DateFormat(this.props.end, 'dddd, h:MMTT')
                 }
               </Text>
-              <View style={styles.progressUpsellContainer}>
-                <Text style={styles.progressUpsellText}>
-                  ADD AN HOUR
-                </Text>
-                <CircleIcon
-                  style={styles.progressUpsellIcon}
-                  size={10}
-                  icon='attach-money' />
-              </View>
+              {
+                this.props.isOwn && (
+                  <View style={styles.progressUpsellContainer}>
+                    <Text style={styles.progressUpsellText}>
+                      ADD AN HOUR
+                    </Text>
+                    <CircleIcon
+                      style={styles.progressUpsellIcon}
+                      size={10}
+                      icon='attach-money' />
+                  </View>
+                )
+              }
             </View>
           ): (
             <View style={styles.progressUpsellContainer}>
@@ -115,7 +114,27 @@ export default class ContestProgress extends Component {
           color={Colors.Primary}
           unfilledColor={Colors.LightOverlay}
           borderWidth={0} />
-      </TouchableOpacity>
+      </View>
+    );
+  }
+
+  render() {
+    return (
+      this.props.isOwn
+      ? (
+        <TouchableOpacity
+          onPress={(
+            this.state.progress < 1
+            ? this.props.onPressIncomplete
+            : this.props.onPressComplete
+          )}>
+          {this.renderContent()}
+        </TouchableOpacity>
+      ): (
+        <View>
+          {this.renderContent()}
+        </View>
+      )
     );
   }
 }

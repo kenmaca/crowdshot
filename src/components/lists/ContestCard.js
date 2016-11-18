@@ -134,6 +134,7 @@ export default class ContestCard extends Component {
           }
         ]}>
           <ContestProgressBar
+            isOwn
             start={this.state.dateCreated}
             end={this.state.endDate}
             interval={20000}

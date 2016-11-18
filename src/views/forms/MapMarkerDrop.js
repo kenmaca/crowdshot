@@ -15,7 +15,7 @@ import {
 
 // consts
 const LAT_DELTA = 0.01;
-const LONG_DELTA = 0.01;
+const LNG_DELTA = 0.01;
 
 // components
 import MapView from 'react-native-maps';
@@ -32,7 +32,7 @@ export default class MapMarkerDrop extends Component {
         latitude: 43.6525,
         longitude: -79.381667,
         latitudeDelta: LAT_DELTA,
-        longitudeDelta: LONG_DELTA
+        longitudeDelta: LNG_DELTA
       }
     };
 
@@ -46,7 +46,7 @@ export default class MapMarkerDrop extends Component {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           latitudeDelta: LAT_DELTA,
-          longitudeDelta: LONG_DELTA
+          longitudeDelta: LNG_DELTA
         }
       }),
       error => console.log(error),
