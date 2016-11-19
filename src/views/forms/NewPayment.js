@@ -161,6 +161,10 @@ export default class NewPayment extends Component {
               && !this.state.stripeCustomerId
             }
             onPress={this.charge}
+            onPressDisabled={() => Alert.alert(
+              'Unable to process payment',
+              'Please fill in all fields before submitting'
+            )}
             color={Colors.Primary}
             label={
               this.props.submitText

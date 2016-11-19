@@ -319,6 +319,10 @@ export default class NewPaymentMethod extends Component {
             ref='submit'
             isDisabled={!this.state.ready}
             onPress={this.addCard}
+            onPressDisabled={() => Alert.alert(
+              'Unable to add card',
+              'Please fill in all fields before submitting'
+            )}
             color={Colors.Primary}
             label='Add Credit Card' />
         </View>
