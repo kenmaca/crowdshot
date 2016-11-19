@@ -22,6 +22,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import ChecklistItem from '../../components/lists/ChecklistItem';
 import ProgressBlocker from '../../components/common/ProgressBlocker';
 
+const DEFAULT_INSTRUCTIONS = 'Take a photo with the contents shown in the reference photo above.\n\n';
+
 export default class NewContest extends Component {
   constructor(props) {
     super(props);
@@ -29,7 +31,8 @@ export default class NewContest extends Component {
       prizeId: null,
       location: null,
       referencePhotoId: null,
-      processing: false
+      processing: false,
+      instructions: DEFAULT_INSTRUCTIONS
     };
 
     this.submit = this.submit.bind(this);
@@ -63,9 +66,7 @@ export default class NewContest extends Component {
 
           // default a hour duration
           endDate: dateCreated + 3600000,
-
-          // TODO: add in Photo upload
-          instructions: 'Not implemented.',
+          instructions: this.state.instructions,
           prizes: {
             [this.state.prizeId]: true
           },
@@ -108,7 +109,8 @@ export default class NewContest extends Component {
           prizeId: null,
           location: null,
           referencePhotoId: null,
-          processing: false
+          processing: false,
+          instructions: DEFAULT_INSTRUCTIONS
         });
         Actions.contest({
           contestId: contestId
@@ -166,9 +168,23 @@ export default class NewContest extends Component {
             } />
           <ChecklistItem
             onPress={() => Actions.newReferencePhoto({
-              onTaken: photoId => this.setState({
-                referencePhotoId: photoId
-              })
+              onTaken: photoId => {
+                this.setState({
+                  referencePhotoId: photoId
+                });
+
+                // launch textEntry for instructions
+                Actions.textEntry({
+                  onSubmit: text => this.setState({
+                    instructions: text
+                  }),
+                  title: 'Contest Instructions',
+                  label: 'Instructions',
+                  subtitle: 'General rules for your contest',
+                  buttonLabel: 'Add Instructions',
+                  value: this.state.instructions
+                });
+              }
             })}
             checked={this.state.referencePhotoId}
             photoId='appNewContestCamera'

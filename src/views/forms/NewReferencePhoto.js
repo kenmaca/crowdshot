@@ -34,13 +34,13 @@ export default class NewReferencePhoto extends Component {
           <CameraView
             onUploaded={photoId => {
 
+              // out
+              Actions.pop();
+
               // outer callback
               this.props.onTaken && this.props.onTaken(
                 photoId
               );
-
-              // and out
-              Actions.pop();
             }} />
         </View>
         <CloseFullscreenButton />

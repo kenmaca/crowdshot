@@ -203,12 +203,17 @@ export default class ContestCard extends Component {
               </TouchableOpacity>
             </View>
             <Divider style={styles.divider} />
-            <View style={styles.instructionContainer}>
-              <InputSectionHeader label='Instructions' />
-              <Text style={styles.instructions}>
-                {this.state.instructions}
-              </Text>
-            </View>
+            {
+              !!this.state.instructions
+              && (
+                <View style={styles.instructionContainer}>
+                  <InputSectionHeader label='Instructions' />
+                  <Text style={styles.instructions}>
+                    {this.state.instructions}
+                  </Text>
+                </View>
+              )
+            }
             {
               this.state.latitude && this.state.longitude
               && (

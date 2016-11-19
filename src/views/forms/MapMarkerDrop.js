@@ -83,6 +83,9 @@ export default class MapMarkerDrop extends Component {
                 <TouchableOpacity
                   onPress={() => {
 
+                    // out
+                    Actions.pop();
+
                     // outer callback
                     this.props.onSelected && this.props.onSelected(
                       [
@@ -90,9 +93,6 @@ export default class MapMarkerDrop extends Component {
                         this.state.current.longitude
                       ]
                     );
-
-                    // and out
-                    Actions.pop();
                   }}
                   style={styles.pinContent}>
                   <OutlineText text='Set as Contest Location' />

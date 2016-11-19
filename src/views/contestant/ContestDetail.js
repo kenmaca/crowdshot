@@ -169,12 +169,17 @@ export default class ContestDetail extends Component {
                 </View>
               )
             }
-            <View style={styles.instructionContainer}>
-              <InputSectionHeader label='Instructions' />
-              <Text style={styles.instructions}>
-                {this.state.instructions}
-              </Text>
-            </View>
+            {
+              !!this.state.instructions
+              && (
+                <View style={styles.instructionContainer}>
+                  <InputSectionHeader label='Instructions' />
+                  <Text style={styles.instructions}>
+                    {this.state.instructions}
+                  </Text>
+                </View>
+              )
+            }
             <View style={styles.bottomPadding}/>
           </ScrollView>
         </View>

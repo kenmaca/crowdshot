@@ -30,6 +30,7 @@ import MapMarkerDrop from './views/forms/MapMarkerDrop';
 import NewReferencePhoto from './views/forms/NewReferencePhoto';
 import Contest from './views/contests/Contest';
 import Entries from './views/contestant/Entries';
+import TextEntry from './views/forms/TextEntry';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -97,6 +98,9 @@ export default class Navigation extends Component {
             <Scene
               key='contest'
               component={Contest} />
+            <Scene
+              key='textEntry'
+              component={TextEntry} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}

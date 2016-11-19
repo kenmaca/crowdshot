@@ -68,9 +68,9 @@ export default class NewPayment extends Component {
       if (data.exists() && data.val().approved) {
 
         // outer callback, close listener, and exit
-        this.props.onCharged(data.key);
-        ref.off('value', listener);
         Actions.pop();
+        this.props.onCharged && this.props.onCharged(data.key);
+        ref.off('value', listener);
       } else if (data.exists() && data.val().error) {
 
         // declined

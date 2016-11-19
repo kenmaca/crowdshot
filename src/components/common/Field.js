@@ -77,12 +77,12 @@ const styles = StyleSheet.create({
     paddingTop: Sizes.InnerFrame,
     paddingBottom: Sizes.InnerFrame,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'flex-start'
   },
 
   labelContainer: {
     alignItems: 'flex-start',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 
   label: {
