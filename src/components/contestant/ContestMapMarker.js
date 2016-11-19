@@ -24,7 +24,9 @@ export default class ContestMapMarker extends Component {
     this.state = {};
 
     this.ref = Database.ref(
-      `contests/${this.props.contestId}`
+      `contests/${
+        this.props.contestId
+      }`
     );
   }
 
@@ -35,7 +37,7 @@ export default class ContestMapMarker extends Component {
           ...data.val()
         });
       }
-    })
+    });
   }
 
   componentWillUnmount() {

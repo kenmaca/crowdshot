@@ -28,6 +28,7 @@ export default class ContestMapView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      profile: {},
       region: {
 
         // default location is Toronto
@@ -57,6 +58,12 @@ export default class ContestMapView extends Component {
         ]
       )
     });
+
+    this.profileRef = Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }`
+    );
 
     // methods
     this.onRegionChange = this.onRegionChange.bind(this);
@@ -134,10 +141,20 @@ export default class ContestMapView extends Component {
     this.ref.on('key_exited', (key, location, distance) => {
       delete this.state.inView[key];
     });
+
+    // for HeaderButtons
+    this.profileListener = this.profileRef.on('value', data => {
+      if (data.exists()) {
+        this.setState({
+          profile: data.val()
+        });
+      }
+    });
   }
 
   componentWillUnmount() {
     this.ref.cancel();
+    this.profileListener && this.profileRef.off('value', this.profileListener);
   }
 
   render() {
@@ -178,10 +195,20 @@ export default class ContestMapView extends Component {
           <HeaderButtons>
             <HeaderButton
               icon='trophy'
-              onPress={Actions.entries} />
+              onPress={Actions.entries}
+              unread={
+                this.state.profile.entries
+                && Object.keys(this.state.profile.entries).length
+                || 0
+              } />
             <View style={styles.winningsContainer}>
               <Text style={styles.winnings}>
-                $1000
+                {
+                  `$${
+                    this.state.profile.wallet
+                    || 0
+                  }`
+                }
               </Text>
             </View>
           </HeaderButtons>
@@ -238,7 +265,7 @@ const styles = StyleSheet.create({
 
   winningsContainer: {
     padding: Sizes.InnerFrame / 2,
-    marginLeft: Sizes.InnerFrame / 2,
+    marginLeft: Sizes.InnerFrame,
     backgroundColor: Colors.Primary,
     borderRadius: 14
   },
