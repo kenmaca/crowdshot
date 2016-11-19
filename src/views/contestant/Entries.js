@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, ListView
+  View, StyleSheet, Text, ListView, Alert
 } from 'react-native';
 import {
   Colors, Sizes
@@ -16,6 +16,7 @@ import {
 // components
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import EntryCard from '../../components/lists/EntryCard';
+import Swipeout from 'react-native-swipeout';
 
 export default class Settings extends Component {
   constructor(props) {
@@ -56,9 +57,43 @@ export default class Settings extends Component {
 
   renderRow(entryId) {
     return (
-      <EntryCard
-        contestId={this.state.rawEntries[entryId]}
-        entryId={entryId} />
+      <View style={styles.entryContainer}>
+        <Swipeout
+          right={[
+            {
+              text: 'Remove',
+              color: Colors.Text,
+              backgroundColor: Colors.Cancel,
+              onPress: () => {
+                Alert.alert(
+                  'Remove this Contest Entry?',
+                  null,
+                  [
+                    {
+                      text: 'Cancel',
+                      style: 'cancel'
+                    }, {
+                      text: 'Remove',
+                      onPress: () => {
+                        Database.ref(
+                          `profiles/${
+                            Firebase.auth().currentUser.uid
+                          }/entries/${
+                            entryId
+                          }`
+                        ).remove();
+                      }
+                    }
+                  ]
+                );
+              }
+            }
+          ]}>
+          <EntryCard
+            contestId={this.state.rawEntries[entryId]}
+            entryId={entryId} />
+        </Swipeout>
+      </View>
     );
   }
 
@@ -72,6 +107,7 @@ export default class Settings extends Component {
         </View>
         <View style={styles.content}>
           <ListView
+            key={Math.random()}
             scrollEnabled
             dataSource={this.state.entries}
             style={styles.entries}
@@ -109,5 +145,10 @@ const styles = StyleSheet.create({
 
   entries: {
     flex: 1
+  },
+
+  entryContainer: {
+    margin: Sizes.InnerFrame / 2,
+    marginBottom: 0,
   }
 });
