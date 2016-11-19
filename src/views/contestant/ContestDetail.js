@@ -217,10 +217,13 @@ export default class ContestDetail extends Component {
               Database.ref(
                 `profiles/${
                   Firebase.auth().currentUser.uid
-                }/entries/${
-                  entryId
-                }`
-              ).set(this.props.contestId);
+                }/entries`
+              ).update({
+                [entryId]: {
+                  '.value': this.props.contestId,
+                  '.priority': 0 - Date.now()
+                }
+              });
             }}
             />
           <CloseFullscreenButton
