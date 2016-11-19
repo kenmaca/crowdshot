@@ -82,9 +82,15 @@ export default class ContestFinalize extends Component {
           this.props.contestId
         }`
       ).update({
-        isComplete: true,
-        isProcessed: false
+        isComplete: true
       });
+
+      // trigger server processing backlog
+      Database.ref(
+        `contestTasks/${
+          this.props.contestId
+        }`
+      ).set(true);
 
       // update user's list of contests
       Database.ref(

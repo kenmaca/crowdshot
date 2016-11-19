@@ -20,6 +20,75 @@ firebase.auth().signInWithEmailAndPassword(
   console.log(error);
 }).then(() => {
 
+  // contest processor
+  console.log('Starting Contest Processor');
+  Database.ref('contestTasks').on('child_added', data => {
+    console.log(`New Contest Task found: ${
+      data.key
+    }; Awarding/Refunding Contest..`);
+    
+    Database.ref(
+      `contests/${
+        data.key
+      }`
+    ).once('value', contestData => {
+      if (contestData.exists()) {
+        let contest = contestData.val();
+
+        // award prizes if completed
+        if (contest.isComplete) {
+          let prizes = Object.keys(contest.prizes);
+          Database.ref(
+            `entries/${
+              data.key
+            }`
+          ).once('value', entriesData => {
+            if (entriesData.exists()) {
+              let entriesBlob = entriesData.val();
+              let winners = Object.keys(entriesBlob).filter(
+                entry => entriesBlob[entry].selected
+              );
+
+              for (let winner of winners) {
+
+                // first award to profile prizes list
+                Database.ref(
+                  `profiles/${
+                    entriesBlob[winner].createdBy
+                  }/prizes`
+                ).update({
+                  [prizes.pop()]: {
+                    '.value': contest.bounty,
+                    '.priority': 0 - Date.now()
+                  }
+                });
+
+                // and update prizes total
+                let walletRef = Database.ref(
+                  `profiles/${
+                    entriesBlob[winner].createdBy
+                  }/wallet`
+                );
+                walletRef.once('value', wallet => {
+                  walletRef.set(
+                    (wallet.val() || 0) + contest.bounty
+                  );
+                });
+
+                // now remove task to stop future processing
+                Database.ref(
+                  `contestTasks/${
+                    data.key
+                  }`
+                ).remove();
+              }
+            }
+          });
+        }
+      }
+    });
+  });
+
   // charge transactions
   console.log('Starting Transaction Charging Listener..');
   Database.ref('transactions').on('child_added', data => {

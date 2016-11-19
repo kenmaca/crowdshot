@@ -265,11 +265,15 @@ export default class ContestCard extends Component {
                       text: 'Cancel my Contest',
                       onPress: () => {
 
-                        // TODO: wait until refunds are processed
+                        // add to server backlog to process refunds
                         this.ref.update({
-                          isCancelled: true,
-                          isProcessed: false
+                          isCancelled: true
                         });
+                        Database.ref(
+                          `contestTasks/${
+                            this.props.contestId
+                          }`
+                        ).set(true);
 
                         // update user's list of contests
                         Database.ref(
