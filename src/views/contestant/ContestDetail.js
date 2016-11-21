@@ -243,28 +243,17 @@ export default class ContestDetail extends Component {
 export class ParticipateButton extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      contest: {}
-    };
-
     this.update = this.update.bind(this);
   }
 
-  componentWillReceiveProps(props) {
-    this.setState({
-      contest: this.props.contest
-    });
-  }
-
   componentDidMount() {
-    this.componentWillReceiveProps(this.props);
 
     // create auto refresh disabler based on time
     this.update();
   }
 
   componentWillUnmount() {
-    this.refresher && clearTimeout(this.update);
+    this.refresher && clearTimeout(this.refresher);
   }
 
   update() {
@@ -273,7 +262,7 @@ export class ParticipateButton extends Component {
     });
 
     // schedule next refresh
-    this.refresher = setTimeout(this.update, 5000);
+    this.refresher = setTimeout(this.update, 2000);
   }
 
   render() {
