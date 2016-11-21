@@ -83,7 +83,7 @@ export default class Chat extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Titlebar title={this.props.title} />
+        <TitleBar title={this.props.title} />
         <GiftedChat
           messages={this.state.messages}
           onSend={this.onSend}
