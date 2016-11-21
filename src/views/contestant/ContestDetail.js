@@ -264,7 +264,7 @@ export class ParticipateButton extends Component {
   }
 
   componentWillUnmount() {
-    this.progress && clearTimeout(this.update);
+    this.refresher && clearTimeout(this.update);
   }
 
   update() {
