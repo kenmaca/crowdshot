@@ -83,16 +83,6 @@ export default class NewContest extends Component {
         new GeoFire(Database.ref('locations')).set(
           contestId, this.state.location
         );
-        Database.ref(
-          `locations/${
-            contestId
-          }`
-        ).update({
-          lastReported: dateCreated,
-          validUntil: dateCreated + 3600000,
-          createdBy: Firebase.auth().currentUser.uid,
-          contestId: contestId
-        });
 
         // add to owner's list
         Database.ref(

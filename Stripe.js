@@ -78,6 +78,9 @@ firebase.auth().signInWithEmailAndPassword(
       if (contestData.exists()) {
         let contest = contestData.val();
 
+        // remove from map of active contests
+        Database.ref(`locations/${data.key}`).remove();
+
         // award prizes if completed
         if (contest.isComplete) {
           let prizes = Object.keys(contest.prizes);

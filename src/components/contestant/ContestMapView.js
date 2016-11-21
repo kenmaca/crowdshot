@@ -53,9 +53,9 @@ export default class ContestMapView extends Component {
         [this.state.region.latitude, this.state.region.longitude],
         [
           this.state.region.latitude
-            + this.state.region.latitudeDelta / 4,
+            + this.state.region.latitudeDelta / 3.5,
           this.state.region.longitude
-            + this.state.region.longitudeDelta / 4
+            + this.state.region.longitudeDelta / 3.5
         ]
       )
     });
@@ -79,8 +79,8 @@ export default class ContestMapView extends Component {
       radius: GeoFire.distance(
         [region.latitude, region.longitude],
         [
-          region.latitude + region.latitudeDelta / 4,
-          region.longitude + region.longitudeDelta / 4
+          region.latitude + region.latitudeDelta / 3.5,
+          region.longitude + region.longitudeDelta / 3.5
         ]
       )
     });
