@@ -10,6 +10,8 @@ import {
 import {
   Colors
 } from './Const';
+import * as Firebase from 'firebase';
+import Database from './utils/Database';
 import FCM from 'react-native-fcm';
 
 // views
@@ -40,15 +42,16 @@ export default class Navigation extends Component {
   componentDidMount() {
     Platform.OS === 'ios' && StatusBar.setBarStyle('light-content', true);
 
-    FCM.requestPermissions(); // for iOS
+    // initialize FCM
+    FCM.requestPermissions();
     FCM.getFCMToken().then(token => {
-      console.log(token);
+      updateFCMToken(token);
     });
     this.token = FCM.on('refreshToken', token => {
-      console.log(token);
+      updateFCMToken(token);
     });
 
-    // demo FCM
+    // FCM listeners
     this.notification = FCM.on('notification', n => {
       console.log(n);
     });
@@ -177,3 +180,16 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Foreground
   }
 });
+
+export function updateFCMToken(token) {
+
+  // only update when logged in
+  let user = Firebase.auth().currentUser;
+  if (user) {
+    Database.ref(
+      `profiles/${
+        user.uid
+      }/fcm`
+    ).set(token);
+  }
+}

@@ -15,6 +15,10 @@ import {
 } from 'react-native-fbsdk';
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
+import FCM from 'react-native-fcm';
+import {
+  updateFCMToken
+} from '../../Navigation';
 
 // components
 import Photo from '../../components/common/Photo';
@@ -83,6 +87,11 @@ export default class Login extends Component {
                             createdBy: user.uid,
                             url: user.photoURL
                           }, [`profiles/${user.uid}/photo`]: photoId
+                        });
+
+                        // and update FCM token for push notifications
+                        FCM.getFCMToken().then(token => {
+                          updateFCMToken(token);
                         });
                       });
 
