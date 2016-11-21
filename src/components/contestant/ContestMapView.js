@@ -16,6 +16,7 @@ import {
 } from 'react-native-router-flux';
 
 // components
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import MapView from 'react-native-maps';
 import ContestMapMarker from './ContestMapMarker';
 import HeaderButtons from '../common/HeaderButtons';
@@ -194,7 +195,7 @@ export default class ContestMapView extends Component {
           </MapView>
           <HeaderButtons>
             <HeaderButton
-              icon='trophy'
+              icon='camera-retro'
               onPress={Actions.entries}
               unread={
                 this.state.profile.entries
@@ -202,6 +203,9 @@ export default class ContestMapView extends Component {
                 || 0
               } />
             <View style={styles.winningsContainer}>
+              <FontAwesomeIcon
+                name='trophy'
+                color={Colors.Text} />
               <Text style={styles.winnings}>
                 {
                   `$${
@@ -264,6 +268,8 @@ const styles = StyleSheet.create({
   },
 
   winningsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: Sizes.InnerFrame / 2,
     marginLeft: Sizes.InnerFrame,
     backgroundColor: Colors.Primary,
@@ -271,6 +277,7 @@ const styles = StyleSheet.create({
   },
 
   winnings: {
+    marginLeft: Sizes.InnerFrame / 4,
     fontWeight: '700',
     color: Colors.Text
   }
