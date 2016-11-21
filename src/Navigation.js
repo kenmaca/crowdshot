@@ -10,6 +10,7 @@ import {
 import {
   Colors
 } from './Const';
+import FCM from 'react-native-fcm';
 
 // views
 import Loader from './views/main/Loader';
@@ -38,6 +39,24 @@ import TabButton from './components/common/TabButton';
 export default class Navigation extends Component {
   componentDidMount() {
     Platform.OS === 'ios' && StatusBar.setBarStyle('light-content', true);
+
+    FCM.requestPermissions(); // for iOS
+    FCM.getFCMToken().then(token => {
+      console.log(token);
+    });
+    this.token = FCM.on('refreshToken', token => {
+      console.log(token);
+    });
+
+    // demo FCM
+    this.notification = FCM.on('notification', n => {
+      console.log(n);
+    });
+  }
+
+  componentWillUnmount() {
+    this.token();
+    this.notification();
   }
 
   render() {

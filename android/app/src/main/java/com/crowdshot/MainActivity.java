@@ -2,6 +2,7 @@ package com.crowdshot;
 
 import android.content.Intent;
 import com.facebook.react.ReactActivity;
+import com.evollu.react.fcm.FIRMessagingPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.BV.LinearGradient.LinearGradientPackage;

@@ -132,6 +132,7 @@ repositories {
 }
 
 dependencies {
+    compile project(':react-native-fcm')
     compile project(':react-native-maps')
     compile project(':react-native-icons')
     compile project(':react-native-fetch-blob')
