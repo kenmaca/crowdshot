@@ -116,6 +116,10 @@ firebase.auth().signInWithEmailAndPassword(
                   {
                     title: 'Congrats! You\'ve won a contest!',
                     body: `Your account was awarded a bounty of $${contest.bounty}!`
+                  },
+                  {
+                    contestId: data.key,
+                    entryId: winner
                   }
                 ).then(
                   response => console.log(
