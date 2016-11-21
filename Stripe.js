@@ -6,6 +6,7 @@ const config = {
   messagingSenderId: '580889623356'
 };
 const StripePrivateAPI = 'sk_test_ZajBLN6RSgJ3JJr4TNrQZadF';
+const FCMServerKey = 'AIzaSyAsFEg-ElTGnf-nPWGNM1BJ8kbskRrFj00';
 
 // start database
 const fetch = require('node-fetch');
@@ -13,6 +14,48 @@ const Base64 = require('base-64');
 const firebase = require('firebase');
 const Firebase = firebase.initializeApp(config);
 const Database = firebase.database();
+const FCM = require('fcm-node');
+
+// helper utils
+function message(profileId, key, notification, data, attempt) {
+  console.log(`Attempting to contact ${profileId}..`);
+  attempt = attempt ? attempt: 0;
+  return new Promise((resolve, reject) => {
+
+    // get the fcm token
+    Database.ref(
+      `profiles/${profileId}/fcm`
+    ).once('value', token => {
+      if (token.exists()) {
+        console.log(`Found FCM, contacting ${token.val()}..`);
+        new FCM(FCMServerKey).send(Object.assign(
+          {
+            to: token.val(),
+            priority: 10,
+            collapse_key: key
+          }, notification && {
+            notification: notification
+          }, data && {
+            data: data
+          }
+        ), (err, response) => {
+          if (err) {
+
+            // continue to send up to 3 times until successful
+            if (attempt < 3) message(
+              profileId, key, notification, data, attempt + 1
+            ); else reject(err);
+          } else {
+            resolve(response);
+          }
+        });
+      } else {
+        reject('Profile not registered with FCM');
+      }
+    });
+  });
+}
+
 firebase.auth().signInWithEmailAndPassword(
   'server@crowdshot.com',
   'GrayHatesLemonade'
@@ -26,7 +69,7 @@ firebase.auth().signInWithEmailAndPassword(
     console.log(`New Contest Task found: ${
       data.key
     }; Awarding/Refunding Contest..`);
-    
+
     Database.ref(
       `contests/${
         data.key
@@ -62,6 +105,22 @@ firebase.auth().signInWithEmailAndPassword(
                     '.priority': 0 - Date.now()
                   }
                 });
+
+                // contact the winner
+                message(
+                  entriesBlob[winner].createdBy,
+                  'contestWinner',
+                  {
+                    title: 'Congrats! You\'ve won a contest!',
+                    body: `Your account was awarded a bounty of $${contest.bounty}!`
+                  }
+                ).then(
+                  response => console.log(
+                    `Message sent to ${entriesBlob[winner].createdBy}`
+                  )
+                ).catch(
+                  err => console.log(err)
+                );
 
                 // and update prizes total
                 let walletRef = Database.ref(

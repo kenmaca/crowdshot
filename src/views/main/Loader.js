@@ -11,6 +11,10 @@ import {
   Colors
 } from '../../Const';
 import * as Firebase from 'firebase';
+import FCM from 'react-native-fcm';
+import {
+  updateFCMToken
+} from '../../Navigation';
 
 /**
  * Handles logging in and redirection to an appropriate View
@@ -21,7 +25,14 @@ export default class Loader extends Component {
 
     // handle currently logged in user
     Firebase.auth().onAuthStateChanged(user => {
-      if (user) Actions.main(); else Actions.login();
+      if (user) {
+
+        // and update FCM token for push notifications
+        FCM.getFCMToken().then(token => {
+          updateFCMToken(token);
+        });
+        Actions.main();
+      } else Actions.login();
     });
   }
 
