@@ -183,24 +183,11 @@ export default class ContestDetail extends Component {
             <View style={styles.bottomPadding}/>
           </ScrollView>
         </View>
-        <Button
-          squareBorders
-          color={Colors.Primary}
+        <ParticipateButton
           onPress={() => this.setState({
             cameraVisible: true
           })}
-          label={
-            this.state.thumbnails.getRowCount() > 0
-            ? 'Submit another Entry': 'Participate'
-          }
-          isDisabled={
-            !this.state.referencePhotoId
-            || Date.now() > this.state.endDate
-            || this.state.isComplete
-            || this.state.isCancelled
-          }
-          disabledColor={Colors.MediumDarkOverlay}>
-        </Button>
+          contest={this.state} />
         <CloseFullscreenButton/>
         <Modal
           transparent
@@ -249,6 +236,67 @@ export default class ContestDetail extends Component {
           </View>
         </Modal>
       </View>
+    );
+  }
+}
+
+export class ParticipateButton extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      contest: {}
+    };
+
+    this.update = this.update.bind(this);
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      contest: this.props.contest
+    });
+  }
+
+  componentDidMount() {
+    this.componentWillReceiveProps(this.props);
+
+    // create auto refresh disabler based on time
+    this.update();
+  }
+
+  componentWillUnmount() {
+    this.progress && clearTimeout(this.update);
+  }
+
+  update() {
+    this.setState({
+      refreshed: true
+    });
+
+    // schedule next refresh
+    this.refresher = setTimeout(this.update, 5000);
+  }
+
+  render() {
+    return (
+      <Button
+        squareBorders
+        color={Colors.Primary}
+        onPress={this.props.onPress}
+        label={
+          this.props.contest.thumbnails.getRowCount() > 0
+          ? 'Submit another Entry': 'Participate'
+        }
+        isDisabled={
+          !this.props.contest.referencePhotoId
+          || Date.now() > this.props.contest.endDate
+          || this.props.contest.isComplete
+          || this.props.contest.isCancelled
+        }
+        onPressDisabled={() => Alert.alert(
+          'Contest has ended',
+          'The contest has either ended or the owner has cancelled it'
+        )}
+        disabledColor={Colors.MediumDarkOverlay} />
     );
   }
 }
