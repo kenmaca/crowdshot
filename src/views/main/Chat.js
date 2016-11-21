@@ -18,6 +18,7 @@ import {
   GiftedChat
 } from 'react-native-gifted-chat';
 import Avatar from '../../components/profiles/Avatar';
+import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 
 export default class Chat extends Component {
@@ -82,11 +83,7 @@ export default class Chat extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>
-            {this.props.title}
-          </Text>
-        </View>
+        <Titlebar title={this.props.title} />
         <GiftedChat
           messages={this.state.messages}
           onSend={this.onSend}
@@ -103,19 +100,5 @@ export default class Chat extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1
-  },
-
-  titleContainer:{
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: Sizes.InnerFrame,
-    height: Sizes.NavHeight,
-    backgroundColor: Colors.Foreground
-  },
-
-  title: {
-    color: Colors.Text,
-    fontSize: Sizes.H3
   }
 });

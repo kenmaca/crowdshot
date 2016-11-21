@@ -15,6 +15,7 @@ import {
 } from 'react-native-router-flux';
 
 // components
+import TitleBar from '../../components/common/TitleBar';
 import Swipeout from 'react-native-swipeout';
 import BillingCard from '../../components/payment/BillingCard';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
@@ -116,11 +117,7 @@ export default class PaymentMethods extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>
-            Select Payment Method
-          </Text>
-        </View>
+        <TitleBar title='Select Payment Method' />
         <View style={styles.content}>
           <ListView
             scrollEnabled={false}
@@ -149,20 +146,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.Background
-  },
-
-  titleContainer:{
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: Sizes.InnerFrame,
-    height: Sizes.NavHeight,
-    backgroundColor: Colors.Foreground
-  },
-
-  title: {
-    color: Colors.Text,
-    fontSize: Sizes.H3
   },
 
   addContainer: {

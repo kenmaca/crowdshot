@@ -12,6 +12,7 @@ import {
 } from 'react-native-router-flux';
 
 // components
+import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import Field from '../../components/common/Field';
 import Button from '../../components/common/Button';
@@ -28,11 +29,7 @@ export default class TextEntry extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>
-            {this.props.title}
-          </Text>
-        </View>
+        <TitleBar title={this.props.title} />
         <View style={styles.content}>
           <Field
             isBottom
@@ -76,20 +73,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: Colors.Background
-  },
-
-  titleContainer:{
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: Sizes.InnerFrame,
-    height: Sizes.NavHeight,
-    backgroundColor: Colors.Foreground
-  },
-
-  title: {
-    color: Colors.Text,
-    fontSize: Sizes.H3
   },
 
   content: {

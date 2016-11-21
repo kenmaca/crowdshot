@@ -14,6 +14,7 @@ import {
 } from 'react-native-router-flux';
 
 // components
+import TitleBar from '../../components/common/TitleBar';
 import ProgressBlocker from '../../components/common/ProgressBlocker';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import PriceSelect from '../../components/common/PriceSelect';
@@ -105,13 +106,10 @@ export default class NewPayment extends Component {
           <ProgressBlocker
             message='Processing payment..' />
         </Modal>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>
-            {
-              this.props.titleText || 'Set the Bounty Amount'
-            }
-          </Text>
-        </View>
+        <TitleBar
+          title={
+            this.props.titleText || 'Set the Bounty Amount'
+          } />
         <View style={styles.content}>
           <CardSelect
             onSelected={card => this.setState({
@@ -181,20 +179,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.Background
-  },
-
-  titleContainer:{
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: Sizes.InnerFrame,
-    height: Sizes.NavHeight,
-    backgroundColor: Colors.Foreground
-  },
-
-  title: {
-    color: Colors.Text,
-    fontSize: Sizes.H3
   },
 
   content: {

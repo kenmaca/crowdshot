@@ -18,6 +18,7 @@ const LAT_DELTA = 0.01;
 const LNG_DELTA = 0.01;
 
 // components
+import TitleBar from '../../components/common/TitleBar';
 import MapView from 'react-native-maps';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import OutlineText from '../../components/common/OutlineText';
@@ -67,11 +68,7 @@ export default class MapMarkerDrop extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>
-            Select the Contest Location
-          </Text>
-        </View>
+        <TitleBar title='Select the Contest Location' />
         <View style={styles.content}>
           <MapView
             ref='map'
@@ -112,20 +109,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.Background
-  },
-
-  titleContainer:{
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: Sizes.InnerFrame,
-    height: Sizes.NavHeight,
-    backgroundColor: Colors.Foreground
-  },
-
-  title: {
-    color: Colors.Text,
-    fontSize: Sizes.H3
   },
 
   content: {

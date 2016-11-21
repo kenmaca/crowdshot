@@ -15,6 +15,7 @@ import {
 import Base64 from 'base-64';
 
 // components
+import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import Button from '../../components/common/Button';
 import SingleLineInput from '../../components/common/SingleLineInput';
@@ -271,11 +272,7 @@ export default class NewPaymentMethod extends Component {
           <ProgressBlocker
             message='Contacting bank..' />
         </Modal>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>
-            Add a new Credit Card
-          </Text>
-        </View>
+        <TitleBar title='Add a new Credit Card' />
         <View style={styles.content}>
           <SingleLineInput
             isTop
@@ -336,20 +333,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.Background
-  },
-
-  titleContainer:{
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: Sizes.InnerFrame,
-    height: Sizes.NavHeight,
-    backgroundColor: Colors.Foreground
-  },
-
-  title: {
-    color: Colors.Text,
-    fontSize: Sizes.H3
   },
 
   content: {
