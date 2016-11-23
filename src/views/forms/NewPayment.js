@@ -118,7 +118,7 @@ export default class NewPayment extends Component {
             })}
             label='Payment Method' />
           {
-            this.props.fixedValue === null ? (
+            this.props.fixedValue == null ? (
               <PriceSelect
                 isBottom
                 noMargin
