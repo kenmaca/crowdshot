@@ -12,10 +12,13 @@ const FCMServerKey = 'AIzaSyAsFEg-ElTGnf-nPWGNM1BJ8kbskRrFj00';
 const fetch = require('node-fetch');
 const Base64 = require('base-64');
 const firebase = require('firebase');
-const Geofire = require('geofire');
+const GeoFire = require('geofire');
 const Firebase = firebase.initializeApp(config);
 const Database = firebase.database();
 const FCM = require('fcm-node');
+
+// global data
+let activeContests = {};
 
 // helper utils
 function message(profileId, key, notification, data, attempt) {
@@ -64,8 +67,74 @@ firebase.auth().signInWithEmailAndPassword(
   console.log(error);
 }).then(() => {
 
+  // new contest proximity notifier
+  console.log('Starting New Contest Proximity Notifier..')
+  Database.ref('locations').on('child_added', data => {
+    let location = data.val();
+    console.log(`New Contest found: ${
+      data.key
+    }; Notifying nearby Contestants..`);
+
+    // grab contest information
+    Database.ref(
+      `contests/${data.key}`
+    ).once('value', data => {
+      if (data.exists()) {
+        let contest = data.val();
+
+        // select all profiles within 10km
+        activeContests[data.key] = new GeoFire(
+          Database.ref('profileLocations')
+        ).query({
+          center: [
+            location.l[0],
+            location.l[1]
+          ],
+
+          // default notify within 1 km of contest center
+          radius: 1
+        });
+
+        // and notify them when they come in range
+        activeContests[data.key].on(
+          'key_entered',
+          (profileId, location, distance) => {
+            message(
+              profileId,
+              'contestNearby',
+              {
+                title: `There\'s a contest ${
+                  contest.near ? `near ${contest.near}`: 'nearby'
+                }!`,
+                body: `Submit a photo to win a $${contest.bounty} bounty!`
+              },
+              {
+                contestId: data.key
+              }
+            ).then(
+              response => console.log(
+                `Nearby notification sent to ${profileId}`
+              )
+            ).catch(
+              err => console.log(err)
+            );
+          }
+        );
+      }
+    });
+  });
+
+  // contest end clean up
+  console.log('Starting Contest End Cleanup');
+  Database.ref('locations').on('child_removed', data => {
+    console.log(`Contest Ended: ${data.key}; Perfoming cleanup..`);
+
+    // remove proximity notifier
+    activeContests[data.key].cancel();
+  });
+
   // contest processor
-  console.log('Starting Contest Processor');
+  console.log('Starting Contest Processor..');
   Database.ref('contestTasks').on('child_added', data => {
     console.log(`New Contest Task found: ${
       data.key
