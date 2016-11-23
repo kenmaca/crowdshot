@@ -16,7 +16,7 @@ import {
 // components
 import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
-import CompletedContest from './CompletedContest';
+import CompletedContest from '../../components/contests/CompletedContest';
 
 export default class CompletedContests extends Component {
   constructor(props) {

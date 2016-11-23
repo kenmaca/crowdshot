@@ -306,7 +306,7 @@ export default class Main extends Component {
           } />
         <HeaderButtons>
           <HeaderButton
-            icon='photo-album'
+            icon='photo-library'
             onPress={Actions.completed} />
           <HeaderButton
             fontAwesome

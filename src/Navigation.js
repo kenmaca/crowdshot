@@ -143,7 +143,7 @@ export default class Navigation extends Component {
                 hideNavBar
                 key='mainMain'
                 component={Main}
-                title='Home'
+                title='Your Contests'
                 iconName='home'
                 icon={TabButton} />
               <Scene
@@ -151,7 +151,7 @@ export default class Navigation extends Component {
                 key='mainBroadcast'
                 component={NewContest}
                 title='Start a Contest'
-                iconName='casino'
+                iconName='assistant-photo'
                 icon={TabButton} />
               <Scene
                 hideNavBar

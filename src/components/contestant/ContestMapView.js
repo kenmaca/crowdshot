@@ -197,8 +197,7 @@ export default class ContestMapView extends Component {
           </MapView>
           <HeaderButtons>
             <HeaderButton
-              fontAwesome
-              icon='camera-retro'
+              icon='gavel'
               onPress={Actions.entries}
               unread={
                 this.state.profile.entries

@@ -2,12 +2,15 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, TouchableOpacity
 } from 'react-native';
 import {
   Colors, Sizes
 } from '../../Const';
 import Database from '../../utils/Database';
+import {
+  Actions
+} from 'react-native-router-flux';
 
 // components
 import Photo from '../common/Photo';
@@ -67,9 +70,14 @@ export default class EntryCard extends Component {
         }
       ]}>
         <View style={styles.container}>
-          <Photo
-            photoId={this.state.photoId}
-            style={styles.photo} />
+          <TouchableOpacity
+            onPress={() => Actions.purchasedPhoto({
+              photoId: this.state.photoId
+            })}>
+            <Photo
+              photoId={this.state.photoId}
+              style={styles.photo} />
+          </TouchableOpacity>
           <View style={styles.content}>
             <Text style={[
               styles.status,

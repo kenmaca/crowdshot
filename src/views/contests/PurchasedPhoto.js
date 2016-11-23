@@ -67,14 +67,18 @@ export default class Settings extends Component {
         }
         <CloseFullscreenButton />
         <View style={styles.buttons}>
-          <Avatar
-            outline
-            outlineColor={Colors.Text}
-            size={28}
-            uid={this.props.contestantId}
-            onPress={() => Actions.profile({
-              uid: this.props.contestantId
-            })} />
+          {
+            this.props.contestantId && (
+              <Avatar
+                outline
+                outlineColor={Colors.Text}
+                size={28}
+                uid={this.props.contestantId}
+                onPress={() => Actions.profile({
+                  uid: this.props.contestantId
+                })} />
+            )
+          }
           <HeaderButton
             icon='share' />
           <HeaderButton
