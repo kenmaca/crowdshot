@@ -128,9 +128,7 @@ const styles = StyleSheet.create({
 
   camera: {
     flex: 1,
-    alignSelf: 'flex-start',
-    width: Sizes.Width,
-    height: Sizes.Width*4/3,
+    alignSelf: 'stretch',
     justifyContent: 'flex-end',
     padding: Sizes.OuterFrame,
   },

@@ -72,6 +72,8 @@ export default class MapMarkerDrop extends Component {
         <View style={styles.content}>
           <MapView
             ref='map'
+            rotateEnabled={false}
+            pitchEnabled={false}
             style={styles.map}
             region={this.state.current}
             onRegionChange={this.onRegionChange}>
