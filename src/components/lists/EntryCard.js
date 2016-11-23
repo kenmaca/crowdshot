@@ -161,8 +161,8 @@ const styles = StyleSheet.create({
   outline: {
     alignSelf: 'stretch',
     borderLeftWidth: Sizes.InnerFrame / 4,
-    borderLeftColor: Colors.Foreground,
-    backgroundColor: Colors.Foreground
+    borderLeftColor: Colors.ModalForeground,
+    backgroundColor: Colors.ModalForeground
   },
 
   container: {
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     padding: Sizes.InnerFrame,
     paddingLeft: Sizes.InnerFrame,
-    backgroundColor: Colors.Foreground
+    backgroundColor: Colors.ModalForeground
   },
 
   photo: {
@@ -185,13 +185,15 @@ const styles = StyleSheet.create({
   },
 
   status: {
-    color: Colors.Text
+    color: Colors.AlternateText,
+    fontWeight: '500'
   },
 
   details: {
     marginTop: Sizes.InnerFrame / 4,
     fontSize: Sizes.SmallText,
-    color: Colors.SubduedText
+    fontWeight: '100',
+    color: Colors.AlternateText
   },
 
   prizeContainer: {
@@ -201,7 +203,7 @@ const styles = StyleSheet.create({
   prize: {
     fontSize: Sizes.H3,
     fontWeight: '500',
-    color: Colors.Text
+    color: Colors.AlternateText
   },
 
   statusIcon: {

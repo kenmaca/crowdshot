@@ -23,15 +23,17 @@ export default class TitleBar extends Component {
 const styles = StyleSheet.create({
   container:{
     alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: Sizes.InnerFrame,
-    height: Sizes.NavHeight,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    padding: Sizes.InnerFrame,
+    paddingTop: Sizes.InnerFrame * 5,
+    minHeight: Sizes.NavHeight,
     backgroundColor: Colors.Foreground
   },
 
   title: {
     color: Colors.Text,
-    fontSize: Sizes.H3
+    fontSize: Sizes.H1,
+    fontWeight: '300'
   }
 });

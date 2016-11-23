@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: Colors.Background
+    backgroundColor: Colors.ModalBackground
   },
 
   content: {

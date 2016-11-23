@@ -127,8 +127,7 @@ export default class PaymentMethods extends Component {
             style={styles.addContainer}
             onPress={Actions.newPaymentMethod}>
             <CircleIcon
-              style={styles.addContainerIcon}
-              color={Colors.Transparent}
+              color={Colors.AlternateText}
               icon='add'
               size={24} />
             <Text style={styles.addContainerText}>
@@ -145,7 +144,7 @@ export default class PaymentMethods extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.Background
+    backgroundColor: Colors.ModalBackground
   },
 
   addContainer: {
@@ -160,6 +159,6 @@ const styles = StyleSheet.create({
 
   addContainerText: {
     marginLeft: Sizes.InnerFrame,
-    color: Colors.Text
+    color: Colors.AlternateText
   }
 });

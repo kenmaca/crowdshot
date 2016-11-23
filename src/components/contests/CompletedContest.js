@@ -111,14 +111,14 @@ export default class CompletedContest extends Component {
               DateFormat(this.state.contest.dateCreated, 'mmmm dS, yyyy')
             }
             style={styles.header}
-            color={Colors.SubduedText}
+            color={Colors.AlternateText}
             offset={0} />
           {
             this.state.contest.near && (
               <InputSectionHeader
                 label={`near ${this.state.contest.near}`}
                 style={styles.header}
-                color={Colors.LightWhiteOverlay}
+                color={Colors.SubduedText}
                 offset={0} />
             )
           }

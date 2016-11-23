@@ -275,7 +275,6 @@ export default class NewPaymentMethod extends Component {
         <TitleBar title='Add a new Credit Card' />
         <View style={styles.content}>
           <SingleLineInput
-            isTop
             autoCapitalize='words'
             placeholder='Johnny Appleseed'
             onChangeText={this.onChangeName}
@@ -306,6 +305,7 @@ export default class NewPaymentMethod extends Component {
             <CircleIcon
               fontAwesome
               color={Colors.Transparent}
+              checkColor={Colors.AlternateText}
               icon='cc-stripe'
               size={28} />
             <Text style={styles.securityText}>
@@ -332,7 +332,7 @@ export default class NewPaymentMethod extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.Background
+    backgroundColor: Colors.ModalBackground
   },
 
   content: {
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
   securityText: {
     marginLeft: Sizes.InnerFrame / 2,
     fontSize: Sizes.SmallText,
-    color: Colors.Text
+    color: Colors.AlternateText
   }
 });
 

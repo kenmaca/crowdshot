@@ -178,7 +178,7 @@ export default class NewPayment extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.Background
+    backgroundColor: Colors.ModalBackground
   },
 
   content: {
@@ -194,6 +194,6 @@ const styles = StyleSheet.create({
   disclaimer: {
     textAlign: 'center',
     fontSize: Sizes.SmallText,
-    color: Colors.SubduedText
+    color: Colors.AlternateText
   }
 });
