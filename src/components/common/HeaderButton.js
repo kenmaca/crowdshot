@@ -15,9 +15,10 @@ export default class HeaderButton extends Component {
   render() {
     return (
       <TouchableOpacity
-        onPress={this.props.onPress}>
+        onPress={this.props.onPress}
+        style={this.props.style}>
         <CircleIcon
-          fontAwesome
+          fontAwesome={this.props.fontAwesome}
           style={styles.container}
           color={Colors.Transparent}
           size={36}

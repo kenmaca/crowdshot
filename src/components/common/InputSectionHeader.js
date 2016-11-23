@@ -26,7 +26,8 @@ export default class InputSectionHeader extends Component {
       ]}>
         <Text style={[
           styles.label,
-          this.props.color && {color: this.props.color}
+          this.props.color && {color: this.props.color},
+          this.props.offset !== null && {paddingLeft: this.props.offset}
         ]}>
           {this.props.label.toUpperCase()}
         </Text>
