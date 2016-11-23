@@ -149,7 +149,9 @@ export default class ContestDetail extends Component {
             {
               this.state.thumbnails.getRowCount() > 0 && (
                 <View style={styles.instructionContainer}>
-                  <InputSectionHeader label='Your submissions' />
+                  <InputSectionHeader
+                    offset={Sizes.InnerFrame}
+                    label='Your submissions' />
                   <ListView
                     horizontal
                     scrollEnabled={false}
@@ -173,7 +175,9 @@ export default class ContestDetail extends Component {
               !!this.state.instructions
               && (
                 <View style={styles.instructionContainer}>
-                  <InputSectionHeader label='Instructions' />
+                  <InputSectionHeader
+                    offset={Sizes.InnerFrame}
+                    label='Instructions' />
                   <Text style={styles.instructions}>
                     {this.state.instructions}
                   </Text>

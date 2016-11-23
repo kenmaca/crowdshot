@@ -75,7 +75,10 @@ export default class ContestProgress extends Component {
 
   renderContent() {
     return (
-      <View style={styles.container}>
+      <View style={[
+        styles.container,
+        this.props.style
+      ]}>
         {
           this.state.progress < 1
           ? (

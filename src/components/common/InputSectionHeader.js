@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignSelf: 'stretch',
-    padding: 5
+    paddingBottom: Sizes.InnerFrame / 2
   },
 
   label: {

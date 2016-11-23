@@ -209,7 +209,7 @@ export default class ContestCard extends Component {
                 && (
                   <View style={styles.instructionContainer}>
                     <InputSectionHeader
-                      offset={10}
+                      offset={Sizes.InnerFrame}
                       label='Instructions' />
                     <Text style={styles.instructions}>
                       {this.state.instructions}
@@ -222,7 +222,7 @@ export default class ContestCard extends Component {
                 && (
                   <View style={styles.instructionContainer}>
                     <InputSectionHeader
-                      offset={10}
+                      offset={Sizes.InnerFrame}
                       label='Photographers Nearby' />
                     <NearbyAvatars
                       limit={6}
@@ -239,7 +239,7 @@ export default class ContestCard extends Component {
                 this.state.thumbnails.getRowCount() > 0 && (
                   <View style={styles.photoContainer}>
                     <InputSectionHeader
-                      offset={10}
+                      offset={Sizes.InnerFrame}
                       label='Contest Entries' />
                     <ListView
                       horizontal

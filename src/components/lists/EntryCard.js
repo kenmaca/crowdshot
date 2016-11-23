@@ -69,85 +69,89 @@ export default class EntryCard extends Component {
           borderLeftColor: Colors.Primary
         }
       ]}>
-        <View style={styles.container}>
-          <TouchableOpacity
-            onPress={() => Actions.purchasedPhoto({
-              photoId: this.state.photoId
-            })}>
-            <Photo
-              photoId={this.state.photoId}
-              style={styles.photo} />
-          </TouchableOpacity>
-          <View style={styles.content}>
-            <Text style={[
-              styles.status,
-            ]}>
-              {
-                (
-                  state => {
-                    let timeLeft = state.contest.endDate - Date.now();
-                    if (state.contest.isCancelled) {
-                      return 'Contest cancelled';
-                    } else if (state.contest.isComplete) {
-                      return 'Contest completed';
-                    } else if (timeLeft > 0) {
-                      return `Ending in ${
-                        getTimeLeft(Date.now(), state.contest.endDate)
-                      }`;
-                    } else if (timeLeft <= 0) {
-                      return 'Contest ended';
+        <TouchableOpacity onPress={() => Actions.contestStatus({
+          contestId: this.props.contestId
+        })}>
+          <View style={styles.container}>
+            <TouchableOpacity
+              onPress={() => Actions.purchasedPhoto({
+                photoId: this.state.photoId
+              })}>
+              <Photo
+                photoId={this.state.photoId}
+                style={styles.photo} />
+            </TouchableOpacity>
+            <View style={styles.content}>
+              <Text style={[
+                styles.status,
+              ]}>
+                {
+                  (
+                    state => {
+                      let timeLeft = state.contest.endDate - Date.now();
+                      if (state.contest.isCancelled) {
+                        return 'Contest cancelled';
+                      } else if (state.contest.isComplete) {
+                        return 'Contest completed';
+                      } else if (timeLeft > 0) {
+                        return `Ending in ${
+                          getTimeLeft(Date.now(), state.contest.endDate)
+                        }`;
+                      } else if (timeLeft <= 0) {
+                        return 'Contest ended';
+                      }
                     }
-                  }
-                )(this.state)
-              }
-            </Text>
-            <Text style={styles.details}>
-              {
-                (
-                  state => {
-                    if (state.selected && state.contest.isComplete) {
-                      return 'Winner — Bounty awarded!';
-                    } else if (state.selected) {
-                      return 'Shortlisted — waiting for contest to end';
-                    } else if (state.selected === false || state.contest.isComplete) {
-                      return 'Rejected';
-                    } else {
-                      return 'Awaiting results..';
+                  )(this.state)
+                }
+              </Text>
+              <Text style={styles.details}>
+                {
+                  (
+                    state => {
+                      if (state.selected && state.contest.isComplete) {
+                        return 'Winner — Bounty awarded!';
+                      } else if (state.selected) {
+                        return 'Shortlisted — waiting for contest to end';
+                      } else if (state.selected === false || state.contest.isComplete) {
+                        return 'Rejected';
+                      } else {
+                        return 'Awaiting results..';
+                      }
                     }
-                  }
-                )(this.state)
-              }
-            </Text>
+                  )(this.state)
+                }
+              </Text>
+            </View>
+            <View style={styles.prizeContainer}>
+              <Text style={[
+                styles.prize,
+                this.state.selected && this.state.contest.isComplete && {
+                  color: Colors.Primary
+                }
+              ]}>
+                {
+                  `$${
+                    this.state.contest.bounty || '$0'
+                  }`
+                }
+              </Text>
+              <CircleIcon
+                fontAwesome={this.state.selected && this.state.contest.isComplete}
+                icon={
+                  this.state.selected && this.state.contest.isComplete && 'trophy'
+                  || this.state.selected && 'thumb-up'
+                  || this.state.selected === false && 'thumb-down'
+                  || 'thumbs-up-down'
+                }
+                color={
+                  this.state.selected && Colors.Primary
+                  || this.state.selected === false && Colors.Cancel
+                  || Colors.Foreground
+                }
+                style={styles.statusIcon} />
+            </View>
           </View>
-          <View style={styles.prizeContainer}>
-            <Text style={[
-              styles.prize,
-              this.state.selected && this.state.contest.isComplete && {
-                color: Colors.Primary
-              }
-            ]}>
-              {
-                `$${
-                  this.state.contest.bounty || '$0'
-                }`
-              }
-            </Text>
-            <CircleIcon
-              fontAwesome={this.state.selected && this.state.contest.isComplete}
-              icon={
-                this.state.selected && this.state.contest.isComplete && 'trophy'
-                || this.state.selected && 'thumb-up'
-                || this.state.selected === false && 'thumb-down'
-                || 'thumbs-up-down'
-              }
-              color={
-                this.state.selected && Colors.Primary
-                || this.state.selected === false && Colors.Cancel
-                || Colors.Foreground
-              }
-              style={styles.statusIcon} />
-          </View>
-        </View>
+        </TouchableOpacity>
       </View>
     );
   }
