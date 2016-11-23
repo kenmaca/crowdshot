@@ -12,6 +12,7 @@ const FCMServerKey = 'AIzaSyAsFEg-ElTGnf-nPWGNM1BJ8kbskRrFj00';
 const fetch = require('node-fetch');
 const Base64 = require('base-64');
 const firebase = require('firebase');
+const Geofire = require('geofire');
 const Firebase = firebase.initializeApp(config);
 const Database = firebase.database();
 const FCM = require('fcm-node');
@@ -140,17 +141,20 @@ firebase.auth().signInWithEmailAndPassword(
                     (wallet.val() || 0) + contest.bounty
                   );
                 });
-
-                // now remove task to stop future processing
-                Database.ref(
-                  `contestTasks/${
-                    data.key
-                  }`
-                ).remove();
               }
             }
           });
+        } else if (contest.isCancelled) {
+
+          // TODO: handle cancelled contest by refunding
         }
+
+        // now remove task to stop future processing
+        Database.ref(
+          `contestTasks/${
+            data.key
+          }`
+        ).remove();
       }
     });
   });
