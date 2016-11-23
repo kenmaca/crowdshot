@@ -202,57 +202,69 @@ export default class ContestCard extends Component {
                   label='Open contest chat' />
               </TouchableOpacity>
             </View>
-            <Divider style={styles.divider} />
-            {
-              !!this.state.instructions
-              && (
-                <View style={styles.instructionContainer}>
-                  <InputSectionHeader label='Instructions' />
-                  <Text style={styles.instructions}>
-                    {this.state.instructions}
-                  </Text>
-                </View>
-              )
-            }
-            {
-              this.state.latitude && this.state.longitude
-              && (
-                <View style={styles.instructionContainer}>
-                  <InputSectionHeader label='Photographers Nearby' />
-                  <NearbyAvatars
-                    limit={6}
-                    latitude={this.state.latitude}
-                    longitude={this.state.longitude}
-                    size={Sizes.InnerFrame * 3}
-                    color={Colors.Foreground}
-                    outlineColor={Colors.ModalBackground}
-                    style={styles.photographersNearby} />
-                </View>
-              )
-            }
-            <View style={styles.photoContainer}>
-              <InputSectionHeader label='Contest Entries' />
-              <ListView
-                horizontal
-                scrollEnabled={false}
-                dataSource={this.state.thumbnails}
-                style={styles.thumbnailContainer}
-                contentContainerStyle={styles.thumbnails}
-                renderRow={data => {
-                  return (
-                    <TouchableOpacity
-                      onPress={() => Actions.contestPhotos({
-                        contestId: this.props.contestId,
-                        startCard: data
-                      })}>
-                      <ContestThumbnail
-                        size={80}
-                        rejectedOverlay={Colors.WhiteOverlay}
-                        contestId={this.props.contestId}
-                        entryId={data} />
-                    </TouchableOpacity>
-                  );
-                }} />
+            <View style={styles.content}>
+              <Divider style={styles.divider} />
+              {
+                !!this.state.instructions
+                && (
+                  <View style={styles.instructionContainer}>
+                    <InputSectionHeader
+                      offset={10}
+                      label='Instructions' />
+                    <Text style={styles.instructions}>
+                      {this.state.instructions}
+                    </Text>
+                  </View>
+                )
+              }
+              {
+                this.state.latitude && this.state.longitude
+                && (
+                  <View style={styles.instructionContainer}>
+                    <InputSectionHeader
+                      offset={10}
+                      label='Photographers Nearby' />
+                    <NearbyAvatars
+                      limit={6}
+                      latitude={this.state.latitude}
+                      longitude={this.state.longitude}
+                      size={Sizes.InnerFrame * 3}
+                      color={Colors.Foreground}
+                      outlineColor={Colors.ModalBackground}
+                      style={styles.photographersNearby} />
+                  </View>
+                )
+              }
+              {
+                this.state.thumbnails.getRowCount() > 0 && (
+                  <View style={styles.photoContainer}>
+                    <InputSectionHeader
+                      offset={10}
+                      label='Contest Entries' />
+                    <ListView
+                      horizontal
+                      scrollEnabled={false}
+                      dataSource={this.state.thumbnails}
+                      style={styles.thumbnailContainer}
+                      contentContainerStyle={styles.thumbnails}
+                      renderRow={data => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => Actions.contestPhotos({
+                              contestId: this.props.contestId,
+                              startCard: data
+                            })}>
+                            <ContestThumbnail
+                              size={80}
+                              rejectedOverlay={Colors.WhiteOverlay}
+                              contestId={this.props.contestId}
+                              entryId={data} />
+                          </TouchableOpacity>
+                        );
+                      }} />
+                  </View>
+                )
+              }
             </View>
             <View style={styles.footerContainer}>
               <Button
@@ -348,6 +360,11 @@ const styles = StyleSheet.create({
 
   summary: {
     padding: Sizes.InnerFrame
+  },
+
+  content: {
+    flex: 1,
+    minHeight: Sizes.Height / 4.25
   },
 
   instructionContainer: {

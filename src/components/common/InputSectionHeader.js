@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
   label: {
     backgroundColor: Colors.Transparent,
     color: Colors.SubduedText,
-    fontSize: Sizes.SmallText,
-    paddingLeft: 10
+    fontSize: Sizes.SmallText
   }
 });
