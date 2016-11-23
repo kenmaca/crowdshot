@@ -8,9 +8,10 @@ import {
   Actions
 } from 'react-native-router-flux';
 import {
-  Colors
+  Colors, Strings
 } from '../../Const';
 import * as Firebase from 'firebase';
+import Database from '../../utils/Database';
 import FCM from 'react-native-fcm';
 import {
   updateFCMToken
@@ -23,16 +24,31 @@ import {
 export default class Loader extends Component {
   componentDidMount() {
 
-    // handle currently logged in user
-    Firebase.auth().onAuthStateChanged(user => {
-      if (user) {
+    // handle version check before anything else
+    Database.ref('config').once('value', config => {
+      config = config.val();
 
-        // and update FCM token for push notifications
-        FCM.getFCMToken().then(token => {
-          updateFCMToken(token);
+      // unsupported client, so prompt user to update
+      if (config.minimumVersion > Strings.ClientVersion) {
+        Alert.alert(
+          'Please update Crowdshot',
+          'You are currently running an older version of Crowdshot that is no '
+            + 'longer supported'
+        );
+      } else {
+
+        // handle currently logged in user
+        Firebase.auth().onAuthStateChanged(user => {
+          if (user) {
+
+            // and update FCM token for push notifications
+            FCM.getFCMToken().then(token => {
+              updateFCMToken(token);
+            });
+            Actions.main();
+          } else Actions.login();
         });
-        Actions.main();
-      } else Actions.login();
+      }
     });
   }
 
