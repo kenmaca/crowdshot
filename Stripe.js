@@ -103,6 +103,7 @@ firebase.auth().signInWithEmailAndPassword(
               profileId,
               'contestNearby',
               {
+                type: 'contestNearby',
                 title: `There\'s a contest ${
                   contest.near ? `near ${contest.near}`: 'nearby'
                 }!`,
@@ -188,6 +189,7 @@ firebase.auth().signInWithEmailAndPassword(
                     body: `Your account was awarded a bounty of $${contest.bounty}!`
                   },
                   {
+                    type: 'contestWinner',
                     contestId: data.key,
                     entryId: winner
                   }
