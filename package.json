@@ -29,6 +29,7 @@
     "react-native-photo-view": "^1.2.0",
     "react-native-progress": "^3.1.0",
     "react-native-router-flux": "^3.36.0",
+    "react-native-share": "^1.0.17",
     "react-native-simple-store": "^1.1.0",
     "react-native-swipe-cards": "0.0.9",
     "react-native-swipeout": "git+https://github.com/dancormier/react-native-swipeout.git",

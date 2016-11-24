@@ -2,6 +2,7 @@ package com.crowdshot;
 
 import android.content.Intent;
 import com.facebook.react.ReactActivity;
+import cl.json.RNSharePackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.brentvatne.react.ReactVideoPackage;
