@@ -14,6 +14,7 @@ import {
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 import DateFormat from 'dateformat';
+import FCM from 'react-native-fcm';
 
 // modifications
 let panDiff = 120;
@@ -157,6 +158,26 @@ export default class Main extends Component {
 
   componentDidMount() {
 
+    // initialize FCM
+    FCM.requestPermissions();
+    FCM.getFCMToken().then(token => {
+      updateFCMToken(token);
+    });
+    this.token = FCM.on('refreshToken', token => {
+      updateFCMToken(token);
+    });
+
+    // load first notification if present
+    FCM.getInitialNotification().then(n =>
+      this.notificationResponder(n, true)
+    );
+
+    // FCM listeners
+    this.notification = FCM.on(
+      'notification',
+      this.notificationResponder
+    );
+
     // data
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
@@ -180,7 +201,31 @@ export default class Main extends Component {
     }));
   }
 
+  notificationResponder(notification, initial) {
+    if (notification) {
+
+      // if from tray or initial load, then react to it
+      if (notification.opened_from_tray || initial) {
+        switch(notification['gcm.notification.type']) {
+          case 'contestNearby':
+            Actions.mainContestant();
+            break;
+          case 'contestWinner':
+            Actions.contestStatus({
+              contestId: notification.contestId
+            });
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
   componentWillUnmount() {
+    console.log('unmount');
+    this.token();
+    this.notification();
     this.listener && this.ref.off('value', this.listener);
   }
 
@@ -399,3 +444,16 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   }
 });
+
+export function updateFCMToken(token) {
+
+  // only update when logged in
+  let user = Firebase.auth().currentUser;
+  if (user) {
+    Database.ref(
+      `profiles/${
+        user.uid
+      }/fcm`
+    ).set(token);
+  }
+}

@@ -5,14 +5,13 @@ import {
   View, StyleSheet, Navigator, Platform, StatusBar
 } from 'react-native';
 import {
-  Router, Scene
+  Router, Scene, Actions
 } from 'react-native-router-flux';
 import {
   Colors
 } from './Const';
 import * as Firebase from 'firebase';
 import Database from './utils/Database';
-import FCM from 'react-native-fcm';
 
 // views
 import Loader from './views/main/Loader';
@@ -44,25 +43,6 @@ import TabButton from './components/common/TabButton';
 export default class Navigation extends Component {
   componentDidMount() {
     Platform.OS === 'ios' && StatusBar.setBarStyle('light-content', true);
-
-    // initialize FCM
-    FCM.requestPermissions();
-    FCM.getFCMToken().then(token => {
-      updateFCMToken(token);
-    });
-    this.token = FCM.on('refreshToken', token => {
-      updateFCMToken(token);
-    });
-
-    // FCM listeners
-    this.notification = FCM.on('notification', n => {
-      console.log(n);
-    });
-  }
-
-  componentWillUnmount() {
-    this.token();
-    this.notification();
   }
 
   render() {
@@ -194,16 +174,3 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Foreground
   }
 });
-
-export function updateFCMToken(token) {
-
-  // only update when logged in
-  let user = Firebase.auth().currentUser;
-  if (user) {
-    Database.ref(
-      `profiles/${
-        user.uid
-      }/fcm`
-    ).set(token);
-  }
-}
