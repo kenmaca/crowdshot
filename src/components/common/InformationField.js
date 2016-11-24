@@ -10,6 +10,7 @@ import {
 
 // components
 import Field from './Field';
+import CircleIcon from './CircleIcon';
 
 /**
  * Creates a line of Information wrapped in a InputField.
@@ -20,12 +21,24 @@ export default class InformationField extends Component {
   render() {
     return (
       <Field {...this.props}>
-        <Text style={[
+        <View style={[
           styles.info,
           this.props.style
         ]}>
-          {this.props.info}
-        </Text>
+          <Text style={styles.infoText}>
+            {this.props.info}
+          </Text>
+          {
+            this.props.pressable && (
+              <CircleIcon
+                size={18}
+                style={styles.button}
+                icon='arrow-forward'
+                color={Colors.ModalBackground}
+                checkColor={Colors.AlternateText} />
+            )
+          }
+        </View>
       </Field>
     );
   }
@@ -34,11 +47,21 @@ export default class InformationField extends Component {
 const styles = StyleSheet.create({
   info: {
     flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
     alignSelf: 'flex-end',
-    textAlign: 'right',
     paddingRight: Sizes.OuterFrame,
+    backgroundColor: Colors.Transparent
+  },
+
+  infoText: {
     fontSize: Sizes.Text,
     color: Colors.Text,
-    backgroundColor: Colors.Transparent
+    textAlign: 'right',
+  },
+
+  button: {
+    marginLeft: Sizes.InnerFrame / 2
   }
 });

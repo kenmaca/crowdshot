@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, TouchableOpacity
+  View, StyleSheet, Text
 } from 'react-native';
 import {
   Colors, Sizes
@@ -16,12 +16,13 @@ import {
 // components
 import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
-import InformationField from '../../components/common/InformationField';
 
 export default class Settings extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      user: {}
+    };
 
     this.ref = Database.ref(
       `profiles/${Firebase.auth().currentUser.uid}`
@@ -32,7 +33,7 @@ export default class Settings extends Component {
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
         this.setState({
-          ...data.val()
+          user: data.val()
         });
       }
     });
@@ -47,23 +48,7 @@ export default class Settings extends Component {
       <View style={styles.container}>
         <TitleBar title='Settings' />
         <View style={styles.content}>
-          <TouchableOpacity
-            onPress={Actions.address}>
-            <InformationField
-              pressable
-              label='Shipping Address'
-              info={
-                this.state.address && (
-                  `${
-                    this.state.address
-                  }, ${
-                    this.state.city
-                  } ${
-                    this.state.postal
-                  }`
-                )
-              } />
-          </TouchableOpacity>
+
         </View>
         <CloseFullscreenButton />
       </View>

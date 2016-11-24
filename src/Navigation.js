@@ -36,6 +36,7 @@ import TextEntry from './views/forms/TextEntry';
 import CompletedContests from './views/contests/CompletedContests';
 import PurchasedPhoto from './views/contests/PurchasedPhoto';
 import ContestStatus from './views/contestant/ContestStatus';
+import Address from './views/forms/Address';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -117,6 +118,9 @@ export default class Navigation extends Component {
             <Scene
               key='contestStatus'
               component={ContestStatus} />
+            <Scene
+              key='address'
+              component={Address} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}
