@@ -24,7 +24,7 @@ export const Colors = {
   ModalForeground: '#FCFCFC',
 
   // lines
-  Divider: 'rgba(100, 100, 100, 0.1)',
+  Divider: 'rgba(100, 100, 100, 0.05)',
   Outline: '#222222',
 
   // text
