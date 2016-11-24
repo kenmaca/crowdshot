@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   checklist: {
     alignSelf: 'stretch',
     padding: Sizes.InnerFrame,
-    marginTop: Sizes.OuterFrame,
-    marginBottom: Sizes.OuterFrame
+    marginTop: Sizes.InnerFrame,
+    marginBottom: Sizes.InnerFrame
   }
 });
