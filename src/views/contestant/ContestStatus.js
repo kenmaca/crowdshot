@@ -161,6 +161,7 @@ export default class ContestStatus extends Component {
                   label='Participants' />
                 <GroupAvatar
                   limit={10}
+                  color={Colors.Foreground}
                   outlineColor={Colors.ModalBackground}
                   style={styles.participants}
                   uids={
