@@ -24,12 +24,12 @@ export const Sizes = {
   H3: Ratio*(0.7),
   H4: Ratio*(0.65),
   Text: Ratio*(0.55),
-  SmallText: Ratio*(0.5),
+  SmallText: Ratio*(0.4),
 
   // padding sizes
   // 25 15
-  OuterFrame: 25,
-  InnerFrame: 15
+  OuterFrame: Ratio*(0.9),
+  InnerFrame: Ratio*(0.65)
 };
 
 export default Sizes;
