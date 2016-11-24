@@ -37,6 +37,7 @@
 		834ADD3428D74F1883E35F67 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9132AF949E9B4CD5B42A8129 /* libRNFetchBlob.a */; };
 		8D8FB3B8B1A24C1594962AB7 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0621ED0F83C3445499D0A02E /* Entypo.ttf */; };
 		9EEA18737FE84D70AC3A8FD5 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BEC93596F4A4ADA80BA1FD5 /* libRNVectorIcons.a */; };
+		BE0F76711DE69B25003D38AD /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE0F76581DE69B11003D38AD /* libRCTCameraRoll.a */; };
 		BE622B271DC92B410021F735 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE622B231DC92B410021F735 /* Bolts.framework */; };
 		BE622B281DC92B410021F735 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE622B241DC92B410021F735 /* FBSDKCoreKit.framework */; };
 		BE622B291DC92B410021F735 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE622B251DC92B410021F735 /* FBSDKLoginKit.framework */; };
@@ -193,6 +194,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = BVLinearGradient;
 		};
+		BE0F76571DE69B11003D38AD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BE0F764F1DE69B11003D38AD /* RCTCameraRoll.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58B5115D1A9E6B3D00147676;
+			remoteInfo = RCTCameraRoll;
+		};
 		BE1E1F7B1DC96D6F000D4DD2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 32A75BD704A14176ACEE1686 /* RNVectorIcons.xcodeproj */;
@@ -307,6 +315,7 @@
 		9BEC93596F4A4ADA80BA1FD5 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		A938785A7CD4A8573077EF78 /* Pods-crowdshot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-crowdshot.release.xcconfig"; path = "Pods/Target Support Files/Pods-crowdshot/Pods-crowdshot.release.xcconfig"; sourceTree = "<group>"; };
 		B597872D4F5E4EECB0E4E88B /* libReactNativeIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeIcons.a; sourceTree = "<group>"; };
+		BE0F764F1DE69B11003D38AD /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		BE622B231DC92B410021F735 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../../Documents/FacebookSDK/Bolts.framework; sourceTree = "<group>"; };
 		BE622B241DC92B410021F735 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		BE622B251DC92B410021F735 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../../Documents/FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
@@ -338,6 +347,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE0F76711DE69B25003D38AD /* libRCTCameraRoll.a in Frameworks */,
 				DC65DFA01DDABFF3006970DA /* libRNGeocoder.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -500,6 +510,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				BE0F764F1DE69B11003D38AD /* RCTCameraRoll.xcodeproj */,
 				DC65DF801DDABFB1006970DA /* RNGeocoder.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -570,6 +581,14 @@
 			isa = PBXGroup;
 			children = (
 				BE0F425A1DCAB08C000AF9BD /* libBVLinearGradient.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BE0F76501DE69B11003D38AD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BE0F76581DE69B11003D38AD /* libRCTCameraRoll.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -773,6 +792,10 @@
 				{
 					ProductGroup = BE0F42311DCAB067000AF9BD /* Products */;
 					ProjectRef = 0084B6406DCD4D7290316729 /* RCTCamera.xcodeproj */;
+				},
+				{
+					ProductGroup = BE0F76501DE69B11003D38AD /* Products */;
+					ProjectRef = BE0F764F1DE69B11003D38AD /* RCTCameraRoll.xcodeproj */;
 				},
 				{
 					ProductGroup = BED93B3D1DC926AF00EF2203 /* Products */;
@@ -983,6 +1006,13 @@
 			fileType = archive.ar;
 			path = libBVLinearGradient.a;
 			remoteRef = BE0F42591DCAB08C000AF9BD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		BE0F76581DE69B11003D38AD /* libRCTCameraRoll.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTCameraRoll.a;
+			remoteRef = BE0F76571DE69B11003D38AD /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		BE1E1F7C1DC96D6F000D4DD2 /* libRNVectorIcons.a */ = {

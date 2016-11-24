@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, CameraRoll, Alert
 } from 'react-native';
 import {
   Colors, Sizes
@@ -12,6 +12,7 @@ import Database from '../../utils/Database';
 import {
   Actions
 } from 'react-native-router-flux';
+import RNFetchBlob from 'react-native-fetch-blob';
 
 // components
 import PhotoView from 'react-native-photo-view';
@@ -32,6 +33,9 @@ export default class Settings extends Component {
         this.props.photoId
       }/url`
     );
+
+    // methods
+    this.download = this.download.bind(this);
   }
 
   componentDidMount() {
@@ -46,6 +50,38 @@ export default class Settings extends Component {
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
+  }
+
+  download() {
+    if (this.state.uri) {
+      RNFetchBlob.config({
+        fileCache: true,
+        appendExt: 'jpg'
+      }).fetch('GET', this.state.uri).then(photo => {
+        CameraRoll.saveToCameraRoll(
+          photo.path(),
+          'photo'
+        ).then(result => {
+          Alert.alert(
+            'Photo saved successfully',
+            null,
+            [
+              {
+                text: 'OK',
+                onPress: Actions.pop
+              }
+            ]
+          );
+        }).catch(err => {
+          Alert.alert(
+            'Couldn\'t save your photo',
+            'Please try again'
+          );
+        }).then(result => {
+          photo.flush();
+        });
+      });
+    }
   }
 
   render() {
@@ -82,6 +118,7 @@ export default class Settings extends Component {
           <HeaderButton
             icon='share' />
           <HeaderButton
+            onPress={this.download}
             icon='file-download' />
         </View>
       </View>
