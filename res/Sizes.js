@@ -25,7 +25,7 @@ export const Sizes = {
   H3: Ratio*(0.7),
   H4: Ratio*(0.65),
   Text: Ratio*(0.52),
-  SmallText: Ratio*(0.48),
+  SmallText: Ratio*(0.43),
 
   // padding sizes
   // 25 15
