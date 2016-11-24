@@ -60,6 +60,44 @@ function message(profileId, key, notification, data, attempt) {
   });
 }
 
+function refresh(contestId, interval) {
+  console.log(`Refreshing contest: ${contestId}..`);
+  interval = interval || 10000;
+
+  // grab newest data (in case contest has a
+  // changed endDate or status)
+  Database.ref(
+    `contests/${contestId}`
+  ).once('value', data => {
+    let contest = data.val();
+
+    // trigger removal if the contest has elapsed or
+    // manually cancelled/completed
+    if (
+      contest.endDate < Date.now()
+      || contest.isComplete
+      || contest.isCancelled
+    ) {
+
+      // removal will trigger disconnect refresh and notifier
+      console.log('Contest has ended, triggering cleanup');
+      Database.ref(
+        `locations/${contestId}`
+      ).remove();
+    } else {
+
+      // otherwise, check again later
+      console.log('Contest is still active; will try again later..');
+      activeContests[contestId].refresh = setTimeout(
+        refresh,
+        interval,
+        contestId,
+        interval
+      );
+    }
+  });
+}
+
 firebase.auth().signInWithEmailAndPassword(
   'server@crowdshot.com',
   'GrayHatesLemonade'
@@ -82,21 +120,26 @@ firebase.auth().signInWithEmailAndPassword(
       if (data.exists()) {
         let contest = data.val();
 
-        // select all profiles within 10km
-        activeContests[data.key] = new GeoFire(
-          Database.ref('profileLocations')
-        ).query({
-          center: [
-            location.l[0],
-            location.l[1]
-          ],
+        // select all profiles within 1km
+        activeContests[data.key] = {
+          notifier: new GeoFire(
+            Database.ref('profileLocations')
+          ).query({
+            center: [
+              location.l[0],
+              location.l[1]
+            ],
 
-          // default notify within 1 km of contest center
-          radius: 1
-        });
+            // default notify within 1 km of contest center
+            radius: 1
+          })
+        };
+
+        // add refresher to poll for time elapsed event
+        refresh(data.key);
 
         // and notify them when they come in range
-        activeContests[data.key].on(
+        activeContests[data.key].notifier.on(
           'key_entered',
           (profileId, location, distance) => {
             message(
@@ -131,7 +174,12 @@ firebase.auth().signInWithEmailAndPassword(
     console.log(`Contest Ended: ${data.key}; Perfoming cleanup..`);
 
     // remove proximity notifier
-    activeContests[data.key].cancel();
+    activeContests[data.key].notifier.cancel();
+
+    // and remove status refresher
+    activeContests[data.key].refresh && clearTimeout(
+      activeContests[data.key].refresh
+    );
   });
 
   // contest processor
@@ -148,9 +196,6 @@ firebase.auth().signInWithEmailAndPassword(
     ).once('value', contestData => {
       if (contestData.exists()) {
         let contest = contestData.val();
-
-        // remove from map of active contests
-        Database.ref(`locations/${data.key}`).remove();
 
         // award prizes if completed
         if (contest.isComplete) {

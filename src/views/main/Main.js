@@ -223,7 +223,6 @@ export default class Main extends Component {
   }
 
   componentWillUnmount() {
-    console.log('unmount');
     this.token();
     this.notification();
     this.listener && this.ref.off('value', this.listener);
