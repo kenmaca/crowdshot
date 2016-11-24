@@ -18,15 +18,17 @@ const LAT_DELTA = 0.01;
 const LNG_DELTA = 0.01;
 
 // components
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import TitleBar from '../../components/common/TitleBar';
 import MapView from 'react-native-maps';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
-import OutlineText from '../../components/common/OutlineText';
+import Button from '../../components/common/Button';
 
 export default class MapMarkerDrop extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      motion: false,
       current: {
 
         // default location is Toronto
@@ -38,6 +40,7 @@ export default class MapMarkerDrop extends Component {
     };
 
     this.onRegionChange = this.onRegionChange.bind(this);
+    this.select = this.select.bind(this);
   }
 
   componentDidMount() {
@@ -59,16 +62,30 @@ export default class MapMarkerDrop extends Component {
     );
   }
 
-  onRegionChange(region) {
+  select() {
+
+    // out
+    Actions.pop();
+
+    // outer callback
+    this.props.onSelected && this.props.onSelected(
+      [
+        this.state.current.latitude,
+        this.state.current.longitude
+      ]
+    );
+  }
+
+  onRegionChange(region, motion) {
     this.setState({
-      current: region
+      current: region,
+      motion: motion
     });
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <TitleBar title='Select the Contest Location' />
         <View style={styles.content}>
           <MapView
             ref='map'
@@ -76,28 +93,49 @@ export default class MapMarkerDrop extends Component {
             pitchEnabled={false}
             style={styles.map}
             region={this.state.current}
-            onRegionChange={this.onRegionChange}>
+            onRegionChange={region => this.onRegionChange(
+              region, true
+            )}
+            onRegionChangeComplete={region => this.onRegionChange(
+              region, false
+            )}>
             <View style={styles.pinShadow}>
               <View style={styles.pinContainer}>
                 <TouchableOpacity
-                  onPress={() => {
-
-                    // out
-                    Actions.pop();
-
-                    // outer callback
-                    this.props.onSelected && this.props.onSelected(
-                      [
-                        this.state.current.latitude,
-                        this.state.current.longitude
-                      ]
-                    );
-                  }}
+                  onPress={this.select}
                   style={styles.pinContent}>
-                  <OutlineText text='Set as Contest Location' />
+                  <Icon
+                    name='flag'
+                    color={Colors.AlternateText}
+                    size={48} />
                 </TouchableOpacity>
-                <View style={styles.pin} />
               </View>
+            </View>
+            <TitleBar
+              title='Select the Contest Location'
+              style={[
+                styles.titleContainer,
+                this.state.motion && {
+                  height: 0,
+                  padding: 0,
+                  paddingTop: 0
+                }
+              ]} />
+            <View style={styles.buttonContainer}>
+              <Button
+                onPress={this.select}
+                style={
+                  this.state.motion && {
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    height: 0
+                  }
+                }
+                squareBorders
+                color={Colors.Primary}
+                label='Set Location' />
             </View>
           </MapView>
         </View>
@@ -142,11 +180,6 @@ const styles = StyleSheet.create({
   },
 
   pinContent: {
-    minWidth: Sizes.InnerFrame * 10,
-    padding: Sizes.InnerFrame / 2,
-    backgroundColor: Colors.Foreground,
-    borderRadius: 20,
-    overflow: 'hidden'
   },
 
   pinShadow: {
@@ -158,5 +191,18 @@ const styles = StyleSheet.create({
       height: Sizes.InnerFrame / 2,
       width: 0
     }
+  },
+
+  titleContainer: {
+    width: Sizes.Width,
+    position: 'absolute',
+    top: 0
+  },
+
+  buttonContainer: {
+    width: Sizes.Width,
+    padding: Sizes.InnerFrame,
+    position: 'absolute',
+    bottom: 0
   }
 });

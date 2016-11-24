@@ -11,7 +11,10 @@ import {
 export default class TitleBar extends Component {
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[
+        styles.container,
+        this.props.style
+      ]}>
         <Text style={styles.title}>
           {this.props.title}
         </Text>
@@ -27,7 +30,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: Sizes.InnerFrame,
     paddingTop: Sizes.InnerFrame * 4.5,
-    minHeight: Sizes.NavHeight,
     backgroundColor: Colors.Foreground
   },
 
