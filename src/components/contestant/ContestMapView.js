@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
   },
 
   textContainer: {
-    marginBottom: Sizes.OuterFrame * 3,
+    marginBottom: Sizes.OuterFrame * 4,
     alignItems: 'center',
     justifyContent: 'center',
     padding: Sizes.InnerFrame * 2,
