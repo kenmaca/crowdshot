@@ -19,12 +19,13 @@ export const Sizes = {
 
   // text sizes
   // 32, 24, 18, 16, 12, 10
+  H0: Ratio*(1.5),
   H1: Ratio*(0.95),
   H2: Ratio*(0.9),
   H3: Ratio*(0.7),
   H4: Ratio*(0.65),
-  Text: Ratio*(0.55),
-  SmallText: Ratio*(0.4),
+  Text: Ratio*(0.52),
+  SmallText: Ratio*(0.48),
 
   // padding sizes
   // 25 15

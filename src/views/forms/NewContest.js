@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: Sizes.InnerFrame,
     color: Colors.Text,
-    fontSize: Sizes.H1
+    fontSize: Sizes.H0
   },
 
   headerSubtitle: {
