@@ -166,6 +166,7 @@ export default class ContestMapView extends Component {
         <View style={styles.container}>
           <MapView
             ref='map'
+            showsUserLocation
             rotateEnabled={false}
             pitchEnabled={false}
             style={styles.map}

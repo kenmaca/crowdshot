@@ -89,6 +89,7 @@ export default class MapMarkerDrop extends Component {
         <View style={styles.content}>
           <MapView
             ref='map'
+            showsUserLocation
             rotateEnabled={false}
             pitchEnabled={false}
             style={styles.map}
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
   },
 
   pinContainer: {
-    top: -Sizes.InnerFrame * 1.2,
+    top: -Sizes.InnerFrame / 2.3,
     alignItems: 'center'
   },
 
@@ -180,6 +181,7 @@ const styles = StyleSheet.create({
   },
 
   pinContent: {
+    left: Sizes.InnerFrame / 1.2
   },
 
   pinShadow: {
