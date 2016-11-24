@@ -350,6 +350,7 @@ const styles = StyleSheet.create({
 
   securityText: {
     marginLeft: Sizes.InnerFrame / 2,
+    marginRight: Sizes.InnerFrame / 2,
     fontSize: Sizes.SmallText,
     color: Colors.AlternateText
   }
