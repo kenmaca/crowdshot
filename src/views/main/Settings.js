@@ -2,10 +2,10 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, TouchableOpacity
+  View, StyleSheet, Text, TouchableOpacity, Image
 } from 'react-native';
 import {
-  Colors, Sizes
+  Colors, Sizes, Strings
 } from '../../Const';
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
@@ -50,6 +50,7 @@ export default class Settings extends Component {
           <TouchableOpacity
             onPress={Actions.address}>
             <InformationField
+              isBottom
               pressable
               label='Shipping Address'
               info={
@@ -64,6 +65,19 @@ export default class Settings extends Component {
                 )
               } />
           </TouchableOpacity>
+          <View style={styles.footer}>
+            <Image
+              style={styles.logo}
+              source={require('../../../res/img/logo.png')} />
+            <Text style={styles.tagline}>
+              from <Text style={styles.bold}>Toronto</Text> with ❤️
+            </Text>
+            <Text style={styles.version}>
+              {
+                `v${Strings.ClientVersion}`
+              }
+            </Text>
+          </View>
         </View>
         <CloseFullscreenButton />
       </View>
@@ -75,5 +89,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.ModalBackground
+  },
+
+  footer: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  logo: {
+    width: 40,
+    height: 40,
+    margin: Sizes.InnerFrame / 2
+  },
+
+  tagline: {
+    fontSize: Sizes.SmallText,
+    color: Colors.SubduedText
+  },
+
+  bold: {
+    fontWeight: '500'
+  },
+
+  version: {
+    marginTop: Sizes.InnerFrame / 4,
+    fontSize: Sizes.SmallText,
+    fontWeight: '100',
+    color: Colors.Overlay
   }
 });
