@@ -60,9 +60,15 @@ function message(profileId, key, notification, data, attempt) {
   });
 }
 
-function refresh(contestId, interval) {
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function refresh(contestId) {
   console.log(`Refreshing contest: ${contestId}..`);
-  interval = interval || 10000;
+
+  // change interval every refresh to help distribute polling
+  let interval = getRandomInt(5, 15) * 60000;
 
   // grab newest data (in case contest has a
   // changed endDate or status)
@@ -91,8 +97,7 @@ function refresh(contestId, interval) {
       activeContests[contestId].refresh = setTimeout(
         refresh,
         interval,
-        contestId,
-        interval
+        contestId
       );
     }
   });
