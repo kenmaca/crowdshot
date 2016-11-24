@@ -68,7 +68,7 @@ function refresh(contestId) {
   console.log(`Refreshing contest: ${contestId}..`);
 
   // change interval every refresh to help distribute polling
-  let interval = getRandomInt(5, 15) * 60000;
+  let interval = getRandomInt(1, 3) * 60000;
 
   // grab newest data (in case contest has a
   // changed endDate or status)
