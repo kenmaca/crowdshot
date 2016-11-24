@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, ScrollView
+  View, StyleSheet, Text, ScrollView, ListView
 } from 'react-native';
 import {
   Colors, Sizes
@@ -22,12 +22,16 @@ import Photo from '../../components/common/Photo';
 import CircleIcon from '../../components/common/CircleIcon';
 import Divider from '../../components/common/Divider';
 import Avatar from '../../components/profiles/Avatar';
+import GroupAvatar from '../../components/profiles/GroupAvatar';
 
 export default class ContestStatus extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      entries: {}
+      entries: {},
+      winners: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1 !== r2
+      })
     };
 
     this.ref = Database.ref(
@@ -41,6 +45,9 @@ export default class ContestStatus extends Component {
         this.props.contestId
       }`
     );
+
+    // methods
+    this.renderRow = this.renderRow.bind(this);
   }
 
   componentDidMount() {
@@ -54,8 +61,31 @@ export default class ContestStatus extends Component {
 
     this.entriesListener = this.entriesRef.on('value', data => {
       if (data.exists()) {
+        let entries = data.val();
+        let prizes = Object.keys(this.state.prizes).length || 1;
+        let winners = Object.keys(entries).filter(
+
+          // only keep selected entries
+          entryId => entries[entryId].selected
+        ).map(entryId => ({
+
+          // transform into a blob
+          ...entries[entryId],
+          entryId: entryId
+
+        // only allow up to prizes length of winners
+        })).slice(0, prizes);
+
         this.setState({
-          entries: data.val()
+          winners: new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 !== r2
+          }).cloneWithRows([
+            ...winners,
+
+            // pad the winners list of unclaimed prizes
+            ...new Array(prizes - winners.length).fill(false)
+          ]),
+          entries: entries
         });
       }
     });
@@ -66,6 +96,37 @@ export default class ContestStatus extends Component {
     this.entriesListener && this.entriesRef.off('value', this.entriesListener);
   }
 
+  renderRow(entry) {
+    return (
+      entry ? (
+        <View style={styles.prize}>
+          <View style={styles.avatar}>
+            <Avatar
+              uid={entry.createdBy}
+              size={48} />
+          </View>
+          <Photo
+            photoId={entry.photoId}
+            style={styles.photo} />
+        </View>
+      ): (
+        <View style={styles.prize}>
+          <CircleIcon
+            fontAwesome
+            icon='trophy'
+            size={48} />
+          <Text style={styles.availableText}>
+            {
+              `Bounty of $${
+                this.state.bounty
+              } not yet assigned to any entry`
+            }
+          </Text>
+        </View>
+      )
+    );
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -73,38 +134,59 @@ export default class ContestStatus extends Component {
         <ContestProgressBar
           style={styles.progress}
           start={this.state.dateCreated}
-          end={this.state.endDate}
+          end={
+
+            // end contest if either flag is present
+            (this.state.isComplete || this.state.isCancelled)
+            ? this.state.dateCreated + 1
+            : this.state.endDate
+          }
           interval={2000} />
         <ScrollView style={styles.content}>
-          <InputSectionHeader label='Instructions' />
-          <Text style={styles.text}>
-            {this.state.instructions}
-          </Text>
+          {
+            this.state.instructions != null && (
+              <View>
+                <InputSectionHeader label='Instructions' />
+                <Text style={styles.text}>
+                  {this.state.instructions}
+                </Text>
+              </View>
+            )
+          }
+          {
+            this.state.entries && (
+              <View>
+                <InputSectionHeader
+                  style={styles.header}
+                  label='Participants' />
+                <GroupAvatar
+                  limit={10}
+                  outlineColor={Colors.ModalBackground}
+                  style={styles.participants}
+                  uids={
+                    Object.keys(
+                      this.state.entries
+                    ).map(
+                      entryId => this.state.entries[entryId].createdBy
+                    )
+                  } />
+              </View>
+            )
+          }
           <InputSectionHeader
             style={styles.header}
             label='Winners' />
           <View style={styles.prizeContainer}>
-            <View style={styles.prize}>
-              <View style={styles.avatar}>
-                <Avatar
-                  uid='ht33R6YWUWQMc8SZb27o9BOzn6G3'
-                  size={48} />
-              </View>
-              <Photo
-                photoId='appLoginBackground'
-                style={styles.photo} />
-            </View>
-            <Divider style={styles.divider} />
-            <View style={styles.prize}>
-              <View style={styles.avatar}>
-                <Avatar
-                  uid='ht33R6YWUWQMc8SZb27o9BOzn6G3'
-                  size={48} />
-              </View>
-              <Photo
-                photoId='appLoginBackground'
-                style={styles.photo} />
-            </View>
+            <ListView
+              key={Math.random()}
+              scrollEnabled={false}
+              dataSource={this.state.winners}
+              renderSeparator={() => (
+                <Divider
+                  key={Math.random()}
+                  style={styles.divider} />
+              )}
+              renderRow={this.renderRow} />
           </View>
         </ScrollView>
         <CloseFullscreenButton />
@@ -166,5 +248,15 @@ const styles = StyleSheet.create({
     marginTop: Sizes.InnerFrame,
     marginBottom: Sizes.InnerFrame,
     height: 1
+  },
+
+  availableText: {
+    fontSize: Sizes.Text,
+    fontWeight: '100',
+    color: Colors.SubduedText
+  },
+
+  participants: {
+    justifyContent: 'flex-start'
   }
 });

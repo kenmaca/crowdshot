@@ -131,7 +131,7 @@ export default class EntryCard extends Component {
               ]}>
                 {
                   `$${
-                    this.state.contest.bounty || '$0'
+                    this.state.contest.bounty || '0'
                   }`
                 }
               </Text>
