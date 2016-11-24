@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
     padding: Sizes.InnerFrame,
-    paddingTop: Sizes.InnerFrame * 5,
+    paddingTop: Sizes.InnerFrame * 4.5,
     minHeight: Sizes.NavHeight,
     backgroundColor: Colors.Foreground
   },
