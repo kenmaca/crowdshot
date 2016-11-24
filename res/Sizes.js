@@ -2,6 +2,10 @@ import {
   Dimensions, Navigator
 } from 'react-native';
 
+let Width = Dimensions.get('window').width;
+let Height = Dimensions.get('window').height;
+let Ratio = (Height*13)/(Width);
+
 export const Sizes = {
 
   // nav bar height
@@ -9,18 +13,21 @@ export const Sizes = {
   StatusHeight: 20,
 
   // screen
-  Width: Dimensions.get('window').width,
-  Height: Dimensions.get('window').height,
+  Width: Width,
+  Height: Height,
+  Ratio: Ratio,
 
   // text sizes
-  H1: 32,
-  H2: 24,
-  H3: 18,
-  H4: 16,
-  Text: 12,
-  SmallText: 10,
+  // 32, 24, 18, 16, 12, 10
+  H1: Ratio*(0.95),
+  H2: Ratio*(3/4),
+  H3: Ratio*(9/16),
+  H4: Ratio*(1/2),
+  Text: Ratio*(3/8),
+  SmallText: Ratio*(6/16),
 
   // padding sizes
+  // 25 15
   OuterFrame: 25,
   InnerFrame: 15
 };

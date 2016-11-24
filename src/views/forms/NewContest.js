@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
 
   header: {
     alignItems: 'center',
+    justifyContent: 'center',
     padding: Sizes.OuterFrame,
     paddingTop: 0,
     paddingBottom: Sizes.InnerFrame
@@ -220,7 +221,7 @@ const styles = StyleSheet.create({
 
   headerTitle: {
     textAlign: 'center',
-    marginBottom: Sizes.InnerFrame / 2,
+    marginBottom: Sizes.InnerFrame,
     color: Colors.Text,
     fontSize: Sizes.H1
   },
@@ -234,6 +235,7 @@ const styles = StyleSheet.create({
   checklist: {
     alignSelf: 'stretch',
     padding: Sizes.InnerFrame,
+    marginTop: Sizes.OuterFrame,
     marginBottom: Sizes.OuterFrame
   }
 });
