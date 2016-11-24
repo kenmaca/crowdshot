@@ -408,14 +408,15 @@ const styles = StyleSheet.create({
 
   arrowContainer: {
     marginTop: -Sizes.InnerFrame * 10,
-    alignItems: 'center'
+    alignItems: 'center',
   },
 
   arrow: {
-    marginBottom: -Sizes.InnerFrame * 1.5
+    
   },
 
   arrowText: {
+    marginTop: -Sizes.InnerFrame * 0.5,
     textAlign: 'center',
     fontSize: Sizes.SmallText,
     color: Colors.LightWhiteOverlay,

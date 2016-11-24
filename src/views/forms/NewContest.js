@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
 
   headerTitle: {
     textAlign: 'center',
-    marginBottom: Sizes.InnerFrame,
+    paddingBottom: Sizes.InnerFrame / 2,
     color: Colors.Text,
     fontSize: Sizes.H0
   },

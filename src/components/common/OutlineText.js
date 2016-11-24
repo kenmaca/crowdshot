@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 
   text: {
     backgroundColor: Colors.Transparent,
-    fontSize: Sizes.SmallText,
+    fontSize: Sizes.SmallText * 0.85,
     fontWeight: '700',
     color: Colors.Text
   }
