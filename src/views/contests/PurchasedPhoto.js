@@ -13,6 +13,7 @@ import {
   Actions
 } from 'react-native-router-flux';
 import RNFetchBlob from 'react-native-fetch-blob';
+import Share from 'react-native-share';
 
 // components
 import PhotoView from 'react-native-photo-view';
@@ -36,6 +37,7 @@ export default class Settings extends Component {
 
     // methods
     this.download = this.download.bind(this);
+    this.share = this.share.bind(this);
   }
 
   componentDidMount() {
@@ -50,6 +52,27 @@ export default class Settings extends Component {
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
+  }
+
+  share() {
+    if (this.state.uri) {
+      RNFetchBlob.config({
+        fileCache: true
+      }).fetch('GET', this.state.uri).then(photoBlob => {
+        return photoBlob.readFile('base64').then(photo => [
+          photo, photoBlob
+        ]);
+      }).then(photo => {
+        Share.open({
+          title: 'Photo from Crowdshot',
+          message: 'I got this photo taken by others on the Crowdshot app!',
+          url: `data:image/jpg;base64,${photo[0]}`,
+          subject: 'Photo from Crowdshot',
+          type: 'image/jpg'
+        });
+        photo[1].flush();
+      }).catch(err => console.log(err));
+    }
   }
 
   download() {
@@ -114,6 +137,7 @@ export default class Settings extends Component {
                   uid: this.props.contestantId
                 })} />
               <HeaderButton
+                onPress={this.share}
                 icon='share' />
               <HeaderButton
                 onPress={this.download}
