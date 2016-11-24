@@ -78,54 +78,56 @@ export default class CameraPreview extends Component {
                 let realXML = window.XMLHttpRequest;
                 window.Blob = Blob;
                 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
-
-                Blob.build(
-                  RNFetchBlob.wrap(
-                    this.props.path
-                  ), {
-                    type: 'image/jpg;'
-                  }
-                ).then(blob => {
-                  let task = Firebase.storage().ref().child(
-                    `images/${
-                      this.props.path.split('/').pop()
-                    }`
-                  ).put(blob, {
-                    contentType: 'image/jpg'
-                  });
-
-                  // keep track of upload
-                  task.on('state_changed', snapshot => {
-                    this.setState({
-                      snapshot: snapshot.bytesTransferred,
-                      progress: (
-                        (Number(snapshot.bytesTransferred) /
-                        Number(snapshot.totalBytes)) + 0.05 || 0
-                      )
+                
+                Blob.clearCache().then(() => {
+                  Blob.build(
+                    RNFetchBlob.wrap(
+                      this.props.path
+                    ), {
+                      type: 'image/jpg;'
+                    }
+                  ).then(blob => {
+                    let task = Firebase.storage().ref().child(
+                      `images/${
+                        this.props.path.split('/').pop()
+                      }`
+                    ).put(blob, {
+                      contentType: 'image/jpg'
                     });
-                  }, err => {
+
+                    // keep track of upload
+                    task.on('state_changed', snapshot => {
+                      this.setState({
+                        snapshot: snapshot.bytesTransferred,
+                        progress: (
+                          (Number(snapshot.bytesTransferred) /
+                          Number(snapshot.totalBytes)) + 0.05 || 0
+                        )
+                      });
+                    }, err => {
+                      console.error(err);
+                      this.revert(realBlob, realXML);
+                    }, () => {
+
+                      // successful, create photos item ref
+                      let photoId = Database.ref(`photos`).push().key;
+                      Database.ref(
+                        `photos/${photoId}`
+                      ).set({
+                        createdBy: Firebase.auth().currentUser.uid,
+                        url: task.snapshot.downloadURL
+                      });
+
+                      // and now finalize by callback from parent
+                      this.revert(realBlob, realXML);
+                      this.props.accept
+                      && this.props.accept(photoId);
+
+                    });
+                  }).catch(err => {
                     console.error(err);
                     this.revert(realBlob, realXML);
-                  }, () => {
-
-                    // successful, create photos item ref
-                    let photoId = Database.ref(`photos`).push().key;
-                    Database.ref(
-                      `photos/${photoId}`
-                    ).set({
-                      createdBy: Firebase.auth().currentUser.uid,
-                      url: task.snapshot.downloadURL
-                    });
-
-                    // and now finalize by callback from parent
-                    this.revert(realBlob, realXML);
-                    this.props.accept
-                    && this.props.accept(photoId);
-
                   });
-                }).catch(err => {
-                  console.error(err);
-                  this.revert(realBlob, realXML);
                 });
               }}>
               <CircleIcon
