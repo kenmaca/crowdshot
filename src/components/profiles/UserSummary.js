@@ -60,7 +60,9 @@ export default class UserSummary extends Component {
         <View style={styles.userContainer}>
           <View style={styles.statContainer}>
             <Text style={styles.statTitle}>
-              24
+              {
+                this.state.countWon || 0
+              }
             </Text>
             <Text style={styles.statDescription}>
               CONTESTS WON
@@ -68,7 +70,19 @@ export default class UserSummary extends Component {
           </View>
           <View style={styles.statContainer}>
             <Text style={styles.statTitle}>
-              66%
+              {
+                `${
+                  Math.round(
+                    (
+                      this.state.countAttempts
+                      ? (
+                        (this.state.countWon || 0)
+                        / this.state.countAttempts
+                      ): 0
+                    ) * 100
+                  )
+                }%`
+              }
             </Text>
             <Text style={styles.statDescription}>
               SUCCESS RATE
@@ -76,7 +90,9 @@ export default class UserSummary extends Component {
           </View>
           <View style={styles.statContainer}>
             <Text style={styles.statTitle}>
-              382
+              {
+                this.state.countAttempts || 0
+              }
             </Text>
             <Text style={styles.statDescription}>
               PHOTOS

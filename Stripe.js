@@ -251,16 +251,18 @@ firebase.auth().signInWithEmailAndPassword(
                   err => console.log(err)
                 );
 
-                // and update prizes total
-                let walletRef = Database.ref(
+                // and update prizes total and counts
+                let profileRef = Database.ref(
                   `profiles/${
                     entriesBlob[winner].createdBy
-                  }/wallet`
+                  }`
                 );
-                walletRef.once('value', wallet => {
-                  walletRef.set(
-                    (wallet.val() || 0) + contest.bounty
-                  );
+                profileRef.once('value', profile => {
+                  profile = data.val();
+                  profileRef.update({
+                    wallet: (profile.wallet || 0) + contest.bounty,
+                    countWon: (profile.countWon || 0) + 1
+                  });
                 });
               }
             }

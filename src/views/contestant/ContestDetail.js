@@ -220,6 +220,17 @@ export default class ContestDetail extends Component {
                   '.priority': 0 - Date.now()
                 }
               });
+
+              // and update profile counts
+              let attempts = Database.ref(
+                `profiles/${
+                  Firebase.auth().currentUser.uid
+                }/countAttempts`
+              )
+              attempts.once(
+                'value',
+                data => attempts.set((data.val() || 0) + 1)
+              );
             }}
             />
           <CloseFullscreenButton
