@@ -180,15 +180,15 @@ export default class Main extends Component {
 
     // data
     this.listener = this.ref.on('value', data => {
-      if (data.exists()) {
-        let rawData = [...Object.keys(data.val()), false];
-        this.setState({
-          rawData: rawData,
-          data: new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2
-          }).cloneWithRows(rawData)
-        });
-      }
+
+      // dont check exists due to last item being removed
+      let rawData = [...Object.keys(data.val() || {}), false];
+      this.setState({
+        rawData: rawData,
+        data: new ListView.DataSource({
+          rowHasChanged: (r1, r2) => r1 !== r2
+        }).cloneWithRows(rawData)
+      });
     });
 
     // profile
@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
   },
 
   arrow: {
-    
+
   },
 
   arrowText: {
