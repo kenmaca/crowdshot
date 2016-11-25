@@ -38,17 +38,17 @@ export default class Settings extends Component {
 
   componentDidMount() {
     this.listener = this.ref.on('value', data => {
-      if (data.exists()) {
-        let blob = data.val();
-        this.setState({
-          rawEntries: blob,
-          entries: new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2
-          }).cloneWithRows(
-            Object.keys(blob)
-          )
-        });
-      }
+
+      // dont check exists due to empty entries allowed
+      let blob = data.val() || {};
+      this.setState({
+        rawEntries: blob,
+        entries: new ListView.DataSource({
+          rowHasChanged: (r1, r2) => r1 !== r2
+        }).cloneWithRows(
+          Object.keys(blob)
+        )
+      });
     });
   }
 
