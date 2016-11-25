@@ -213,10 +213,10 @@ export default class ContestFinalize extends Component {
                     finalizedVisible: false
                   });
 
-                  // and show completed contest view
-                  // TODO: a dedicated completed view of contest
-                  Actions.contest({
-                    contestId: this.props.contestId
+                  // removal of voting screen and show
+                  // completed contest view
+                  Actions.completed({
+                    type: 'replace'
                   });
                 }}
                 label='View the winning photos'
