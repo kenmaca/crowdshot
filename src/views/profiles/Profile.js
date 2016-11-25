@@ -11,7 +11,6 @@ import {
 
 // components
 import InformationField from '../../components/common/InformationField';
-import PhotoGrid from '../../components/common/PhotoGrid';
 import LinearGradient from 'react-native-linear-gradient';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import Photo from '../../components/common/Photo';
@@ -26,7 +25,6 @@ export default class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profile: {}
     };
 
     this.ref = Database.ref(`profiles/${this.props.uid}`);
@@ -35,7 +33,7 @@ export default class Profile extends Component {
   componentDidMount() {
     this.profileListener = this.ref.on('value', data => {
       data.exists() && this.setState({
-        profile: data.val()
+        ...data.val()
       });
     })
   }
@@ -45,7 +43,6 @@ export default class Profile extends Component {
   }
 
   render() {
-    console.log(this.state.profile.photo);
     return (
       <View style={styles.container}>
         <ParallaxScrollView
@@ -54,7 +51,7 @@ export default class Profile extends Component {
           fadeOutForeground={false}
           renderBackground={() => (
             <Photo
-              photoId={this.state.profile.photo}
+              photoId={this.state.photo}
               style={styles.cover}>
               <BlurView
                 blurType='light'
@@ -68,13 +65,23 @@ export default class Profile extends Component {
           )}
           renderForeground={() => (
             <View style={styles.foreground}>
-              <OutlineText text='Toronto, ON, Canada' />
+              {
+                this.state.currentRegion && (
+                  <OutlineText text={
+                    `${
+                      this.state.currentRegion
+                    }, ${
+                      this.state.currentCountry
+                    }`
+                  } />
+                )
+              }
             </View>
           )}>
           <View style={styles.body}>
             <View style={styles.topContainer}>
               <Text style={styles.name}>
-                {this.state.profile.displayName}
+                {this.state.displayName}
               </Text>
               <Avatar
                 outline
@@ -84,21 +91,11 @@ export default class Profile extends Component {
             <InformationField
               isTop
               label="Region"
-              info="Toronto, ON" />
+              info={this.state.currentRegion || 'Unknown'} />
             <InformationField
               isBottom
               label="Age"
               info="18-29" />
-          </View>
-          <View style={styles.grid}>
-            <PhotoGrid
-              photoIds={
-                this.state.profile.photos
-                && Object.keys(this.state.profile.photos)
-                || []
-              }
-              eachRow={3}
-              width={Sizes.Width - Sizes.InnerFrame * 2 + 5} />
           </View>
         </ParallaxScrollView>
         <CloseFullscreenButton />

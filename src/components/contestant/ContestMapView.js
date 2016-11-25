@@ -14,6 +14,7 @@ import Database from '../../utils/Database';
 import {
   Actions
 } from 'react-native-router-flux';
+import Geocoder from 'react-native-geocoder';
 
 // components
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -29,6 +30,7 @@ export default class ContestMapView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loaded: false,
       profile: {},
       region: {
 
@@ -70,32 +72,35 @@ export default class ContestMapView extends Component {
     this.onRegionChange = this.onRegionChange.bind(this);
   }
 
-  onRegionChange(region) {
-    this.ref.updateCriteria({
-      center: [
-        region.latitude,
-        region.longitude
-      ],
-      radius: GeoFire.distance(
-        [region.latitude, region.longitude],
-        [
-          Math.min(90, Math.max(-90, region.latitude
-            + region.latitudeDelta / 2)),
-          Math.min(180, Math.max(-180, region.longitude
-            + region.longitudeDelta / 2))
-        ]
-      )
-    });
+  onRegionChange(region, initial) {
+    if (!initial || !this.state.loaded) {
+      this.ref.updateCriteria({
+        center: [
+          region.latitude,
+          region.longitude
+        ],
+        radius: GeoFire.distance(
+          [region.latitude, region.longitude],
+          [
+            Math.min(90, Math.max(-90, region.latitude
+              + region.latitudeDelta / 2)),
+            Math.min(180, Math.max(-180, region.longitude
+              + region.longitudeDelta / 2))
+          ]
+        )
+      });
 
-    this.setState({
-      region: region
-    });
+      this.setState({
+        region: region,
+        loaded: initial
+      });
+    }
   }
 
   componentDidMount() {
 
     // setup default location
-    navigator.geolocation.getCurrentPosition(
+    this.position = navigator.geolocation.watchPosition(
       position => {
         let region = {
           latitude: position.coords.latitude,
@@ -105,13 +110,34 @@ export default class ContestMapView extends Component {
         };
 
         // trigger initial load
-        this.onRegionChange(region);
+        this.onRegionChange(region, true);
 
-        // and update server about contestant whereabouts
+        // update server about contestant whereabouts
         new GeoFire(Database.ref('profileLocations')).set(
           Firebase.auth().currentUser.uid,
           [position.coords.latitude, position.coords.longitude]
         );
+
+        // add geocoded info to profile to show current city
+        let coords = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+
+        Geocoder.geocodePosition(coords).then(location => {
+          if (location[0]) {
+            Database.ref(
+              `profiles/${
+                Firebase.auth().currentUser.uid
+              }/currentRegion`
+            ).set(`${location[0].locality}, ${location[0].adminArea}`);
+            Database.ref(
+              `profiles/${
+                Firebase.auth().currentUser.uid
+              }/currentCountry`
+            ).set(location[0].country);
+          }
+        }).catch(err => console.log(err));
       },
       error => Alert.alert(error),
       {
@@ -156,6 +182,7 @@ export default class ContestMapView extends Component {
   }
 
   componentWillUnmount() {
+    this.position && navigator.geolocation.clearWatch(this.position);
     this.ref.cancel();
     this.profileListener && this.profileRef.off('value', this.profileListener);
   }
