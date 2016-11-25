@@ -9,6 +9,7 @@ import {
 } from '../../Const';
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
+import GeoFire from 'geofire';
 import {
   Actions
 } from 'react-native-router-flux';
@@ -16,6 +17,7 @@ import {
 // consts
 const LAT_DELTA = 0.01;
 const LNG_DELTA = 0.01;
+const MARKER_SIZE = 20;
 
 // components
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -36,8 +38,27 @@ export default class MapMarkerDrop extends Component {
         longitude: -79.381667,
         latitudeDelta: LAT_DELTA,
         longitudeDelta: LNG_DELTA
-      }
+      },
+      profiles: {}
     };
+
+    this.ref = new GeoFire(
+      Database.ref('profileLocations')
+    ).query({
+      center: [
+        this.state.current.latitude,
+        this.state.current.longitude
+      ],
+      radius: GeoFire.distance(
+        [this.state.current.latitude, this.state.current.longitude],
+        [
+          Math.min(90, Math.max(-90, this.state.current.latitude
+            + this.state.current.latitudeDelta / 2)),
+          Math.min(180, Math.max(-180, this.state.current.longitude
+            + this.state.current.longitudeDelta / 2))
+        ]
+      )
+    });
 
     this.onRegionChange = this.onRegionChange.bind(this);
     this.select = this.select.bind(this);
@@ -60,6 +81,21 @@ export default class MapMarkerDrop extends Component {
         maximumAge: 1000
       }
     );
+
+    // and update when a new profile comes into view
+    this.ref.on('key_entered', (profileId, location, distance) => {
+
+      // add to seen profiles
+      this.state.profiles[profileId] = {
+        latitude: location[0],
+        longitude: location[1]
+      };
+
+      // helps trigger initial load
+      this.setState({
+        updated: true
+      });
+    });
   }
 
   select() {
@@ -77,10 +113,30 @@ export default class MapMarkerDrop extends Component {
   }
 
   onRegionChange(region, motion) {
+    this.ref.updateCriteria({
+      center: [
+        region.latitude,
+        region.longitude
+      ],
+      radius: GeoFire.distance(
+        [region.latitude, region.longitude],
+        [
+          Math.min(90, Math.max(-90, region.latitude
+            + region.latitudeDelta / 2)),
+          Math.min(180, Math.max(-180, region.longitude
+            + region.longitudeDelta / 2))
+        ]
+      )
+    });
+
     this.setState({
       current: region,
       motion: motion
     });
+  }
+
+  componentWillUnmount() {
+    this.ref.cancel();
   }
 
   render() {
@@ -100,6 +156,37 @@ export default class MapMarkerDrop extends Component {
             onRegionChangeComplete={region => this.onRegionChange(
               region, false
             )}>
+            {
+              Object.keys(this.state.profiles).map(profileId => {
+                let markerSizes = _scaleMarker(
+                  this.state.current.latitudeDelta
+                );
+
+                return (
+                  <MapView.Marker
+                    key={profileId}
+                    coordinate={this.state.profiles[profileId]}>
+                    <View style={[
+                      styles.profileContainer,
+                      {
+                        width: markerSizes.outer,
+                        height: markerSizes.outer,
+                        borderRadius: markerSizes.outer / 2,
+                      }
+                    ]}>
+                      <View style={[
+                        styles.profile,
+                        {
+                          width: markerSizes.inner,
+                          height: markerSizes.inner,
+                          borderRadius: markerSizes.inner / 2,
+                        }
+                      ]} />
+                    </View>
+                  </MapView.Marker>
+                );
+              })
+            }
             <View style={styles.pinShadow}>
               <View style={styles.pinContainer}>
                 <TouchableOpacity
@@ -206,5 +293,47 @@ const styles = StyleSheet.create({
     padding: Sizes.InnerFrame,
     position: 'absolute',
     bottom: 0
+  },
+
+  profileContainer: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.WhiteOverlay,
+    shadowColor: Colors.Overlay,
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    shadowOffset: {
+      height: Sizes.InnerFrame / 2,
+      width: 0
+    }
+  },
+
+  profile: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: Colors.AlternateText
   }
 });
+
+// scale markers with min and max sizes as pinch to zoom
+function _scaleMarker(delta) {
+  return {
+    outer: Math.max(
+      MARKER_SIZE / 2,
+      Math.min(
+        MARKER_SIZE,
+        MARKER_SIZE / delta * LAT_DELTA
+      )
+    ), inner: Math.max(
+      (MARKER_SIZE - 8) / 2,
+      Math.min(
+        (MARKER_SIZE - 8),
+        (MARKER_SIZE - 8) / delta * LAT_DELTA
+      )
+    )
+  };
+}
