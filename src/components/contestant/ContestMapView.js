@@ -91,8 +91,7 @@ export default class ContestMapView extends Component {
       });
 
       this.setState({
-        region: region,
-        loaded: initial
+        region: region
       });
     }
   }
@@ -218,7 +217,9 @@ export default class ContestMapView extends Component {
                 <View style={styles.shadow}>
                   <View style={styles.textContainer}>
                     <Text style={styles.text}>
-                      No active contests found — try moving the map around
+                      {this.state.loaded
+                        ? "No active contests found — try moving the map around"
+                        : "Looking for contests"}
                     </Text>
                   </View>
                 </View>
