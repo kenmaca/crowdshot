@@ -17,6 +17,7 @@ import Photo from '../../components/common/Photo';
 import Avatar from '../../components/profiles/Avatar';
 import OutlineText from '../../components/common/OutlineText';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
+import Rank from '../../components/profiles/Rank';
 import {
   BlurView
 } from 'react-native-blur';
@@ -65,17 +66,9 @@ export default class Profile extends Component {
           )}
           renderForeground={() => (
             <View style={styles.foreground}>
-              {
-                this.state.currentRegion && (
-                  <OutlineText text={
-                    `${
-                      this.state.currentRegion
-                    }, ${
-                      this.state.currentCountry
-                    }`
-                  } />
-                )
-              }
+              <Rank
+                size={Sizes.Text}
+                contestsWon={this.state.countWon} />
             </View>
           )}>
           <View style={styles.body}>
@@ -148,13 +141,13 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
-    marginTop: Sizes.InnerFrame * -4.5,
     marginRight: Sizes.OuterFrame,
     marginLeft: Sizes.OuterFrame,
     marginBottom: Sizes.InnerFrame
   },
 
   body: {
+    top: -Sizes.InnerFrame * 4,
     marginTop: Sizes.InnerFrame
   },
 
@@ -168,10 +161,5 @@ const styles = StyleSheet.create({
   since: {
     textAlign: 'center',
     marginBottom: Sizes.OuterFrame
-  },
-
-  grid: {
-    alignItems: 'center',
-    marginBottom: Sizes.InnerFrame
   }
 });

@@ -2,15 +2,17 @@ import React, {
   Component
 } from 'react';
 import {
-  TouchableHighlight, StyleSheet, Image
+  TouchableHighlight, StyleSheet, Image, View, Text
 } from 'react-native';
 import {
-  Colors
+  Colors, Sizes
 } from '../../Const';
 import Database from '../../utils/Database';
 
 // components
 import Photo from '../common/Photo';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import Rank from '../profiles/Rank';
 
 /**
  * Displays a circlar avatar.
@@ -28,11 +30,11 @@ export default class Avatar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      photoId: null
+      photo: null
     };
 
     this.ref = Database.ref(
-      `profiles/${this.props.uid}/photo`
+      `profiles/${this.props.uid}`
     );
   }
 
@@ -40,7 +42,7 @@ export default class Avatar extends Component {
     this.listener = this.ref.on('value', data => {
       data.exists()
       && this.setState({
-          photoId: data.val()
+        ...data.val()
       });
     });
   }
@@ -58,33 +60,52 @@ export default class Avatar extends Component {
 
     return (
       <TouchableHighlight
-        style={[
-          styles.container,
-          this.props.size && {
-            width: this.props.size,
-            height: this.props.size,
-            borderRadius: this.props.size / 2
-          },
-          this.props.outlineColor && {
-            backgroundColor: this.props.outlineColor
-          }
-        ]}
         onPress={this.props.onPress}
         underlayColor={Colors.Transparent}>
-        <Photo
-          style={[
-            styles.avatar,
-            this.props.style,
-            this.props.size && {
-              width: innerSize,
-              height: innerSize,
-              borderRadius: innerSize / 2
-            },
-            this.props.color && {
-              backgroundColor: this.props.color
-            }
-          ]}
-          photoId={this.state.photoId} />
+        <View>
+          <View
+            style={[
+              styles.container,
+              this.props.size && {
+                width: this.props.size,
+                height: this.props.size,
+                borderRadius: this.props.size / 2
+              },
+              this.props.outlineColor && {
+                backgroundColor: this.props.outlineColor
+              }
+            ]}>
+            <Photo
+              style={[
+                styles.avatar,
+                this.props.style,
+                this.props.size && {
+                  width: innerSize,
+                  height: innerSize,
+                  borderRadius: innerSize / 2
+                },
+                this.props.color && {
+                  backgroundColor: this.props.color
+                }
+              ]}
+              photoId={this.state.photo} />
+          </View>
+          {
+            this.props.showRank && (
+              <Rank
+                onlyLast
+                contestsWon={this.state.countWon}
+                size={this.props.size / 5}
+                style={[
+                  styles.rank,
+                  this.props.size && {
+                    bottom: this.props.size / 20,
+                    right: this.props.size / 20
+                  }
+                ]} />
+            )
+          }
+        </View>
       </TouchableHighlight>
     );
   }
@@ -106,5 +127,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 20,
     height: 20,
+  },
+
+  rank: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0
   }
 });

@@ -130,6 +130,7 @@ export default class Settings extends Component {
             <View style={styles.buttons}>
               <Avatar
                 outline
+                showRank
                 outlineColor={Colors.Text}
                 size={28}
                 uid={this.props.contestantId}

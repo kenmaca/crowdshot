@@ -20,7 +20,7 @@ import Button from '../../components/common/Button';
 import InputSectionHeader from '../../components/common/InputSectionHeader';
 import Photo from '../../components/common/Photo';
 import Divider from '../../components/common/Divider';
-import OutlineText from '../../components/common/OutlineText';
+import TrophyCase from '../../components/contests/TrophyCase';
 import CircleIconInfo from '../../components/common/CircleIconInfo';
 import CircleIcon from '../../components/common/CircleIcon';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
@@ -83,15 +83,9 @@ export default class ContestDetail extends Component {
         <Photo
           photoId={this.state.referencePhotoId}
           style={styles.header}>
-          <OutlineText
-            text={
-              `$${
-                this.state.bounty || 0
-              } Bounty To Top ${
-                this.state.prizes
-                ? Object.keys(this.state.prizes).length
-                : 'Photo'
-              }`} />
+          <TrophyCase
+            bounty={this.state.bounty}
+            prizes={this.state.prizes} />
         </Photo>
         <View style={styles.body}>
           <ContestProgressBar

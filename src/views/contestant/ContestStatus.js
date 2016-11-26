@@ -102,6 +102,7 @@ export default class ContestStatus extends Component {
         <View style={styles.prize}>
           <View style={styles.avatar}>
             <Avatar
+              showRank
               uid={entry.createdBy}
               size={48} />
           </View>
@@ -160,6 +161,7 @@ export default class ContestStatus extends Component {
                   style={styles.header}
                   label='Participants' />
                 <GroupAvatar
+                  showRank
                   limit={10}
                   color={Colors.Foreground}
                   outlineColor={Colors.ModalBackground}
