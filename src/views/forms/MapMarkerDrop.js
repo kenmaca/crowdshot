@@ -62,6 +62,7 @@ export default class MapMarkerDrop extends Component {
 
     this.onRegionChange = this.onRegionChange.bind(this);
     this.select = this.select.bind(this);
+    this.stopMotion = this.stopMotion.bind(this);
   }
 
   componentDidMount() {
@@ -112,6 +113,15 @@ export default class MapMarkerDrop extends Component {
     );
   }
 
+  // helps avoid jitterness by delaying reappear
+  stopMotion() {
+    this.motion = setTimeout(
+      () => this.setState({
+        motion: false
+      }), 50
+    );
+  }
+
   onRegionChange(region, motion) {
     this.ref.updateCriteria({
       center: [
@@ -129,10 +139,12 @@ export default class MapMarkerDrop extends Component {
       )
     });
 
-    this.setState({
+    // helps avoid jitterness by delaying reappear
+    this.motion && clearTimeout(this.motion);
+    if (motion) this.setState({
       current: region,
-      motion: motion
-    });
+      motion: true
+    }); else this.stopMotion();
   }
 
   componentWillUnmount() {
