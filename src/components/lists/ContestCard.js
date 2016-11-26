@@ -20,13 +20,13 @@ import Button from '../common/Button';
 import InputSectionHeader from '../common/InputSectionHeader';
 import Photo from '../common/Photo';
 import Divider from '../common/Divider';
-import OutlineText from '../common/OutlineText';
 import CircleIconInfo from '../common/CircleIconInfo';
 import ContestThumbnail from '../lists/ContestThumbnail';
 import GroupAvatar from '../profiles/GroupAvatar';
 import ContestProgressBar from '../contests/ContestProgressBar';
 import CloseFullscreenButton from '../common/CloseFullscreenButton';
 import NearbyAvatars from '../profiles/NearbyAvatars';
+import TrophyCase from '../contests/TrophyCase';
 
 export default class ContestCard extends Component {
   constructor(props) {
@@ -93,7 +93,9 @@ export default class ContestCard extends Component {
         <Photo
           photoId={this.state.referencePhotoId}
           style={styles.header}>
-          <TouchableOpacity
+          <TrophyCase
+            bounty={this.state.bounty}
+            prizes={this.state.prizes}
             onPress={() => {
               Actions.newPayment({
                 titleText: 'Add another Prize',
@@ -109,17 +111,7 @@ export default class ContestCard extends Component {
                   }`
                 ).set(true)
               });
-            }}>
-            <OutlineText
-              text={
-                `$${
-                  this.state.bounty || 0
-                } Bounty To Top ${
-                  this.state.prizes
-                  ? Object.keys(this.state.prizes).length
-                  : 'Photo'
-                }`} />
-          </TouchableOpacity>
+            }} />
         </Photo>
         <View style={[
           styles.body,
