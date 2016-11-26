@@ -83,12 +83,17 @@ export default class Profile extends Component {
             </View>
             <InformationField
               isTop
+              isBottom
               label="Region"
               info={this.state.currentRegion || 'Unknown'} />
             <InformationField
+              isTop
+              label="Contests Won"
+              info={this.state.countWon || 0} />
+            <InformationField
               isBottom
-              label="Age"
-              info="18-29" />
+              label="Contests Entered"
+              info={this.state.countAttempts} />
           </View>
         </ParallaxScrollView>
         <CloseFullscreenButton />
