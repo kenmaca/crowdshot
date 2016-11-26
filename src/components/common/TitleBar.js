@@ -10,6 +10,7 @@ import {
 
 // components
 import * as Progress from 'react-native-progress';
+import * as Animatable from 'react-native-animatable';
 
 export default class TitleBar extends Component {
   constructor(props) {
@@ -32,9 +33,12 @@ export default class TitleBar extends Component {
         styles.container,
         this.props.style
       ]}>
-        <Text style={styles.title}>
+        <Animatable.Text
+          animation='fadeInDown'
+          duration={500}
+          style={styles.title}>
           {this.props.title}
-        </Text>
+        </Animatable.Text>
         {
           this.props.clearLoader && !this.state.loaded
           ? (
