@@ -91,7 +91,8 @@ export default class ContestMapView extends Component {
       });
 
       this.setState({
-        region: region
+        region: region,
+        updated: true
       });
     }
   }
