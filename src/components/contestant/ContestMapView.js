@@ -236,7 +236,8 @@ export default class ContestMapView extends Component {
                 && Object.keys(this.state.profile.entries).length
                 || 0
               } />
-            <View style={styles.winningsContainer}>
+            <TouchableOpacity style={styles.winningsContainer}
+              onPress={Actions.redeem}>
               <FontAwesomeIcon
                 name='trophy'
                 color={Colors.Text} />
@@ -248,7 +249,7 @@ export default class ContestMapView extends Component {
                   }`
                 }
               </Text>
-            </View>
+            </TouchableOpacity>
           </HeaderButtons>
         </View>
       </View>
