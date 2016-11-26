@@ -30,7 +30,7 @@ export default class ContestMapView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loaded: false,
+      updated: false,
       profile: {},
       region: {
 
@@ -73,7 +73,7 @@ export default class ContestMapView extends Component {
   }
 
   onRegionChange(region, initial) {
-    if (!initial || !this.state.loaded) {
+    if (!initial || !this.state.updated) {
       this.ref.updateCriteria({
         center: [
           region.latitude,
@@ -91,8 +91,7 @@ export default class ContestMapView extends Component {
       });
 
       this.setState({
-        region: region,
-        loaded: initial
+        region: region
       });
     }
   }
@@ -218,7 +217,9 @@ export default class ContestMapView extends Component {
                 <View style={styles.shadow}>
                   <View style={styles.textContainer}>
                     <Text style={styles.text}>
-                      No active contests found — try moving the map around
+                      {this.state.updated
+                        ? "No active contests found — try moving the map around"
+                        : "Looking for contests"}
                     </Text>
                   </View>
                 </View>
