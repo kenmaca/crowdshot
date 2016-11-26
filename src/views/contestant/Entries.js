@@ -49,6 +49,9 @@ export default class Settings extends Component {
           Object.keys(blob)
         )
       });
+
+      // and clear loader
+      this.refs.title.clearLoader();
     });
   }
 
@@ -101,7 +104,10 @@ export default class Settings extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TitleBar title='Your Contest Entries' />
+        <TitleBar
+          clearLoader
+          ref='title'
+          title='Your Contest Entries' />
         <View style={styles.content}>
           <ListView
             key={Math.random()}

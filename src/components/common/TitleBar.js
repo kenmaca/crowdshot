@@ -8,7 +8,24 @@ import {
   Colors, Sizes
 } from '../../Const';
 
+// components
+import * as Progress from 'react-native-progress';
+
 export default class TitleBar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+
+    // methods
+    this.clearLoader = this.clearLoader.bind(this);
+  }
+
+  clearLoader() {
+    this.setState({
+      loaded: true
+    });
+  }
+
   render() {
     return (
       <View style={[
@@ -18,6 +35,21 @@ export default class TitleBar extends Component {
         <Text style={styles.title}>
           {this.props.title}
         </Text>
+        {
+          this.props.clearLoader && !this.state.loaded
+          ? (
+            <Progress.Bar
+              animated
+              indeterminate
+              width={Sizes.Width}
+              height={3}
+              borderWidth={0}
+              borderRadius={0}
+              color={Colors.Primary} />
+          ): (
+            <View style={styles.loaderPlaceholder} />
+          )
+        }
       </View>
     );
   }
@@ -28,7 +60,6 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'flex-start',
     justifyContent: 'center',
-    padding: Sizes.InnerFrame,
     paddingTop: Sizes.InnerFrame * 4.5,
     backgroundColor: Colors.Foreground
   },
@@ -36,6 +67,12 @@ const styles = StyleSheet.create({
   title: {
     color: Colors.Text,
     fontSize: Sizes.H1,
-    fontWeight: '300'
+    fontWeight: '300',
+    marginLeft: Sizes.OuterFrame,
+    marginBottom: Sizes.InnerFrame
+  },
+
+  loaderPlaceholder: {
+    height: 3
   }
 });

@@ -46,6 +46,9 @@ export default class CompletedContests extends Component {
           }).cloneWithRows(Object.keys(contests))
         });
       }
+
+      // clear loader
+      this.refs.title.clearLoader();
     });
   }
 
@@ -62,7 +65,10 @@ export default class CompletedContests extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TitleBar title='Purchased Photos' />
+        <TitleBar
+          showLoader
+          ref='title'
+          title='Purchased Photos' />
         <ListView
           key={Math.random()}
           scrollEnabled
