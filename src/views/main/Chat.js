@@ -72,6 +72,7 @@ export default class Chat extends Component {
   renderAvatar(message) {
     return (
       <Avatar
+        showRank
         onPress={() => Actions.profile({
           uid: message.currentMessage.user._id
         })}

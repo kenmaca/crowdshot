@@ -80,6 +80,7 @@ export default class ContestMapMarker extends Component {
                   }
                 ]}>
                   <Avatar
+                    showRank
                     size={48}
                     uid={this.state.createdBy} />
                   <View style={styles.bounty}>

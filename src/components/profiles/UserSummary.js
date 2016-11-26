@@ -47,6 +47,7 @@ export default class UserSummary extends Component {
         <View style={styles.avatar}>
           <Avatar
             outline
+            showRank
             outlineColor={Colors.ModalBackground}
             onPress={() => Actions.profile({
               uid: this.props.uid

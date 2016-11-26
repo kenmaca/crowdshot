@@ -217,6 +217,7 @@ export default class ContestCard extends Component {
                       offset={Sizes.InnerFrame}
                       label='Photographers Nearby' />
                     <NearbyAvatars
+                      showRank
                       limit={6}
                       latitude={this.state.latitude}
                       longitude={this.state.longitude}
