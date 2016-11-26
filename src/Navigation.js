@@ -24,6 +24,7 @@ import Profile from './views/profiles/Profile';
 import ContestPhotos from './views/contests/ContestPhotos';
 import ContestDetail from './views/contestant/ContestDetail';
 import Chat from './views/main/Chat';
+import ChatRoom from './views/main/ChatRoom';
 import Settings from './views/main/Settings';
 import PaymentMethods from './views/forms/PaymentMethods';
 import NewPaymentMethod from './views/forms/NewPaymentMethod';
@@ -80,6 +81,9 @@ export default class Navigation extends Component {
             <Scene
               key='chat'
               component={Chat} />
+            <Scene
+              key='chatroom'
+              component={ChatRoom} />
             <Scene
               key='settings'
               component={Settings} />

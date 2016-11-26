@@ -184,10 +184,7 @@ export default class ContestCard extends Component {
                   } photographers`
                 } />
               <TouchableOpacity
-                onPress={() => Actions.chat({
-                  chatId: this.props.contestId,
-                  title: 'Contest Chat'
-                })}>
+                onPress={() => Actions.chatroom()}>
                 <CircleIconInfo
                   size={Sizes.H2}
                   color={Colors.Foreground}
