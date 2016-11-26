@@ -120,6 +120,14 @@ export default class NewPayment extends Component {
           {
             this.props.fixedValue == null ? (
               <PriceSelect
+                options=
+                {
+                  {
+                    0:[0,1,5,10],
+                    1:[20,30,50,60],
+                    2:[60,70,80,100]
+                  }
+                }
                 isBottom
                 noMargin
                 label={
