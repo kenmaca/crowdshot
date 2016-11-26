@@ -94,6 +94,7 @@ export default class ContestCard extends Component {
           photoId={this.state.referencePhotoId}
           style={styles.header}>
           <TrophyCase
+            isOwn
             bounty={this.state.bounty}
             prizes={this.state.prizes}
             onPress={() => {

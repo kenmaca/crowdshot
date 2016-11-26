@@ -35,10 +35,14 @@ export default class TrophyCase extends Component {
                 style={styles.trophy} />
             ))
           }
-          <CircleIcon
-            icon='add'
-            size={12}
-            style={styles.trophy} />
+          {
+            this.props.isOwn && (
+              <CircleIcon
+                icon='add'
+                size={12}
+                style={styles.trophy} />
+            )
+          }
         </View>
       </TouchableOpacity>
     );
