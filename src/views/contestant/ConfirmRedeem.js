@@ -16,6 +16,7 @@ import {
 // components
 import Button from '../../components/common/Button';
 import TitleBar from '../../components/common/TitleBar';
+import InputSectionHeader from '../../components/common/InputSectionHeader';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import AwardCard from '../../components/lists/AwardCard';
 import Swipeout from 'react-native-swipeout';
@@ -50,12 +51,25 @@ export default class ConfirmRedeem extends Component {
   }
 
   render() {
+    let { profile } = this.state
     return (
       <View style={styles.container}>
         <TitleBar
           ref='title'
           title='Confirmation' />
         <View style={styles.content}>
+          <InputSectionHeader
+            offset={Sizes.InnerFrame}
+            label='Your shipping address' />
+          <Text style={styles.address}>
+            {profile.address + '\n' + profile.city
+              + (profile.region ? ', ' + profile.region + '\n' : '\n')
+              + profile.country
+              + (profile.postal ? ', ' + profile.postal : '')}
+          </Text>
+          <InputSectionHeader
+            offset={Sizes.InnerFrame}
+            label='Your cart' />
         </View>
         <Button
           squareBorders
@@ -75,11 +89,15 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    flex: 1
+    flex: 1,
+    marginTop: Sizes.OuterFrame
   },
 
-  entries: {
-    flex: 1
+  address: {
+    color: Colors.AlternateText,
+    fontWeight: '100',
+    marginHorizontal: Sizes.InnerFrame,
+    marginBottom: Sizes.OuterFrame
   },
 
   entryContainer: {
