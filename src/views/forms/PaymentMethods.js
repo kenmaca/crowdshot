@@ -43,7 +43,7 @@ export default class PaymentMethods extends Component {
 
   componentDidMount() {
     this.listener = this.ref.on('value', data => {
-      let blob = data.val();
+      let blob = data.val() || {};
       this.setState({
         blob: blob,
         billing: new ListView.DataSource({
@@ -88,7 +88,6 @@ export default class PaymentMethods extends Component {
                       Database.ref(
                         `billing/${data}`
                       ).remove();
-                      this.reset();
                     }
                   }
                 ]
