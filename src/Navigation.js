@@ -34,6 +34,7 @@ import NewReferencePhoto from './views/forms/NewReferencePhoto';
 import Contest from './views/contests/Contest';
 import Entries from './views/contestant/Entries';
 import Redeem from './views/contestant/Redeem';
+import ConfirmRedeem from './views/contestant/ConfirmRedeem';
 import TextEntry from './views/forms/TextEntry';
 import CompletedContests from './views/contests/CompletedContests';
 import PurchasedPhoto from './views/contests/PurchasedPhoto';
@@ -113,6 +114,9 @@ export default class Navigation extends Component {
             <Scene
               key='redeem'
               component={Redeem} />
+            <Scene
+              key='confirmRedeem'
+              component={ConfirmRedeem} />
             <Scene
               key='contest'
               component={Contest} />

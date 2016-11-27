@@ -20,7 +20,7 @@ import CloseFullscreenButton from '../../components/common/CloseFullscreenButton
 import AwardCard from '../../components/lists/AwardCard';
 import Swipeout from 'react-native-swipeout';
 
-export default class Settings extends Component {
+export default class Redeem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -133,7 +133,12 @@ export default class Settings extends Component {
   checkOut(){
     let { profile } = this.state;
     if (!profile.address || !profile.city || !profile.country) {
-      Actions.address();
+      Actions.address({
+        afterSubmit: Actions.confirmRedeem({
+          cart: this.state.cart,
+          cartAmt: this.state.cartAmt
+        })
+      });
     } else {
       let longAddress = profile.address + ', ' + profile.city + ', '
         + (profile.region ? profile.region + ', ' : '')
@@ -143,8 +148,18 @@ export default class Settings extends Component {
         'Verify Your Shipping Address',
         longAddress,
         [
-          {text: 'Update', onPress: () => Actions.address()},
-          {text: 'Continue', onPress: () => console.log('OK Pressed')}
+          {text: 'Update', onPress: () => {
+            Actions.address({
+              afterSubmit: Actions.confirmRedeem({
+                cart: this.state.cart,
+                cartAmt: this.state.cartAmt
+              })
+            })
+          }},
+          {text: 'Confirm', onPress: () => Actions.confirmRedeem({
+            cart: this.state.cart,
+            cartAmt: this.state.cartAmt,
+          })}
         ]
       )
     }

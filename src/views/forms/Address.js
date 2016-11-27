@@ -90,7 +90,7 @@ export default class Settings extends Component {
       country: this.state.country,
       postal: this.state.postal
     }).then(result => {
-      Actions.pop();
+      Actions.pop() && this.props.afterSubmit;
     });
   }
 
