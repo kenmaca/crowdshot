@@ -28,6 +28,7 @@ export default class NewPayment extends Component {
     this.state = {
       stripeCardId: null,
       stripeCustomerId: null,
+      billingId: null,
       value: null,
       processing: false
     };
@@ -59,6 +60,7 @@ export default class NewPayment extends Component {
       value: this.state.value * 100,
       stripeCardId: this.state.stripeCardId,
       stripeCustomerId: this.state.stripeCustomerId,
+      billingId: this.state.billingId,
       dateCreated: Date.now(),
     }).key;
     let ref = Database.ref(
@@ -114,7 +116,8 @@ export default class NewPayment extends Component {
           <CardSelect
             onSelected={card => this.setState({
               stripeCustomerId: card.stripeCustomerId,
-              stripeCardId: card.stripeCardId
+              stripeCardId: card.stripeCardId,
+              billingId: card.billingId
             })}
             label='Payment Method' />
           {

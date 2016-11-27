@@ -348,6 +348,18 @@ firebase.auth().signInWithEmailAndPassword(
           approved: true
         });
       }
+
+      // add to list of transactions for that card
+      Database.ref(
+        `billing/${
+          transaction.billingId
+        }/transactions/${
+          data.key
+        }`
+      ).set({
+        '.value': true,
+        '.priority': -Date.now()
+      });
     }
   });
 

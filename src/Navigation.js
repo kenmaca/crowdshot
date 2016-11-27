@@ -39,6 +39,7 @@ import CompletedContests from './views/contests/CompletedContests';
 import PurchasedPhoto from './views/contests/PurchasedPhoto';
 import ContestStatus from './views/contestant/ContestStatus';
 import Address from './views/forms/Address';
+import PaymentMethod from './views/main/PaymentMethod';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -91,6 +92,9 @@ export default class Navigation extends Component {
             <Scene
               key='paymentMethods'
               component={PaymentMethods} />
+            <Scene
+              key='paymentMethod'
+              component={PaymentMethod} />
             <Scene
               key='newPaymentMethod'
               component={NewPaymentMethod} />
