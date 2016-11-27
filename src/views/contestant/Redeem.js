@@ -131,7 +131,23 @@ export default class Settings extends Component {
   }
 
   checkOut(){
-
+    let { profile } = this.state;
+    if (!profile.address || !profile.city || !profile.country) {
+      Actions.address();
+    } else {
+      let longAddress = profile.address + ', ' + profile.city + ', '
+        + (profile.region ? profile.region + ', ' : '')
+        + profile.country
+        + (profile.postal ? ', ' + profile.postal : '');
+      Alert.alert(
+        'Verify Your Shipping Address',
+        longAddress,
+        [
+          {text: 'Update', onPress: () => Actions.address()},
+          {text: 'Continue', onPress: () => console.log('OK Pressed')}
+        ]
+      )
+    }
   }
 
   getCartCount(){
@@ -168,7 +184,7 @@ export default class Settings extends Component {
         <Button
           squareBorders
           color={Colors.Primary}
-          onPress={this.checkOut}
+          onPress={() => this.checkOut()}
           label={"Check Out"}
           isDisabled={this.getCartCount() <= 0}
           onPressDisabled={() => Alert.alert(
