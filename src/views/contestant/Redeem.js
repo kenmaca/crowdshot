@@ -14,6 +14,7 @@ import {
 } from 'react-native-router-flux';
 
 // components
+import Button from '../../components/common/Button';
 import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import AwardCard from '../../components/lists/AwardCard';
@@ -42,6 +43,7 @@ export default class Settings extends Component {
     );
 
     this.addToCart = this.addToCart.bind(this);
+    this.showAwardDetail = this.showAwardDetail.bind(this);
   }
 
   componentDidMount() {
@@ -107,6 +109,20 @@ export default class Settings extends Component {
 
   }
 
+  checkOut(){
+
+  }
+
+  getCartCount(){
+    let {cart, rawAwards} = this.state;
+    let cartCount = 0;
+    for (award in rawAwards){
+      cartCount += cart[award] || 0;
+      console.log("cart awardId",award)
+    }
+    return cartCount;
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -128,6 +144,17 @@ export default class Settings extends Component {
             style={styles.entries}
             renderRow={this.renderRow.bind(this)} />
         </View>
+        <Button
+          squareBorders
+          color={Colors.Primary}
+          onPress={this.checkOut}
+          label={"Check Out"}
+          isDisabled={this.getCartCount() <= 0}
+          onPressDisabled={() => Alert.alert(
+            'Empty Cart',
+            'You don\'t have anything in your cart'
+          )}
+          disabledColor={Colors.MediumDarkOverlay} />
         <CloseFullscreenButton />
       </View>
     );
