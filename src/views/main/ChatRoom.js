@@ -28,11 +28,20 @@ export default class ChatRoom extends Component {
     this.ref = Database.ref(
       `profiles/${
         Firebase.auth().currentUser.uid
-      }/contests`
+      }/activeChat`
     );
   }
 
   componentDidMount() {
+    // add to owner's list
+    Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/activeChat/${
+        this.props.contestId
+      }`
+    ).set(true);
+
     this.listener = this.ref.on('value', data => {
 
       if (data.exists()) {
@@ -54,7 +63,7 @@ export default class ChatRoom extends Component {
     this.listener && this.ref.off('value', this.listener);
   }
 
-  renderRow(chatId) {
+  renderRow(contestId) {
     return (
       <View style={styles.chatContainer}>
         <Swipeout
@@ -89,7 +98,8 @@ export default class ChatRoom extends Component {
             }
           ]}>
           <ChatCard
-            chatId={chatId}
+            chatId={contestId}
+
              />
       </Swipeout>
       </View>
