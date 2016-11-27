@@ -113,6 +113,7 @@ export default class ContestCard extends Component {
                   + 'chosen payment method immediately. Unused bounties '
                   + 'will be refunded at the end of the contest.',
                 fixedValue: this.state.bounty,
+                description: 'Additional Bounty for Photo Contest',
                 onCharged: prizeId => Database.ref(
                   `contests/${
                     this.props.contestId
@@ -137,26 +138,18 @@ export default class ContestCard extends Component {
             onPressComplete={() => Actions.contestPhotos({
               contestId: this.props.contestId
             })}
-            onPressIncomplete={() => Alert.alert(
-              'Extending your Contest',
-              'By extending your contest below, the credit card on '
+            onPressIncomplete={() => Actions.newPayment({
+              titleText: 'Extending your Contest',
+              disclaimerText: 'By extending your contest, the credit card on '
                 + 'file will be billed for $1 to extend your contest by an '
                 + 'hour\n\nYou may continue to extend your contest as long '
                 + 'it remains active',
-              [
-                {
-                  text: 'Cancel',
-                  style: 'cancel'
-                }, {
-                  text: 'I Agree',
-                  onPress: () => {
-                    this.ref.update({
-                      endDate: this.state.endDate + 3600000
-                    });
-                  }
-                }
-              ]
-            )} />
+              fixedValue: 1,
+              description: '1 Hour Extension for Photo Contest',
+              onCharged: transactionId => this.ref.update({
+                endDate: this.state.endDate + 3600000
+              })
+            })} />
           <ScrollView style={styles.detailContainer}>
             <View style={styles.summary}>
               {
