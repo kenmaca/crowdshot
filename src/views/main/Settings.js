@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, TouchableOpacity, Image
+  View, StyleSheet, Text, TouchableOpacity, Image, Alert
 } from 'react-native';
 import {
   Colors, Sizes, Strings
@@ -50,7 +50,6 @@ export default class Settings extends Component {
           <TouchableOpacity
             onPress={Actions.address}>
             <InformationField
-              isBottom
               pressable
               label='Shipping Address'
               info={
@@ -64,6 +63,18 @@ export default class Settings extends Component {
                   }`
                 )
               } />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => Actions.paymentMethods({
+              title: 'Payment Methods',
+              onSelected: billing => Actions.paymentMethod({
+                billingId: billing.billingId
+              })
+            })}>
+            <InformationField
+              isBottom
+              pressable
+              label='Payment Methods' />
           </TouchableOpacity>
           <View style={styles.footer}>
             <Image

@@ -33,7 +33,8 @@ export default class BillingCard extends Component {
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
         this.setState({
-          ...data.val()
+          ...data.val(),
+          billingId: this.props.billingId
         });
       }
     })
@@ -50,13 +51,13 @@ export default class BillingCard extends Component {
         <TouchableOpacity
           onPress={() => {
 
-            // used on selected card
+            // exit screen
+            Actions.pop();
+
+            // and used on selected card
             this.props.onPress && this.props.onPress(
               this.state
             );
-
-            // and exit screen
-            Actions.pop();
           }}
           style={styles.container}>
           <View style={styles.content}>
@@ -90,7 +91,7 @@ export default class BillingCard extends Component {
             </Text>
             <CircleIcon
               size={18}
-              style={styles.button}              
+              style={styles.button}
               color={Colors.ModalBackground}
               checkColor={Colors.AlternateText}
               icon='arrow-forward' />

@@ -117,7 +117,10 @@ export default class PaymentMethods extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TitleBar title='Select Payment Method' />
+        <TitleBar
+          title={
+            this.props.title || 'Select Payment Method'
+          } />
         <View style={styles.content}>
           <ListView
             scrollEnabled={false}
