@@ -26,7 +26,8 @@ export default class Settings extends Component {
       rawAwards: {},
       awards: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
-      })
+      }),
+      cart: 0
     };
 
     this.ref = Database.ref(
@@ -76,9 +77,20 @@ export default class Settings extends Component {
     return (
       <View style={styles.entryContainer}>
         <AwardCard
-          awardId={awardId} />
+          awardId={awardId}
+          balance={this.state.profile.wallet - this.state.cart}
+          addToCart={this.addToCart}
+          showAwardDetail={this.showAwardDetail} />
       </View>
     );
+  }
+
+  addToCart(awardId){
+
+  }
+
+  showAwardDetail(awardId){
+
   }
 
   render() {
@@ -91,8 +103,8 @@ export default class Settings extends Component {
           rightIcon='trophy'
           rightTitle={
             `$${
-              this.state.profile.wallet
-              || 0
+              (this.state.profile.wallet
+              || 0) - this.state.cart
             }`
           }/>
         <View style={styles.content}>

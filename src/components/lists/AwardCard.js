@@ -45,6 +45,7 @@ export default class AwardCard extends Component {
     this.listener && this.ref.off('value', this.listener);
   }
 
+
   render() {
     return (
       <View style={[
@@ -53,14 +54,12 @@ export default class AwardCard extends Component {
           borderLeftColor: Colors.Primary
         }
       ]}>
-        <TouchableOpacity onPress={() => Actions.contestStatus({
-          contestId: this.props.contestId
-        })}>
+          <TouchableOpacity onPress={() => this.props.addToCart(
+            this.props.awardId)}>
           <View style={styles.container}>
             <TouchableOpacity
-              onPress={() => Actions.purchasedPhoto({
-                photoId: this.state.photo
-              })}>
+              onPress={() => this.props.showAwardDetail(
+                this.props.awardId)}>
               <Photo
                 photoId={this.state.photo}
                 style={styles.photo} />
@@ -68,15 +67,28 @@ export default class AwardCard extends Component {
             <View style={styles.content}>
               <Text style={[
                 styles.status,
+                this.props.balance < this.state.cost && {
+                  color: Colors.SubduedText
+                }
               ]}>
                 {this.state.name}
               </Text>
-              <Text style={styles.details}>
+              <Text style={[
+                  styles.details,
+                  this.props.balance < this.state.cost && {
+                    color: Colors.SubduedText
+                  }
+                ]}>
                 {this.state.description}
               </Text>
             </View>
             <View style={styles.prizeContainer}>
-              <Text style={styles.prize}>
+              <Text style={[
+                  styles.prize,
+                  this.props.balance < this.state.cost && {
+                    color: Colors.SubduedText
+                  }
+                ]}>
                 {
                   `$${
                     this.state.cost || '0'
