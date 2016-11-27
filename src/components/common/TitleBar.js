@@ -9,6 +9,7 @@ import {
 } from '../../Const';
 
 // components
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import * as Progress from 'react-native-progress';
 import * as Animatable from 'react-native-animatable';
 
@@ -33,12 +34,25 @@ export default class TitleBar extends Component {
         styles.container,
         this.props.style
       ]}>
-        <Animatable.Text
-          animation='fadeInDown'
-          duration={500}
-          style={styles.title}>
-          {this.props.title}
-        </Animatable.Text>
+        <View style={styles.horizontal}>
+          <Animatable.Text
+            animation='fadeInDown'
+            duration={500}
+            style={styles.title}>
+            {this.props.title}
+          </Animatable.Text>
+          <View style={styles.rightContainer}>
+            {this.props.rightIcon ?
+            <FontAwesomeIcon
+              name={this.props.rightIcon}
+              color={Colors.Text}
+              size={Sizes.H1} />
+            : <View/>}
+            <Text style={styles.rightTitle}>
+              {this.props.rightTitle}
+            </Text>
+          </View>
+        </View>
         {
           this.props.clearLoader && !this.state.loaded
           ? (
@@ -60,12 +74,24 @@ export default class TitleBar extends Component {
 }
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     alignSelf: 'stretch',
     alignItems: 'flex-start',
     justifyContent: 'center',
     paddingTop: Sizes.InnerFrame * 4.5,
     backgroundColor: Colors.Foreground
+  },
+
+  horizontal: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+
+  rightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Sizes.InnerFrame
   },
 
   title: {
@@ -74,6 +100,14 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     marginLeft: Sizes.OuterFrame,
     marginBottom: Sizes.InnerFrame
+  },
+
+  rightTitle: {
+    color: Colors.Text,
+    fontSize: Sizes.H1,
+    fontWeight: '300',
+    marginRight: Sizes.OuterFrame,
+    marginLeft: Sizes.InnerFrame/2
   },
 
   loaderPlaceholder: {
