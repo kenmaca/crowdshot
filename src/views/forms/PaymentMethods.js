@@ -26,7 +26,7 @@ export default class PaymentMethods extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rawBilling: [],
+      blob: {},
       billing: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
       })
@@ -38,36 +38,25 @@ export default class PaymentMethods extends Component {
       }/billing`
     );
 
-    this.reset = this.reset.bind(this);
     this.renderRow = this.renderRow.bind(this);
   }
 
-  // needed to remove deleted cards
-  reset() {
-    this.setState({
-      rawBilling: [],
-      billing: new ListView.DataSource({
-        rowHasChanged: (r1, r2) => r1 !== r2
-      })
-    });
-    this.componentWillUnmount();
-    this.componentDidMount();
-  }
-
   componentDidMount() {
-    this.listener = this.ref.on('child_added', data => {
-      if (data.exists()) {
-        let billing = [...this.state.rawBilling, data.key];
-        this.setState({
-          rawBilling: billing,
-          billing: this.state.billing.cloneWithRows(billing)
-        });
-      }
+    this.listener = this.ref.on('value', data => {
+      let blob = data.val();
+      this.setState({
+        blob: blob,
+        billing: new ListView.DataSource({
+          rowHasChanged: (r1, r2) => r1 !== r2
+        }).cloneWithRows(
+          Object.keys(blob)
+        )
+      });
     });
   }
 
   componentWillUnmount() {
-    this.listener && this.ref.off('child_added', this.listener);
+    this.listener && this.ref.off('value', this.listener);
   }
 
   renderRow(data) {
