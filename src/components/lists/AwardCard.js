@@ -20,7 +20,6 @@ export default class AwardCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      contest: {}
     };
 
     this.ref = Database.ref(
@@ -50,12 +49,14 @@ export default class AwardCard extends Component {
     return (
       <View style={[
         styles.outline,
-        this.state.selected && this.state.contest.isComplete && {
+        this.props.inCart && this.props.inCart > 0 && {
           borderLeftColor: Colors.Primary
         }
       ]}>
-          <TouchableOpacity onPress={() => this.props.addToCart(
-            this.props.awardId)}>
+          <TouchableOpacity
+            onPress={() => this.props.addToCart(
+              this.props.awardId)}
+            disabled={this.props.balance < this.state.cost}>
           <View style={styles.container}>
             <TouchableOpacity
               onPress={() => this.props.showAwardDetail(
@@ -69,6 +70,9 @@ export default class AwardCard extends Component {
                 styles.status,
                 this.props.balance < this.state.cost && {
                   color: Colors.SubduedText
+                },
+                this.props.inCart && this.props.inCart > 0 && {
+                  color: Colors.Primary
                 }
               ]}>
                 {this.state.name}
@@ -87,11 +91,29 @@ export default class AwardCard extends Component {
                   styles.prize,
                   this.props.balance < this.state.cost && {
                     color: Colors.SubduedText
+                  },
+                  this.props.inCart && this.props.inCart > 0 && {
+                    color: Colors.Primary
                   }
                 ]}>
                 {
                   `$${
                     this.state.cost || '0'
+                  }`
+                }
+              </Text>
+              <Text style={[
+                  styles.prize,
+                  this.props.balance < this.state.cost && {
+                    color: Colors.SubduedText
+                  },
+                  this.props.inCart && this.props.inCart > 0 && {
+                    color: Colors.Primary
+                  }
+                ]}>
+                {
+                  `x${
+                    this.props.inCart || '0'
                   }`
                 }
               </Text>

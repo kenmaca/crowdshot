@@ -27,7 +27,8 @@ export default class Settings extends Component {
       awards: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
       }),
-      cart: 0
+      cartAmt: 0,
+      cart: {}
     };
 
     this.ref = Database.ref(
@@ -39,6 +40,8 @@ export default class Settings extends Component {
         Firebase.auth().currentUser.uid
       }`
     );
+
+    this.addToCart = this.addToCart.bind(this);
   }
 
   componentDidMount() {
@@ -78,15 +81,26 @@ export default class Settings extends Component {
       <View style={styles.entryContainer}>
         <AwardCard
           awardId={awardId}
-          balance={this.state.profile.wallet - this.state.cart}
+          balance={this.state.profile.wallet - this.state.cartAmt}
           addToCart={this.addToCart}
-          showAwardDetail={this.showAwardDetail} />
+          showAwardDetail={this.showAwardDetail}
+          inCart={this.state.cart[awardId]} />
       </View>
     );
   }
 
   addToCart(awardId){
-
+    let { cart, cartAmt, rawAwards} = this.state;
+    if (cart[awardId]) {
+      cart[awardId]++;
+    } else {
+      cart[awardId] = 1;
+    }
+    cartAmt += rawAwards[awardId].cost;
+    this.setState({
+      cart,
+      cartAmt
+    });
   }
 
   showAwardDetail(awardId){
@@ -104,12 +118,11 @@ export default class Settings extends Component {
           rightTitle={
             `$${
               (this.state.profile.wallet
-              || 0) - this.state.cart
+              || 0) - this.state.cartAmt
             }`
           }/>
         <View style={styles.content}>
           <ListView
-            key={Math.random()}
             scrollEnabled
             dataSource={this.state.awards}
             style={styles.entries}
