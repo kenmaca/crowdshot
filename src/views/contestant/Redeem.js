@@ -18,6 +18,7 @@ import Button from '../../components/common/Button';
 import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import AwardCard from '../../components/lists/AwardCard';
+import Swipeout from 'react-native-swipeout';
 
 export default class Settings extends Component {
   constructor(props) {
@@ -81,12 +82,32 @@ export default class Settings extends Component {
   renderRow(awardId) {
     return (
       <View style={styles.entryContainer}>
-        <AwardCard
-          awardId={awardId}
-          balance={this.state.profile.wallet - this.state.cartAmt}
-          addToCart={this.addToCart}
-          showAwardDetail={this.showAwardDetail}
-          inCart={this.state.cart[awardId]} />
+        <Swipeout
+          right={[
+            {
+              text: 'Remove',
+              color: Colors.Text,
+              backgroundColor: Colors.Cancel,
+              onPress: () => {
+                let { cart, cartAmt, rawAwards} = this.state;
+                if (cart[awardId] && cart[awardId] > 0) {
+                  cart[awardId]--;
+                }
+                cartAmt -= rawAwards[awardId].cost;
+                this.setState({
+                  cart,
+                  cartAmt
+                });
+              }
+            }
+          ]}>
+          <AwardCard
+            awardId={awardId}
+            balance={this.state.profile.wallet - this.state.cartAmt}
+            addToCart={this.addToCart}
+            showAwardDetail={this.showAwardDetail}
+            inCart={this.state.cart[awardId]} />
+        </Swipeout>
       </View>
     );
   }
