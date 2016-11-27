@@ -11,6 +11,7 @@ import {
   Actions
 } from 'react-native-router-flux';
 
+import Database from '../../utils/Database';
 import Photo from '../common/Photo';
 import CircleIconInfo from '../common/CircleIconInfo';
 
@@ -19,7 +20,27 @@ export default class ChatCard extends Component {
     super(props);
     this.state = {
       contest: {}
-    };
+    }
+
+    this.ref = Database.ref(
+      `contests/${
+        this.props.chatId
+      }`
+    )
+  };
+
+    componentDidMount() {
+      this.listenser = this.ref.on('value', data => {
+        if (data.exists()) {
+          this.setState({
+            ...data.val()
+          });
+        }
+      });
+    }
+
+  componentWillUnmount() {
+    this.listener && this.ref.off('value', this.listener);
   }
 
   render() {
@@ -32,7 +53,7 @@ export default class ChatCard extends Component {
           })}>
           <View style={styles.item}>
             <Photo
-              photoId={this.state.photoId}
+              photoId={this.state.referencePhotoId}
               style={styles.photo} />
             <Text>
               Chat Preview

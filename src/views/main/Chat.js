@@ -32,10 +32,30 @@ export default class Chat extends Component {
       `chats/${this.props.chatId}`
     );
 
+    this.activeChatRef = Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/activeChat/${this.props.chatId}`
+    );
+
     this.onSend = this.onSend.bind(this);
   }
 
   componentDidMount() {
+
+    this.activeChatListener = this.activeChatRef.on('value', data => {
+      if(!data.exists()) {
+        //add to owner's list
+        Database.ref(
+          `profiles/${
+            Firebase.auth().currentUser.uid
+          }/activeChat/${
+            this.props.chatId
+          }`
+        ).set(true);
+      }
+    })
+
     this.listener = this.ref.on('child_added', data => {
       if (data.exists()) {
         let message = data.val();
@@ -56,6 +76,7 @@ export default class Chat extends Component {
 
   componentWillUnmount() {
     this.listener && this.ref.off('child_added', this.listener);
+    this.activeChatListener && this.activeChatRef.off('value', this.activeChatListener);
   }
 
   onSend(messages) {

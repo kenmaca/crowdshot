@@ -50,6 +50,15 @@ export default class ContestCard extends Component {
   }
 
   componentDidMount() {
+    //add to owner's list
+    Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/activeChat/${
+        this.props.contestId
+      }`
+    ).set(true);
+
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
         this.setState({
@@ -184,8 +193,9 @@ export default class ContestCard extends Component {
                   } photographers`
                 } />
               <TouchableOpacity
-                onPress={() => Actions.chatroom({
-                    contestId: this.props.contestId
+                onPress={() => Actions.chat({
+                  chatId: this.props.contestId,
+                  title: 'Contest Chat'
                 })}>
                 <CircleIconInfo
                   size={Sizes.H2}
