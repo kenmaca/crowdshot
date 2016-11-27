@@ -350,6 +350,9 @@ export default class Main extends Component {
           } />
         <HeaderButtons>
           <HeaderButton
+            icon='chat-bubble'
+            onPress={Actions.chatroom} />
+          <HeaderButton
             icon='photo-library'
             onPress={Actions.completed} />
           <HeaderButton

@@ -44,6 +44,9 @@ export default class ChatRoom extends Component {
             Object.keys(blob)
           )
         });
+
+        // and clear loader
+        this.refs.title.clearLoader();
     });
   }
 
@@ -95,7 +98,9 @@ export default class ChatRoom extends Component {
     return (
       <View style={styles.container}>
         <TitleBar
-          title='Your Contest Chat Room' />
+          clearLoader
+          title='Crowd Chat'
+          ref='title' />
         <View style={styles.content}>
           <ListView
             key={Math.random()}
@@ -104,6 +109,7 @@ export default class ChatRoom extends Component {
             style={styles.activeChat}
             renderRow={this.renderRow.bind(this)} />
         </View>
+        <CloseFullscreenButton />
       </View>
     );
   }
@@ -129,5 +135,9 @@ const styles = StyleSheet.create({
   chatContainer: {
     margin: Sizes.InnerFrame / 2,
     marginBottom: 0
+  },
+
+  title: {
+    alignItems: 'center'
   }
 })
