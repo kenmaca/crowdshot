@@ -8,6 +8,7 @@ import {
   Colors, Sizes
 } from '../../Const';
 import Database from '../../utils/Database';
+import DateFormat from 'dateformat';
 
 export default class Transaction extends Component {
   constructor(props) {
@@ -40,10 +41,17 @@ export default class Transaction extends Component {
       <View style={styles.container}>
         <View style={styles.detail}>
           <Text style={styles.date}>
-            November 18th, 2016
+            {
+              DateFormat(
+                this.state.dateCreated,
+                'mmmm dS, yyyy, h:MMTT'
+              )
+            }
           </Text>
           <Text style={styles.description}>
-            Contest Bounty
+            {
+              this.state.description || 'Charge processed by Stripe'
+            }
           </Text>
         </View>
         <View style={styles.amountContainer}>
