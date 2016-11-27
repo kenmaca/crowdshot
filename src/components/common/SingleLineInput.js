@@ -38,6 +38,7 @@ export default class SingleLineInput extends Component {
       <Field
         {...this.props}>
         <TextInput
+          ref='field'
           placeholderTextColor={Colors.SubduedText}
           {...this.props}
           clearButtonMode='always'

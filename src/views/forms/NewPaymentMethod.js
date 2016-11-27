@@ -21,6 +21,7 @@ import Button from '../../components/common/Button';
 import SingleLineInput from '../../components/common/SingleLineInput';
 import CircleIcon from '../../components/common/CircleIcon';
 import ProgressBlocker from '../../components/common/ProgressBlocker';
+import PaymentCard from '../../components/payment/PaymentCard';
 
 export default class NewPaymentMethod extends Component {
   constructor(props) {
@@ -196,6 +197,9 @@ export default class NewPaymentMethod extends Component {
         && this.state.expiryValid
       )
     });
+
+    // proceed next
+    if (cardValid) this.refs.expiry.refs.field.focus();
   }
 
   onChangeExpiry(expiry) {
@@ -218,6 +222,9 @@ export default class NewPaymentMethod extends Component {
         && this.state.numberValid
       )
     });
+
+    // proceed next
+    if (expiryValid) this.refs.cvc.refs.field.focus();
   }
 
   onChangeCvc(cvc) {
@@ -237,6 +244,9 @@ export default class NewPaymentMethod extends Component {
         && this.state.numberValid
       )
     });
+
+    // hide input
+    if (cvcValid) this.refs.cvc.refs.field.blur();
   }
 
   onChangeName(name) {
@@ -268,61 +278,82 @@ export default class NewPaymentMethod extends Component {
         <Modal
           transparent
           visible={this.state.processing}
-          animationType='slide'>
+          animationType='fade'>
           <ProgressBlocker
             message='Contacting bank..' />
         </Modal>
         <TitleBar title='Add a new Credit Card' />
         <View style={styles.content}>
+          <PaymentCard
+            ref='card'
+            number={this.state.number}
+            cvc={this.state.cvc}
+            name={this.state.name}
+            expiryMonth={
+              this.state.expiry.split('/')[0]
+            }
+            expiryYear={
+              this.state.expiry.split('/').length > 1
+              ? this.state.expiry.split('/')[1]
+              : '00'
+            }
+            style={styles.card} />
           <SingleLineInput
+            autoFocus
             autoCapitalize='words'
             placeholder='Johnny Appleseed'
             onChangeText={this.onChangeName}
+            onFocus={() => this.refs.card.front()}
             label='Cardholder Name' />
           <SingleLineInput
             keyboardType='numeric'
             placeholder='●●●● ●●●● ●●●● ●●●●'
             onChangeText={this.onChangeNumber}
+            onFocus={() => this.refs.card.front()}
             maxLength={19}
             value={this.state.number}
             label='Card Number' />
           <SingleLineInput
+            ref='expiry'
             keyboardType='numeric'
             placeholder='MM/YY'
             onChangeText={this.onChangeExpiry}
             value={this.state.expiry}
+            onFocus={() => this.refs.card.front()}
             maxLength={5}
             label='Expiry' />
           <SingleLineInput
             isBottom
             noMargin
+            ref='cvc'
             keyboardType='numeric'
             placeholder='●●●'
             onChangeText={this.onChangeCvc}
+            onFocus={() => this.refs.card.back()}
             maxLength={3}
             label='CVC' />
-          <View style={styles.security}>
-            <CircleIcon
-              fontAwesome
-              color={Colors.Transparent}
-              checkColor={Colors.AlternateText}
-              icon='cc-stripe'
-              size={28} />
-            <Text style={styles.securityText}>
-              Your credit card data is handled by Stripe and never stored on our servers.
-            </Text>
-          </View>
-          <Button
-            ref='submit'
-            isDisabled={!this.state.ready}
-            onPress={this.addCard}
-            onPressDisabled={() => Alert.alert(
-              'Unable to add card',
-              'Please fill in all fields before submitting'
-            )}
-            color={Colors.Primary}
-            label='Add Credit Card' />
         </View>
+        <View style={styles.security}>
+          <CircleIcon
+            fontAwesome
+            color={Colors.Transparent}
+            checkColor={Colors.AlternateText}
+            icon='cc-stripe'
+            size={28} />
+          <Text style={styles.securityText}>
+            Your credit card data is handled by Stripe and never stored on our servers.
+          </Text>
+        </View>
+        <Button
+          ref='submit'
+          isDisabled={!this.state.ready}
+          onPress={this.addCard}
+          onPressDisabled={() => Alert.alert(
+            'Unable to add card',
+            'Please fill in all fields before submitting'
+          )}
+          color={Colors.Primary}
+          label='Add Credit Card' />
         <CloseFullscreenButton />
       </View>
     );
@@ -332,25 +363,34 @@ export default class NewPaymentMethod extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
     backgroundColor: Colors.ModalBackground
   },
 
   content: {
-    flex: 1,
     alignSelf: 'stretch',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: Colors.Foreground
+  },
+
+  card: {
+    marginBottom: Sizes.InnerFrame
   },
 
   security: {
-    margin: Sizes.InnerFrame / 2,
+    margin: Sizes.InnerFrame,
+    marginTop: Sizes.InnerFrame / 2,
+    paddingLeft: Sizes.OuterFrame,
+    paddingRight: Sizes.OuterFrame,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'center'
   },
 
   securityText: {
-    marginLeft: Sizes.InnerFrame / 2,
-    marginRight: Sizes.InnerFrame / 2,
+    flex: 1,
+    flexWrap: 'wrap',
+    marginLeft: Sizes.InnerFrame,
     fontSize: Sizes.SmallText,
     color: Colors.AlternateText
   }

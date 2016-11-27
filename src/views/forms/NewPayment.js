@@ -58,6 +58,7 @@ export default class NewPayment extends Component {
 
       // stripe asks for cents
       value: this.state.value * 100,
+      description: this.props.description,
       stripeCardId: this.state.stripeCardId,
       stripeCustomerId: this.state.stripeCustomerId,
       billingId: this.state.billingId,
@@ -104,7 +105,7 @@ export default class NewPayment extends Component {
         <Modal
           transparent
           visible={this.state.processing}
-          animationType='slide'>
+          animationType='fade'>
           <ProgressBlocker
             message='Processing payment..' />
         </Modal>

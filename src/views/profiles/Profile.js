@@ -74,7 +74,7 @@ export default class Profile extends Component {
           <View style={styles.body}>
             <View style={styles.topContainer}>
               <Text style={styles.name}>
-                {this.state.displayName}
+                {this.state.displayName || 'Somebody'}
               </Text>
               <Avatar
                 outline
@@ -93,7 +93,7 @@ export default class Profile extends Component {
             <InformationField
               isBottom
               label="Contests Entered"
-              info={this.state.countAttempts} />
+              info={this.state.countAttempts || 0} />
           </View>
         </ParallaxScrollView>
         <CloseFullscreenButton />

@@ -65,19 +65,7 @@ export default class PaymentMethod extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TitleBar title={
-          `${
-            (() => {
-              switch(this.state.type) {
-                case 1: return 'MasterCard';
-                case 2: return 'American Express';
-                default: return 'Visa';
-              }
-            })()
-          } ending in ${
-            this.state.lastFour || '0000'
-          }`
-        } />
+        <TitleBar title='Transaction History' />
         <View style={styles.content}>
           <PaymentCard {...this.state} />
         </View>

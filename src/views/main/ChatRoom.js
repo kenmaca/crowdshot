@@ -19,8 +19,8 @@ export default class ChatRoom extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rawEntries: {},
-      entries: new ListView.DataSource({
+      rawChat: {},
+      activeChat: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 != r2
       })
     };
@@ -33,29 +33,20 @@ export default class ChatRoom extends Component {
   }
 
   componentDidMount() {
-    // add to owner's list
-    Database.ref(
-      `profiles/${
-        Firebase.auth().currentUser.uid
-      }/activeChat/${
-        this.props.contestId
-      }`
-    ).set(true);
 
     this.listener = this.ref.on('value', data => {
-
-      if (data.exists()) {
-        let blob = data.val();
+        let blob = data.val() || {};
         this.setState({
-          rawEntries: blob,
-          entries: new ListView.DataSource({
+          rawChat: blob,
+          activeChat: new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
           }).cloneWithRows(
             Object.keys(blob)
           )
         });
-      }
-      this.refs.title.clearLoader();
+
+        // and clear loader
+        this.refs.title.clearLoader();
     });
   }
 
@@ -97,10 +88,7 @@ export default class ChatRoom extends Component {
               }
             }
           ]}>
-          <ChatCard
-            chatId={contestId}
-
-             />
+          <ChatCard chatId={contestId} />
       </Swipeout>
       </View>
     )
@@ -111,14 +99,14 @@ export default class ChatRoom extends Component {
       <View style={styles.container}>
         <TitleBar
           clearLoader
-          ref='title'
-          title='Your Contest Chat Room' />
+          title='Crowd Chat'
+          ref='title' />
         <View style={styles.content}>
           <ListView
             key={Math.random()}
             scrollEnabled
-            dataSource={this.state.entries}
-            style={styles.entries}
+            dataSource={this.state.activeChat}
+            style={styles.activeChat}
             renderRow={this.renderRow.bind(this)} />
         </View>
         <CloseFullscreenButton />
@@ -140,12 +128,16 @@ const styles = StyleSheet.create({
     flex: 1
   },
 
-  entries: {
+  activeChat: {
     flex: 1
   },
 
   chatContainer: {
     margin: Sizes.InnerFrame / 2,
     marginBottom: 0
+  },
+
+  title: {
+    alignItems: 'center'
   }
 })

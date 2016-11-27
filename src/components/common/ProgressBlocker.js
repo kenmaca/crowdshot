@@ -7,17 +7,22 @@ import {
 import {
   Colors, Sizes
 } from '../../Const';
+import * as Animatable from 'react-native-animatable';
 
 export default class ProgressBlocker extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.modal}>
+        <Animatable.View
+          animation='bounceIn'
+          duration={500}
+          delay={250}
+          style={styles.modal}>
           <ActivityIndicator />
           <Text style={styles.message}>
             {this.props.message}
           </Text>
-        </View>
+        </Animatable.View>
       </View>
     );
   }
