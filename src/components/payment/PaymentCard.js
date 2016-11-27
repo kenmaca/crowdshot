@@ -21,6 +21,8 @@ export default class PaymentCard extends Component {
 
     // methods
     this.flip = this.flip.bind(this);
+    this.front = this.front.bind(this);
+    this.back = this.back.bind(this);
   }
 
   flip() {
@@ -29,11 +31,39 @@ export default class PaymentCard extends Component {
     });
   }
 
+  back() {
+    this.setState({
+      back: true
+    });
+  }
+
+  front() {
+    this.setState({
+      back: false
+    });
+  }
+
   render() {
+
+    // right pad incomplete groups with 0's, then left pad
+    // with groups
+    let numbers = (this.props.number || '').split(' ').map(group => {
+      group = '' + group;
+      let pad = '0000';
+      return group + pad.substring(0, pad.length - group.length);
+    });
+    numbers = [
+      ...numbers,
+      ...new Array(4 - numbers.length).fill('0000')
+    ];
+
     return (
       <TouchableOpacity
         onPress={this.flip}
-        style={styles.touchable}>
+        style={[
+          styles.touchable,
+          this.props.style
+        ]}>
         <FlipCard
           clickable={false}
           flip={this.state.back}
@@ -44,16 +74,40 @@ export default class PaymentCard extends Component {
             <View style={styles.front}>
               <View style={styles.number}>
                 <Text style={styles.numberGroup}>
-                  ●●●●
+                  {
+                    this.props.number
+                    ? numbers[0]: (
+                      this.props.lastFour
+                      ? '●●●●': '0000'
+                    )
+                  }
                 </Text>
                 <Text style={styles.numberGroup}>
-                  ●●●●
+                  {
+                    this.props.number
+                    ? numbers[1]: (
+                      this.props.lastFour
+                      ? '●●●●': '0000'
+                    )
+                  }
                 </Text>
                 <Text style={styles.numberGroup}>
-                  ●●●●
+                  {
+                    this.props.number
+                    ? numbers[2]: (
+                      this.props.lastFour
+                      ? '●●●●': '0000'
+                    )
+                  }
                 </Text>
                 <Text style={styles.numberGroup}>
-                  {this.props.lastFour || '0000'}
+                  {
+                    this.props.number
+                    ? numbers[3]: (
+                      this.props.lastFour
+                      ? this.props.lastFour: '0000'
+                    )
+                  }
                 </Text>
               </View>
               <View style={styles.lowerContainer}>
@@ -104,7 +158,7 @@ export default class PaymentCard extends Component {
               <View style={styles.stripe} />
               <View style={styles.signature}>
                 <Text style={styles.cvv}>
-                  ●●●
+                  {this.props.cvc || '●●●'}
                 </Text>
               </View>
               <View style={styles.shiny} />
