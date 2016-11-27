@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, ListView
 } from 'react-native';
 import {
   Colors, Sizes
@@ -17,11 +17,17 @@ import {
 import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import PaymentCard from '../../components/payment/PaymentCard';
+import Transaction from '../../components/payment/Transaction';
+import InputSectionHeader from '../../components/common/InputSectionHeader';
 
 export default class PaymentMethod extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      transactionDataSource: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1 !== r2
+      })
+    };
 
     this.ref = Database.ref(
       `billing/${
@@ -33,8 +39,14 @@ export default class PaymentMethod extends Component {
   componentDidMount() {
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
+        let blob = data.val();
         this.setState({
-          ...data.val()
+          ...blob,
+          transactionDataSource: new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 !== r2
+          }).cloneWithRows(
+            Object.keys(blob.transactions || {})
+          )
         });
       }
     });
@@ -44,17 +56,40 @@ export default class PaymentMethod extends Component {
     this.listener && this.ref.off('value', this.listener);
   }
 
+  renderRow(transactionId) {
+    return (
+      <Transaction transactionId={transactionId} />
+    );
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <TitleBar title={
-          `Visa ending in ${
+          `${
+            (() => {
+              switch(this.state.type) {
+                case 1: return 'MasterCard';
+                case 2: return 'American Express';
+                default: return 'Visa';
+              }
+            })()
+          } ending in ${
             this.state.lastFour || '0000'
           }`
         } />
         <View style={styles.content}>
           <PaymentCard {...this.state} />
         </View>
+        <InputSectionHeader
+          offset={Sizes.InnerFrame}
+          label='Recent Transactions' />
+        <ListView
+          key={Math.random()}
+          scrollEnabled
+          dataSource={this.state.transactionDataSource}
+          style={styles.transactions}
+          renderRow={this.renderRow.bind(this)} />
         <CloseFullscreenButton />
       </View>
     );
@@ -72,7 +107,12 @@ const styles = StyleSheet.create({
     padding: Sizes.InnerFrame,
     paddingBottom: Sizes.InnerFrame * 2,
     paddingTop: 0,
+    marginBottom: Sizes.InnerFrame,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+
+  transactions: {
+    flex: 1
   }
 });
