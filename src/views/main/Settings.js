@@ -74,7 +74,7 @@ export default class Settings extends Component {
             <InformationField
               isBottom
               pressable
-              label='Payment Methods' />
+              label='Payment Methods & Transaction History' />
           </TouchableOpacity>
           <View style={styles.footer}>
             <Image
