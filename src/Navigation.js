@@ -160,6 +160,13 @@ export default class Navigation extends Component {
                 title='Join a Contest'
                 iconName='camera'
                 icon={TabButton} />
+              <Scene
+                hideNavBar
+                key='mainChat'
+                component={ChatRoom}
+                title='Crowd Chat'
+                iconName='chat-bubble'
+                icon={TabButton} />
             </Scene>
           </Scene>
         </Router>
