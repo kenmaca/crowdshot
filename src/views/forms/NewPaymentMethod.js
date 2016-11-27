@@ -278,7 +278,7 @@ export default class NewPaymentMethod extends Component {
         <Modal
           transparent
           visible={this.state.processing}
-          animationType='slide'>
+          animationType='fade'>
           <ProgressBlocker
             message='Contacting bank..' />
         </Modal>

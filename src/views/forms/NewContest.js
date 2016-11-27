@@ -115,7 +115,7 @@ export default class NewContest extends Component {
         <Modal
           transparent
           visible={this.state.processing}
-          animationType='slide'>
+          animationType='fade'>
           <ProgressBlocker
             message='Setting up your Contest..' />
         </Modal>
