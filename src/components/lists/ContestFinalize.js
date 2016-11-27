@@ -108,7 +108,10 @@ export default class ContestFinalize extends Component {
         }/completedContests/${
           this.props.contestId
         }`
-      ).set(true);
+      ).set({
+        '.value': true,
+        '.priority': -this.props.endDate
+      });
 
       // show view
       this.setState({

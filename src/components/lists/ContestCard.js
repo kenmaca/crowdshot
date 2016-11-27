@@ -50,14 +50,18 @@ export default class ContestCard extends Component {
   }
 
   componentDidMount() {
-    //add to owner's list
+
+    // add to owner's list
     Database.ref(
       `profiles/${
         Firebase.auth().currentUser.uid
       }/activeChat/${
         this.props.contestId
       }`
-    ).set(true);
+    ).set({
+      '.value': true,
+      '.priority': -Date.now()
+    });
 
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
@@ -120,7 +124,10 @@ export default class ContestCard extends Component {
                   }/prizes/${
                     prizeId
                   }`
-                ).set(true)
+                ).set({
+                  '.value': true,
+                  '.priority': -Date.now()
+                })
               });
             }} />
         </Photo>
@@ -304,7 +311,10 @@ export default class ContestCard extends Component {
                           }/cancelledContests/${
                             this.props.contestId
                           }`
-                        ).set(true);
+                        ).set({
+                          '.value': true,
+                          '.priority': -this.state.dateCreated
+                        });
 
                         // and out
                         Actions.mainMain();

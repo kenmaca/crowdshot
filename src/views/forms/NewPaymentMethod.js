@@ -121,7 +121,10 @@ export default class NewPaymentMethod extends Component {
           }/billing/${
             billingId
           }`
-        ).set(true);
+        ).set({
+          '.value': true,
+          '.priority': -Date.now()
+        });
 
         // block view and wait for successful card add
         this.setState({
