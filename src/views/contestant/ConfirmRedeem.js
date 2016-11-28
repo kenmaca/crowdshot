@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, ListView, Alert
+  View, StyleSheet, Text, ListView, Alert, Modal, Image
 } from 'react-native';
 import {
   Colors, Sizes
@@ -27,7 +27,8 @@ export default class ConfirmRedeem extends Component {
     this.state = {
       profile: {},
       cartList: [],
-      cartAmt: 0
+      cartAmt: 0,
+      finalizedVisible: false
     };
 
     this.profileRef = Database.ref(
@@ -105,6 +106,10 @@ export default class ConfirmRedeem extends Component {
       '.value': true,
       '.priority': -Date.now()
     });
+
+    this.setState({
+      finalizedVisible: true
+    })
   }
 
   renderCart(){
@@ -201,6 +206,44 @@ export default class ConfirmRedeem extends Component {
           onPress={() => this.confirm()}
           label={"Confirm"} />
         <CloseFullscreenButton />
+        <Modal
+          visible={this.state.finalizedVisible}
+          animationType='slide'>
+          <View style={styles.finalizedContainer}>
+            <View style={styles.textContainer}>
+              <Text style={[
+                styles.text,
+                styles.title
+              ]}>
+                Yussss!
+              </Text>
+              <Text style={[
+                styles.text,
+                styles.description
+              ]}>
+                You've selected the awards you deserved for your awesome photos.
+                We will ship out your awards very soon!
+              </Text>
+              <Button
+                onPress={() => {
+                  // remove overlay
+                  this.setState({
+                    finalizedVisible: false
+                  });
+
+                  // completed contest view
+                  Actions.pop({
+                    popNum: 2
+                  });
+                }}
+                label='Done'
+                color={Colors.Background} />
+            </View>
+            <Image
+              source={require('../../../res/img/finalized.png')}
+              style={styles.finalizedPhoto} />
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -254,6 +297,39 @@ const styles = StyleSheet.create({
   cartSummaryText: {
     color: Colors.AlternateText,
     fontWeight: '500',
-  }
+  },
 
+  finalizedContainer: {
+    flex: 1,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.Primary
+  },
+
+  finalizedPhoto: {
+    width: 350,
+    height: 350
+  },
+
+  textContainer: {
+    padding: Sizes.OuterFrame,
+    alignItems: 'center'
+  },
+
+  title: {
+    marginTop: Sizes.InnerFrame * 3,
+    fontSize: Sizes.H1,
+    fontWeight: '600'
+  },
+
+  text: {
+    color: Colors.AlternateText
+  },
+
+  description: {
+    padding: Sizes.InnerFrame,
+    textAlign: 'center',
+    fontSize: Sizes.H4
+  },
 });
