@@ -72,6 +72,10 @@ export default class ConfirmRedeem extends Component {
     this.profileListener && this.profileRef.off('value', this.profileListener);
   }
 
+  confirm(){
+    
+  }
+
   renderCart(){
     let { cartList } = this.state;
     let cartView = [];
@@ -125,7 +129,7 @@ export default class ConfirmRedeem extends Component {
             <View style={[styles.cartItem, styles.cartSummary]}>
               <View>
                 <Text style={styles.cartSummaryText}>
-                  Total
+                  Total Redemption
                 </Text>
               </View>
               <View>
@@ -134,12 +138,36 @@ export default class ConfirmRedeem extends Component {
                 </Text>
               </View>
             </View>
+            <View style={[styles.cartItem, styles.balanceSummary]}>
+              <View>
+                <Text style={styles.cartSummaryText}>
+                  Your Current Balance
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.cartSummaryText}>
+                  {'$' + this.state.profile.wallet}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.cartItem}>
+              <View>
+                <Text style={styles.cartSummaryText}>
+                  Your Balance After Redemption
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.cartSummaryText}>
+                  {'$' + (this.state.profile.wallet - this.state.cartAmt)}
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
         <Button
           squareBorders
           color={Colors.Primary}
-          onPress={() => this.checkOut()}
+          onPress={() => this.confirm()}
           label={"Confirm"} />
         <CloseFullscreenButton />
       </View>
@@ -166,7 +194,7 @@ const styles = StyleSheet.create({
   },
 
   cartContainer: {
-    marginVertical: Sizes.InnerFrame,
+    marginVertical: Sizes.InnerFrame/2,
     marginHorizontal: Sizes.InnerFrame*2,
   },
 
@@ -180,6 +208,11 @@ const styles = StyleSheet.create({
     paddingTop: Sizes.InnerFrame/2,
     borderTopWidth: 1,
     borderColor: Colors.AlternateText
+  },
+
+  balanceSummary: {
+    marginTop: Sizes.InnerFrame/2,
+    paddingTop: Sizes.InnerFrame/2,
   },
 
   cartText: {
