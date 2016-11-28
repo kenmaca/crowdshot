@@ -78,41 +78,51 @@ export default class ConfirmRedeem extends Component {
   }
 
   confirm(){
-    let { cartList } = this.state;
-    let awards = {};
-    for (var cartItem in cartList){
-      awards[cartList[cartItem].id] = {
-        quantity: cartList[cartItem].quantity
+    if (this.state.profile.wallet > this.state.cartAmt){
+      let { cartList } = this.state;
+      let awards = {};
+      for (var cartItem in cartList){
+        awards[cartList[cartItem].id] = {
+          quantity: cartList[cartItem].quantity
+        }
       }
+      //create order in db
+      let orderId = this.ordersRef.push({
+        '.value': {
+          createdBy: Firebase.auth().currentUser.uid,
+          dateCreated: Date.now(),
+          awards: awards,
+          status: 'Submitted'
+        },
+        '.priority': -Date.now()
+      }).key
+
+      //add order reference in profile to db
+      Database.ref(
+        `profiles/${
+          Firebase.auth().currentUser.uid
+        }/orders/${
+          orderId
+        }`
+      ).set({
+        '.value': true,
+        '.priority': -Date.now()
+      });
+
+      //TODO: add transaction stuff to deduct wallet
+
+      this.setState({
+        finalizedVisible: true
+      })
+    } else {
+      Alert.alert(
+        'Insufficient Balance',
+        'You don\'t have enough balance to cover the awards you have chosen!',
+        [
+          {text: 'OK', onPress: () => Actions.pop()}
+        ]
+      )
     }
-    //create order in db
-    let orderId = this.ordersRef.push({
-      '.value': {
-        createdBy: Firebase.auth().currentUser.uid,
-        dateCreated: Date.now(),
-        awards: awards,
-        status: 'Submitted'
-      },
-      '.priority': -Date.now()
-    }).key
-
-    //add order reference in profile to db
-    Database.ref(
-      `profiles/${
-        Firebase.auth().currentUser.uid
-      }/orders/${
-        orderId
-      }`
-    ).set({
-      '.value': true,
-      '.priority': -Date.now()
-    });
-
-    //TODO: add transaction stuff to deduct wallet
-
-    this.setState({
-      finalizedVisible: true
-    })
   }
 
   renderCart(){
