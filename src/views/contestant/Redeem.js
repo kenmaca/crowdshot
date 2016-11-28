@@ -136,7 +136,7 @@ export default class Redeem extends Component {
       Actions.address({
         afterSubmit: Actions.confirmRedeem({
           cart: this.state.cart,
-          cartAmt: this.state.cartAmt
+          rawAwards: this.state.rawAwards
         })
       });
     } else {
@@ -152,13 +152,13 @@ export default class Redeem extends Component {
             Actions.address({
               afterSubmit: Actions.confirmRedeem({
                 cart: this.state.cart,
-                cartAmt: this.state.cartAmt
+                rawAwards: this.state.rawAwards
               })
             })
           }},
           {text: 'Confirm', onPress: () => Actions.confirmRedeem({
             cart: this.state.cart,
-            cartAmt: this.state.cartAmt,
+            rawAwards: this.state.rawAwards,
           })}
         ]
       )

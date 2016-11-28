@@ -26,6 +26,7 @@ export default class ConfirmRedeem extends Component {
     super(props);
     this.state = {
       profile: {},
+      cartList: []
     };
 
     this.profileRef = Database.ref(
@@ -44,13 +45,34 @@ export default class ConfirmRedeem extends Component {
         });
       }
     });
+
+    let {cart, rawAwards} = this.props;
+    let cartList = [];
+    for (award in rawAwards){
+      if (cart[award]){
+        let cartItem = {};
+        cartItem.id = award;
+        cartItem.name = rawAwards[award].name;
+        cartItem.cost = rawAwards[award].cost;
+        cartItem.quantity = cart[award];
+        cartList.push(cartItem);
+      }
+    }
+    this.setState({
+      cartList
+    });
+
   }
 
   componentWillUnmount() {
     this.profileListener && this.profileRef.off('value', this.profileListener);
   }
 
-  render() {
+  renderCart(){
+
+  }
+
+  render(){
     let { profile } = this.state
     return (
       <View style={styles.container}>
