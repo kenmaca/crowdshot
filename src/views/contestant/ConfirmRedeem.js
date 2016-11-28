@@ -41,13 +41,15 @@ export default class ConfirmRedeem extends Component {
     this.profileListener = this.profileRef.on('value', data => {
       if (data.exists()) {
         this.setState({
-          profile: data.val()
+          profile: data.val(),
+          cartAmt: 0
         });
       }
     });
 
     let {cart, rawAwards} = this.props;
     let cartList = [];
+    let cartAmt = 0;
     for (award in rawAwards){
       if (cart[award]){
         let cartItem = {};
@@ -56,10 +58,12 @@ export default class ConfirmRedeem extends Component {
         cartItem.cost = rawAwards[award].cost;
         cartItem.quantity = cart[award];
         cartList.push(cartItem);
+        cartAmt += cartItem.cost * cartItem.quantity;
       }
     }
     this.setState({
-      cartList
+      cartList,
+      cartAmt
     });
 
   }
@@ -69,11 +73,35 @@ export default class ConfirmRedeem extends Component {
   }
 
   renderCart(){
-
+    let { cartList } = this.state;
+    let cartView = [];
+    if (this.state.cartList){
+      for (var cartItem in cartList){
+        cartView.push(
+          <View
+            key={cartList[cartItem].id}
+            style={styles.cartItem}>
+            <View>
+              <Text style={styles.cartText}>
+                {cartList[cartItem].name
+                  + '   x ' + cartList[cartItem].quantity}
+              </Text>
+            </View>
+            <View>
+              <Text style={styles.cartText}>
+                {'$' + cartList[cartItem].quantity * cartList[cartItem].cost}
+              </Text>
+            </View>
+          </View>
+        )
+      }
+    }
+    return cartView;
   }
 
   render(){
     let { profile } = this.state
+
     return (
       <View style={styles.container}>
         <TitleBar
@@ -92,6 +120,21 @@ export default class ConfirmRedeem extends Component {
           <InputSectionHeader
             offset={Sizes.InnerFrame}
             label='Your cart' />
+          <View style={styles.cartContainer}>
+            {this.renderCart()}
+            <View style={[styles.cartItem, styles.cartSummary]}>
+              <View>
+                <Text style={styles.cartSummaryText}>
+                  Total
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.cartSummaryText}>
+                  {'$' + this.state.cartAmt}
+                </Text>
+              </View>
+            </View>
+          </View>
         </View>
         <Button
           squareBorders
@@ -122,8 +165,31 @@ const styles = StyleSheet.create({
     marginBottom: Sizes.OuterFrame
   },
 
-  entryContainer: {
-    margin: Sizes.InnerFrame / 2,
-    marginBottom: 0,
+  cartContainer: {
+    marginVertical: Sizes.InnerFrame,
+    marginHorizontal: Sizes.InnerFrame*2,
+  },
+
+  cartItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+
+  cartSummary: {
+    marginTop: Sizes.InnerFrame/2,
+    paddingTop: Sizes.InnerFrame/2,
+    borderTopWidth: 1,
+    borderColor: Colors.AlternateText
+  },
+
+  cartText: {
+    color: Colors.AlternateText,
+    fontWeight: '100',
+  },
+
+  cartSummaryText: {
+    color: Colors.AlternateText,
+    fontWeight: '500',
   }
+
 });

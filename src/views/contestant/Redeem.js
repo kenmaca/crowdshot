@@ -170,7 +170,6 @@ export default class Redeem extends Component {
     let cartCount = 0;
     for (award in rawAwards){
       cartCount += cart[award] || 0;
-      console.log("cart awardId",award)
     }
     return cartCount;
   }
