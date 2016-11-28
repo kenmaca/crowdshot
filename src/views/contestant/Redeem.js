@@ -14,11 +14,13 @@ import {
 } from 'react-native-router-flux';
 
 // components
+import Button from '../../components/common/Button';
 import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import AwardCard from '../../components/lists/AwardCard';
+import Swipeout from 'react-native-swipeout';
 
-export default class Settings extends Component {
+export default class Redeem extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,7 +28,9 @@ export default class Settings extends Component {
       rawAwards: {},
       awards: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
-      })
+      }),
+      cartAmt: 0,
+      cart: {}
     };
 
     this.ref = Database.ref(
@@ -38,6 +42,9 @@ export default class Settings extends Component {
         Firebase.auth().currentUser.uid
       }`
     );
+
+    this.addToCart = this.addToCart.bind(this);
+    this.showAwardDetail = this.showAwardDetail.bind(this);
   }
 
   componentDidMount() {
@@ -75,10 +82,97 @@ export default class Settings extends Component {
   renderRow(awardId) {
     return (
       <View style={styles.entryContainer}>
-        <AwardCard
-          awardId={awardId} />
+        <Swipeout
+          right={[
+            {
+              text: 'Remove',
+              color: Colors.Text,
+              backgroundColor: Colors.Cancel,
+              onPress: () => {
+                let { cart, cartAmt, rawAwards} = this.state;
+                if (cart[awardId] && cart[awardId] > 0) {
+                  cart[awardId]--;
+                }
+                cartAmt -= rawAwards[awardId].cost;
+                this.setState({
+                  cart,
+                  cartAmt
+                });
+              }
+            }
+          ]}>
+          <AwardCard
+            awardId={awardId}
+            balance={this.state.profile.wallet - this.state.cartAmt}
+            addToCart={this.addToCart}
+            showAwardDetail={this.showAwardDetail}
+            inCart={this.state.cart[awardId]} />
+        </Swipeout>
       </View>
     );
+  }
+
+  addToCart(awardId){
+    let { cart, cartAmt, rawAwards} = this.state;
+    if (cart[awardId]) {
+      cart[awardId]++;
+    } else {
+      cart[awardId] = 1;
+    }
+    cartAmt += rawAwards[awardId].cost;
+    this.setState({
+      cart,
+      cartAmt
+    });
+  }
+
+  showAwardDetail(awardId){
+
+  }
+
+  checkOut(){
+    let { profile } = this.state;
+    if (!profile.address || !profile.city || !profile.country) {
+      Actions.address({
+        afterSubmit: Actions.confirmRedeem({
+          cart: this.state.cart,
+          cartAmt: this.state.cartAmt
+        })
+      });
+    } else {
+      let longAddress = profile.address + ', ' + profile.city + ', '
+        + (profile.region ? profile.region + ', ' : '')
+        + profile.country
+        + (profile.postal ? ', ' + profile.postal : '');
+      Alert.alert(
+        'Verify Your Shipping Address',
+        longAddress,
+        [
+          {text: 'Update', onPress: () => {
+            Actions.address({
+              afterSubmit: Actions.confirmRedeem({
+                cart: this.state.cart,
+                cartAmt: this.state.cartAmt
+              })
+            })
+          }},
+          {text: 'Confirm', onPress: () => Actions.confirmRedeem({
+            cart: this.state.cart,
+            cartAmt: this.state.cartAmt,
+          })}
+        ]
+      )
+    }
+  }
+
+  getCartCount(){
+    let {cart, rawAwards} = this.state;
+    let cartCount = 0;
+    for (award in rawAwards){
+      cartCount += cart[award] || 0;
+      console.log("cart awardId",award)
+    }
+    return cartCount;
   }
 
   render() {
@@ -91,18 +185,28 @@ export default class Settings extends Component {
           rightIcon='trophy'
           rightTitle={
             `$${
-              this.state.profile.wallet
-              || 0
+              (this.state.profile.wallet
+              || 0) - this.state.cartAmt
             }`
           }/>
         <View style={styles.content}>
           <ListView
-            key={Math.random()}
             scrollEnabled
             dataSource={this.state.awards}
             style={styles.entries}
             renderRow={this.renderRow.bind(this)} />
         </View>
+        <Button
+          squareBorders
+          color={Colors.Primary}
+          onPress={() => this.checkOut()}
+          label={"Check Out"}
+          isDisabled={this.getCartCount() <= 0}
+          onPressDisabled={() => Alert.alert(
+            'Empty Cart',
+            'You don\'t have anything in your cart'
+          )}
+          disabledColor={Colors.MediumDarkOverlay} />
         <CloseFullscreenButton />
       </View>
     );
