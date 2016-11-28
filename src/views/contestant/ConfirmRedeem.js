@@ -91,6 +91,7 @@ export default class ConfirmRedeem extends Component {
         createdBy: Firebase.auth().currentUser.uid,
         dateCreated: Date.now(),
         awards: awards
+        status: 'Submitted'
       },
       '.priority': -Date.now()
     }).key
