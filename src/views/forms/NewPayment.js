@@ -54,15 +54,18 @@ export default class NewPayment extends Component {
     });
 
     let transactionId = Database.ref('transactions').push({
-      createdBy: Firebase.auth().currentUser.uid,
+      '.value': {
+        createdBy: Firebase.auth().currentUser.uid,
 
-      // stripe asks for cents
-      value: this.state.value * 100,
-      description: this.props.description,
-      stripeCardId: this.state.stripeCardId,
-      stripeCustomerId: this.state.stripeCustomerId,
-      billingId: this.state.billingId,
-      dateCreated: Date.now(),
+        // stripe asks for cents
+        value: this.state.value * 100,
+        description: this.props.description,
+        stripeCardId: this.state.stripeCardId,
+        stripeCustomerId: this.state.stripeCustomerId,
+        billingId: this.state.billingId,
+        dateCreated: Date.now()
+      },
+      '.priority': -Date.now()
     }).key;
     let ref = Database.ref(
       `transactions/${transactionId}`
@@ -127,9 +130,9 @@ export default class NewPayment extends Component {
                 options=
                 {
                   {
-                    0:[0,1,5,10],
-                    1:[20,30,50,60],
-                    2:[60,70,80,100]
+                    0: [0, 1, 5, 10],
+                    1: [20, 30, 50, 60],
+                    2: [60, 70, 80, 100]
                   }
                 }
                 isBottom

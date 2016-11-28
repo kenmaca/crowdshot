@@ -59,24 +59,27 @@ export default class NewContest extends Component {
 
         // now create it
         let contestId = Database.ref('contests').push({
+          '.value': {
 
-          // stripe requires cents to be stored
-          bounty: transaction.value / 100,
-          dateCreated: dateCreated,
+            // stripe requires cents to be stored
+            bounty: transaction.value / 100,
+            dateCreated: dateCreated,
 
-          // default a hour duration
-          endDate: dateCreated + 3600000,
-          instructions: this.state.instructions,
-          prizes: {
-            [this.state.prizeId]: true
+            // default a hour duration
+            endDate: dateCreated + 3600000,
+            instructions: this.state.instructions,
+            prizes: {
+              [this.state.prizeId]: true
+            },
+            referencePhotoId: this.state.referencePhotoId,
+            createdBy: Firebase.auth().currentUser.uid,
+            near: `${
+              location[0].feature
+            } at ${
+              location[0].subLocality
+            }`
           },
-          referencePhotoId: this.state.referencePhotoId,
-          createdBy: Firebase.auth().currentUser.uid,
-          near: `${
-            location[0].feature
-          } at ${
-            location[0].subLocality
-          }`
+          '.priority': -(dateCreated + 3600000)
         }).key;
 
         // location via GeoFire
@@ -91,10 +94,12 @@ export default class NewContest extends Component {
           }/contests/${
             contestId
           }`
-        ).set(true);
+        ).set({
+          '.value': true,
+          '.priority': -(dateCreated + 3600000)
+        });
 
         // and back out
-        // TODO: send directly to the card expanded
         this.setState({
           prizeId: null,
           location: null,
@@ -102,6 +107,7 @@ export default class NewContest extends Component {
           processing: false,
           instructions: DEFAULT_INSTRUCTIONS
         });
+        
         Actions.contest({
           contestId: contestId
         });

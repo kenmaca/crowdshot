@@ -22,6 +22,7 @@ export default class ContestPhotos extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      contest: {},
       entries: [],
       thumbnails: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2

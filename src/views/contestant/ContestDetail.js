@@ -198,21 +198,24 @@ export default class ContestDetail extends Component {
               });
 
               let entryId = this.entriesRef.push({
-                createdBy: Firebase.auth().currentUser.uid,
-                dateCreated: Date.now(),
-                photoId: photoId,
+                '.value': {
+                  createdBy: Firebase.auth().currentUser.uid,
+                  dateCreated: Date.now(),
+                  photoId: photoId
+                },
+                '.priority': -Date.now()
               }).key
 
               // and add to profile's list of entries
               Database.ref(
                 `profiles/${
                   Firebase.auth().currentUser.uid
-                }/entries`
-              ).update({
-                [entryId]: {
-                  '.value': this.props.contestId,
-                  '.priority': 0 - Date.now()
-                }
+                }/entries/${
+                  entryId
+                }`
+              ).set({
+                '.value': this.props.contestId,
+                '.priority': -Date.now()
               });
 
               // and update profile counts
