@@ -107,6 +107,8 @@ export default class ConfirmRedeem extends Component {
       '.priority': -Date.now()
     });
 
+    //TODO: add transaction stuff to deduct wallet
+
     this.setState({
       finalizedVisible: true
     })
