@@ -85,34 +85,6 @@ export default class ContestFinalize extends Component {
         isComplete: true
       });
 
-      // trigger server processing backlog
-      Database.ref(
-        `contestTasks/${
-          this.props.contestId
-        }`
-      ).set(true);
-
-      // update user's list of contests
-      Database.ref(
-        `profiles/${
-          Firebase.auth().currentUser.uid
-        }/contests/${
-          this.props.contestId
-        }`
-      ).remove();
-
-      // add to completed list
-      Database.ref(
-        `profiles/${
-          Firebase.auth().currentUser.uid
-        }/completedContests/${
-          this.props.contestId
-        }`
-      ).set({
-        '.value': true,
-        '.priority': -this.props.endDate
-      });
-
       // show view
       this.setState({
         finalizedVisible: true
