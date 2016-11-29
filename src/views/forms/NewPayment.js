@@ -30,7 +30,8 @@ export default class NewPayment extends Component {
       stripeCustomerId: null,
       billingId: null,
       value: null,
-      processing: false
+      processing: false,
+      buttonPress: true
     };
 
     this.charge = this.charge.bind(this);
@@ -136,6 +137,9 @@ export default class NewPayment extends Component {
                 onSelected={amount => this.setState({
                   value: amount
                 })}
+                onButtonPress={change => this.setState({
+                  buttonPress: change
+                })}
                 subtitle={
                   this.props.priceSubtext
                   || 'Awarded to the winner'
@@ -161,9 +165,17 @@ export default class NewPayment extends Component {
           </View>
           <Button
             isDisabled={
-              this.state.value
-              && !this.state.stripeCardId
-              && !this.state.stripeCustomerId
+              (
+                this.state.value
+                && !this.state.stripeCardId
+                && !this.state.stripeCustomerId
+              )
+              ||
+              (
+                this.state.buttonPress
+                && !this.state.stripeCardId
+                && !this.state.stripeCustomerId
+              )
             }
             onPress={this.charge}
             onPressDisabled={() => Alert.alert(

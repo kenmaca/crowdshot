@@ -70,9 +70,13 @@ export default class PriceSelect extends Component {
                 : [styles.button, {backgroundColor: Colors.Primary}]}>
               <PriceSelectPicker
                 onSelected={amount => this.props.onSelected(amount)}
-                onButtonPress={change => this.setState({
+                onButtonPress={change => {this.setState({
                   button: change
-                })}>
+                });
+                (
+                  this.props.onButtonPress && this.props.onButtonPress(change)
+                )
+              }}>
               </PriceSelectPicker>
             </View>
           </View>

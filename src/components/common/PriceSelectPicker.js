@@ -32,7 +32,6 @@ export default class PriceSelectPicker extends Component {
   }
 
   onValueChange(key, value) {
-    
     const state = {}
     state[key] = value
     this.setState(state)
@@ -52,7 +51,8 @@ export default class PriceSelectPicker extends Component {
           <View style={styles.modal}>
             <View style={styles.close}>
               <TouchableHighlight onPress={() => this.setState({
-                showModal: false
+                showModal: false,
+                selected: "40"
               })}>
                 <Text>Close</Text>
               </TouchableHighlight>
