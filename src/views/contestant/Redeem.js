@@ -92,12 +92,12 @@ export default class Redeem extends Component {
                 let { cart, cartAmt, rawAwards} = this.state;
                 if (cart[awardId] && cart[awardId] > 0) {
                   cart[awardId]--;
+                  cartAmt -= rawAwards[awardId].cost;
+                  this.setState({
+                    cart,
+                    cartAmt
+                  });
                 }
-                cartAmt -= rawAwards[awardId].cost;
-                this.setState({
-                  cart,
-                  cartAmt
-                });
               }
             }
           ]}>
