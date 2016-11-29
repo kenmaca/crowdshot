@@ -206,7 +206,7 @@ export default class Main extends Component {
 
       // if from tray or initial load, then react to it
       if (notification.opened_from_tray || initial) {
-        switch(notification['gcm.notification.type']) {
+        switch(notification.type) {
           case 'contestNearby':
             Actions.mainContestant();
             break;
