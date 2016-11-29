@@ -53,40 +53,44 @@ export default class ContestStatus extends Component {
   componentDidMount() {
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
+        let contest = data.val() || {};
         this.setState({
-          ...data.val()
+          ...contest
         });
-      }
-    });
 
-    this.entriesListener = this.entriesRef.on('value', data => {
-      if (data.exists()) {
-        let entries = data.val();
-        let prizes = Object.keys(this.state.prizes).length || 1;
-        let winners = Object.keys(entries).filter(
+        // grab entries only when contest is ready
+        if (!this.entriesListener) {
+          this.entriesListener = this.entriesRef.on('value', data => {
+            if (data.exists()) {
+              let entries = data.val();
+              let prizes = Object.keys(contest.prizes).length || 1;
+              let winners = Object.keys(entries).filter(
 
-          // only keep selected entries
-          entryId => entries[entryId].selected
-        ).map(entryId => ({
+                // only keep selected entries
+                entryId => entries[entryId].selected
+              ).map(entryId => ({
 
-          // transform into a blob
-          ...entries[entryId],
-          entryId: entryId
+                // transform into a blob
+                ...entries[entryId],
+                entryId: entryId
 
-        // only allow up to prizes length of winners
-        })).slice(0, prizes);
+              // only allow up to prizes length of winners
+              })).slice(0, prizes);
 
-        this.setState({
-          winners: new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2
-          }).cloneWithRows([
-            ...winners,
+              this.setState({
+                winners: new ListView.DataSource({
+                  rowHasChanged: (r1, r2) => r1 !== r2
+                }).cloneWithRows([
+                  ...winners,
 
-            // pad the winners list of unclaimed prizes
-            ...new Array(prizes - winners.length).fill(false)
-          ]),
-          entries: entries
-        });
+                  // pad the winners list of unclaimed prizes
+                  ...new Array(prizes - winners.length).fill(false)
+                ]),
+                entries: entries
+              });
+            }
+          });
+        }
       }
     });
   }

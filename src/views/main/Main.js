@@ -203,6 +203,7 @@ export default class Main extends Component {
 
   notificationResponder(notification, initial) {
     if (notification) {
+      console.log(notification);
 
       // if from tray or initial load, then react to it
       if (notification.opened_from_tray || initial) {
