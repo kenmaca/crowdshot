@@ -215,6 +215,11 @@ export default class Main extends Component {
               contestId: notification.contestId
             });
             break;
+          case 'chatNotification':
+            Actions.chat({
+              chatId: notification.chatId
+            });
+            break;
           default:
             break;
         }
