@@ -295,27 +295,6 @@ export default class ContestCard extends Component {
                           }`
                         ).set(true);
 
-                        // update user's list of contests
-                        Database.ref(
-                          `profiles/${
-                            Firebase.auth().currentUser.uid
-                          }/contests/${
-                            this.props.contestId
-                          }`
-                        ).remove();
-
-                        // add to cancelled list
-                        Database.ref(
-                          `profiles/${
-                            Firebase.auth().currentUser.uid
-                          }/cancelledContests/${
-                            this.props.contestId
-                          }`
-                        ).set({
-                          '.value': true,
-                          '.priority': -this.state.dateCreated
-                        });
-
                         // and out
                         Actions.mainMain();
                       }
