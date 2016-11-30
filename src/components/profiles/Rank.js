@@ -33,7 +33,7 @@ export function getRankString(contestsWon) {
   return rank;
 }
 
-function emojis(str) {
+export function emojis(str) {
   split = str.split(/([\uD800-\uDBFF][\uDC00-\uDFFF])/);
   arr = [];
   for (var i=0; i<split.length; i++) {

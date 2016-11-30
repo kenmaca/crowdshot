@@ -26,7 +26,9 @@ export default class NewReferencePhoto extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TitleBar title='Take a Photo of the Subject' />
+        <TitleBar title={
+          this.props.title || 'Take a Photo of the Subject'
+        } />
         <View style={styles.content}>
           <CameraView
             onUploaded={photoId => {

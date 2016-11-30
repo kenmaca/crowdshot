@@ -153,6 +153,7 @@ export default class ContestCard extends Component {
                 + 'it remains active',
               fixedValue: 1,
               description: '1 Hour Extension for Photo Contest',
+              submitText: 'Extend my Contest by an hour',
               onCharged: transactionId => this.ref.update({
                 endDate: this.state.endDate + 3600000
               })

@@ -66,15 +66,15 @@ export default class PriceSelect extends Component {
             <View
               style={
                 (this.state.button)
-                ? [styles.button, {backgroundColor: Colors.Disabled}]
-                : [styles.button, {backgroundColor: Colors.Primary}]}>
+                ? [styles.picker, {backgroundColor: Colors.Disabled}]
+                : [styles.picker, {backgroundColor: Colors.Primary}]}>
               <PriceSelectPicker
                 onSelected={amount => this.props.onSelected(amount)}
                 onButtonPress={change => {this.setState({
                   button: change
                 });
                 (
-                  this.props.onButtonPress && this.props.onButtonPress(change)
+                  this.props.onButtonPress && this.props.onButtonPress(!change)
                 )
               }}>
               </PriceSelectPicker>
@@ -99,9 +99,20 @@ const styles = StyleSheet.create({
   },
 
   button: {
+    padding: 5,
     borderRadius: 16,
     width: 32,
     height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden'
+  },
+
+  picker: {
+    padding: 5,
+    borderRadius: 20,
+    width: 40,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden'

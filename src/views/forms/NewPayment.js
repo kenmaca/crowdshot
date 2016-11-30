@@ -31,7 +31,7 @@ export default class NewPayment extends Component {
       billingId: null,
       value: null,
       processing: false,
-      buttonPress: true
+      pickerPress: true
     };
 
     this.charge = this.charge.bind(this);
@@ -138,7 +138,7 @@ export default class NewPayment extends Component {
                   value: amount
                 })}
                 onButtonPress={change => this.setState({
-                  buttonPress: change
+                  pickerPress: change
                 })}
                 subtitle={
                   this.props.priceSubtext
@@ -172,7 +172,7 @@ export default class NewPayment extends Component {
               )
               ||
               (
-                this.state.buttonPress
+                this.state.pickerPress
                 && !this.state.stripeCardId
                 && !this.state.stripeCustomerId
               )

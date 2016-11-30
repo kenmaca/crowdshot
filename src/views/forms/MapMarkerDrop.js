@@ -17,7 +17,7 @@ import {
 // consts
 const LAT_DELTA = 0.01;
 const LNG_DELTA = 0.01;
-const MARKER_SIZE = 20;
+const MARKER_SIZE = 30;
 
 // components
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -25,6 +25,7 @@ import TitleBar from '../../components/common/TitleBar';
 import MapView from 'react-native-maps';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import Button from '../../components/common/Button';
+import ProfileRankPin from '../../components/lists/ProfileRankPin';
 
 export default class MapMarkerDrop extends Component {
   constructor(props) {
@@ -86,16 +87,18 @@ export default class MapMarkerDrop extends Component {
     // and update when a new profile comes into view
     this.ref.on('key_entered', (profileId, location, distance) => {
 
-      // add to seen profiles
-      this.state.profiles[profileId] = {
-        latitude: location[0],
-        longitude: location[1]
-      };
+      // add to seen profiles only if not self
+      if (profileId !== Firebase.auth().currentUser.uid) {
+        this.state.profiles[profileId] = {
+          latitude: location[0],
+          longitude: location[1]
+        };
 
-      // helps trigger initial load
-      this.setState({
-        updated: true
-      });
+        // helps trigger initial load
+        this.setState({
+          updated: true
+        });
+      }
     });
   }
 
@@ -178,23 +181,10 @@ export default class MapMarkerDrop extends Component {
                   <MapView.Marker
                     key={profileId}
                     coordinate={this.state.profiles[profileId]}>
-                    <View style={[
-                      styles.profileContainer,
-                      {
-                        width: markerSizes.outer,
-                        height: markerSizes.outer,
-                        borderRadius: markerSizes.outer / 2,
-                      }
-                    ]}>
-                      <View style={[
-                        styles.profile,
-                        {
-                          width: markerSizes.inner,
-                          height: markerSizes.inner,
-                          borderRadius: markerSizes.inner / 2,
-                        }
-                      ]} />
-                    </View>
+                    <ProfileRankPin
+                      profileId={profileId}
+                      innerSize={markerSizes.inner}
+                      outerSize={markerSizes.outer} />
                   </MapView.Marker>
                 );
               })
@@ -305,29 +295,6 @@ const styles = StyleSheet.create({
     padding: Sizes.InnerFrame,
     position: 'absolute',
     bottom: 0
-  },
-
-  profileContainer: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.WhiteOverlay,
-    shadowColor: Colors.Overlay,
-    shadowOpacity: 1,
-    shadowRadius: 5,
-    shadowOffset: {
-      height: Sizes.InnerFrame / 2,
-      width: 0
-    }
-  },
-
-  profile: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: Colors.AlternateText
   }
 });
 
