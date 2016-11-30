@@ -87,16 +87,18 @@ export default class MapMarkerDrop extends Component {
     // and update when a new profile comes into view
     this.ref.on('key_entered', (profileId, location, distance) => {
 
-      // add to seen profiles
-      this.state.profiles[profileId] = {
-        latitude: location[0],
-        longitude: location[1]
-      };
+      // add to seen profiles only if not self
+      if (profileId !== Firebase.auth().currentUser.uid) {
+        this.state.profiles[profileId] = {
+          latitude: location[0],
+          longitude: location[1]
+        };
 
-      // helps trigger initial load
-      this.setState({
-        updated: true
-      });
+        // helps trigger initial load
+        this.setState({
+          updated: true
+        });
+      }
     });
   }
 
