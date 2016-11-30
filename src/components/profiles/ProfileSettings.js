@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, TouchableOpacity
 } from 'react-native';
 import {
   Colors, Sizes
@@ -65,7 +65,9 @@ export default class ProfileSettings extends Component {
             },
             title: 'Take a new display picture'
           })} />
-        <View style={styles.profile}>
+        <TouchableOpacity
+          onPress={Actions.profileEdit}
+          style={styles.profile}>
           <View style={styles.displayNameContainer}>
             <Text style={[
               styles.text,
@@ -85,7 +87,7 @@ export default class ProfileSettings extends Component {
           ]}>
             {this.state.currentRegion || 'Unknown'}
           </Text>
-        </View>
+        </TouchableOpacity>
       </View>
     );
   }

@@ -41,6 +41,7 @@ import PurchasedPhoto from './views/contests/PurchasedPhoto';
 import ContestStatus from './views/contestant/ContestStatus';
 import Address from './views/forms/Address';
 import PaymentMethod from './views/main/PaymentMethod';
+import ProfileEdit from './views/profiles/ProfileEdit';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -137,6 +138,9 @@ export default class Navigation extends Component {
             <Scene
               key='address'
               component={Address} />
+            <Scene
+              key='profileEdit'
+              component={ProfileEdit} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}
