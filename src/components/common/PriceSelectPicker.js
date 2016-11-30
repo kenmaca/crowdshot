@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Picker, TouchableOpacity, Modal, TouchableHighlight, Text
+  View, StyleSheet, Picker, Modal, TouchableOpacity, Text
 } from 'react-native';
 import {
   Sizes, Colors
@@ -23,7 +23,7 @@ export default class PriceSelectPicker extends Component {
 
 
     const priceList = [];
-    for (i=10;i<101;i++) {
+    for (i=10;i<1000;i++) {
       priceList.push(i + "");
     }
     this.setState({
@@ -50,13 +50,13 @@ export default class PriceSelectPicker extends Component {
           visible={this.state.showModal}>
           <View style={styles.modal}>
             <View style={styles.close}>
-              <TouchableHighlight onPress={() => this.setState({
+              <TouchableOpacity onPress={() => this.setState({
                 showModal: false,
                 selected: "40"
               })}>
                 <Text>Close</Text>
-              </TouchableHighlight>
-              <TouchableHighlight onPress={() => {this.setState({
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => {this.setState({
                 showModal: false
               });
               (
@@ -66,7 +66,7 @@ export default class PriceSelectPicker extends Component {
             }
             }>
                 <Text>Confirm</Text>
-              </TouchableHighlight>
+              </TouchableOpacity>
             </View>
 
             <Picker
@@ -81,8 +81,7 @@ export default class PriceSelectPicker extends Component {
           </View>
         </Modal>
         <View style={styles.contentContainer}>
-          <TouchableHighlight
-            underlayColor={Colors.Transparent}
+          <TouchableOpacity
             onPress={() => {this.setState({
               showModal: true
             });
@@ -92,7 +91,7 @@ export default class PriceSelectPicker extends Component {
               style={styles.text}>
               {`$${this.state.selected}`}
             </Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
       </View>
     )
@@ -100,18 +99,9 @@ export default class PriceSelectPicker extends Component {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1
-  },
-
   text: {
-    textAlign: 'right',
+    textAlign: 'center',
     fontSize: Sizes.Text,
-    color: Colors.Text
-  },
-
-  picker: {
-    width: Sizes.Width,
     color: Colors.Text
   },
 
@@ -120,7 +110,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingRight: Sizes.OuterFrame,
-    paddingLeft: Sizes.OuterFrame
+    paddingLeft: Sizes.OuterFrame,
+    padding: Sizes.InnerFrame
   },
 
   modal: {
