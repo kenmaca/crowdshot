@@ -17,6 +17,7 @@ import {
 import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import InformationField from '../../components/common/InformationField';
+import ProfileSettings from '../../components/profiles/ProfileSettings';
 
 export default class Settings extends Component {
   constructor(props) {
@@ -47,10 +48,13 @@ export default class Settings extends Component {
       <View style={styles.container}>
         <TitleBar title='Settings' />
         <View style={styles.content}>
+          <ProfileSettings
+            color={Colors.Foreground} />
           <TouchableOpacity
             onPress={Actions.address}>
             <InformationField
               pressable
+              color={Colors.Background}
               label='Shipping Address'
               info={
                 this.state.address && (
@@ -74,7 +78,8 @@ export default class Settings extends Component {
             <InformationField
               isBottom
               pressable
-              label='Payment Methods & Transaction History' />
+              color={Colors.Background}
+              label='Transaction History' />
           </TouchableOpacity>
           <View style={styles.footer}>
             <Image
@@ -103,6 +108,7 @@ const styles = StyleSheet.create({
   },
 
   footer: {
+    marginTop: Sizes.OuterFrame,
     alignItems: 'center',
     justifyContent: 'center'
   },

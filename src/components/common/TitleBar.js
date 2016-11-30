@@ -32,7 +32,10 @@ export default class TitleBar extends Component {
     return (
       <View style={[
         styles.container,
-        this.props.style
+        this.props.style,
+        this.props.color && {
+          backgroundColor: this.props.color
+        }
       ]}>
         <View style={styles.horizontal}>
           <Animatable.Text
