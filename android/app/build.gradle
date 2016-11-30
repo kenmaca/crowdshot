@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
 
 import com.android.build.OutputFile
 
@@ -84,7 +85,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         applicationId "com.crowdshot"
@@ -131,6 +132,17 @@ repositories {
     maven { url 'https://github.com/500px/500px-android-blur/raw/master/releases/' }
 }
 
+configurations.all {
+    resolutionStrategy {
+        force 'com.google.android.gms:play-services-ads:9.2.0+'
+        force "com.google.android.gms:play-services:9.2.0+"
+        force "com.google.android.gms:play-services-location:9.2.0+"
+        force "com.google.android.gms:play-services-maps:9.2.0+"
+        force "com.google.android.gms:play-services-gcm:9.2.0+"
+        force "com.google.android.gms:play-services-analytics:9.2.0+"
+    }
+}
+
 dependencies {
     compile project(':react-native-share')
     compile project(':react-native-fcm')
@@ -164,3 +176,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
   from configurations.compile
   into 'libs'
 }
+
+apply plugin: 'com.google.gms.google-services'
