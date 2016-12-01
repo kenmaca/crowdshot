@@ -83,7 +83,7 @@ export default class Redeem extends Component {
     this.billingListener = this.billingRef.on('value', data => {
       if (data.exists()) {
         this.setState({
-          wallet: -1 * Object.values(data.val().transactions).reduce((a, b) => a + b)
+          wallet: -1/100 * Object.values(data.val().transactions).reduce((a, b) => a + b)
         });
       }
     });
