@@ -62,7 +62,7 @@ export default class ConfirmRedeem extends Component {
     this.billingListener = this.billingRef.on('value', data => {
       if (data.exists()) {
         this.setState({
-          wallet: -1 * Object.values(data.val().transactions).reduce((a, b) => a + b)
+          wallet: -1/100 * Object.values(data.val().transactions).reduce((a, b) => a + b)
         });
       }
     });
@@ -95,41 +95,67 @@ export default class ConfirmRedeem extends Component {
 
   confirm(){
     if (this.state.wallet > this.state.cartAmt){
-      let { cartList } = this.state;
-      let awards = {};
-      for (var cartItem in cartList){
-        awards[cartList[cartItem].id] = {
-          quantity: cartList[cartItem].quantity
-        }
-      }
-      //create order in db
-      let orderId = this.ordersRef.push({
+      //TODO: add transaction stuff to deduct wallet
+      let transactionId = Database.ref('transactions').push({
         '.value': {
           createdBy: Firebase.auth().currentUser.uid,
-          dateCreated: Date.now(),
-          awards: awards,
-          status: 'Submitted'
+          value: this.state.cartAmt * 100,
+          description: "Award Redemption",
+          internal: true,
+          dateCreated: Date.now()
         },
         '.priority': -Date.now()
-      }).key
+      }).key;
+      let ref = Database.ref(
+        `transactions/${transactionId}`
+      );
 
-      //add order reference in profile to db
-      Database.ref(
-        `profiles/${
-          Firebase.auth().currentUser.uid
-        }/orders/${
-          orderId
-        }`
-      ).set({
-        '.value': true,
-        '.priority': -Date.now()
+      let listener = ref.on('value', data => {
+        if (data.exists() && data.val().approved && data.val().processed) {
+          let { cartList } = this.state;
+          let awards = {};
+          for (var cartItem in cartList){
+            awards[cartList[cartItem].id] = {
+              quantity: cartList[cartItem].quantity
+            }
+          }
+          //create order in db
+          let orderId = this.ordersRef.push({
+            '.value': {
+              createdBy: Firebase.auth().currentUser.uid,
+              dateCreated: Date.now(),
+              awards: awards,
+              transactionId: transactionId,
+              status: 'Submitted'
+            },
+            '.priority': -Date.now()
+          }).key
+
+          //add order reference in profile to db
+          Database.ref(
+            `profiles/${
+              Firebase.auth().currentUser.uid
+            }/orders/${
+              orderId
+            }`
+          ).set({
+            '.value': true,
+            '.priority': -Date.now()
+          });
+
+          this.setState({
+            finalizedVisible: true
+          })
+        } else if (data.exists() && !data.val().approved && data.val().processed){
+          Alert.alert(
+            'Error!',
+            data.val().error && data.val().error.message,
+            [
+              {text: 'OK', onPress: () => Actions.pop()}
+            ]
+          )
+        }
       });
-
-      //TODO: add transaction stuff to deduct wallet
-
-      this.setState({
-        finalizedVisible: true
-      })
     } else {
       Alert.alert(
         'Insufficient Balance',
