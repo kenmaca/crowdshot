@@ -200,8 +200,8 @@ export default class Redeem extends Component {
           rightIcon='trophy'
           rightTitle={
             `$${
-              (this.state.wallet
-              || 0) - this.state.cartAmt
+              ((this.state.wallet
+              || 0) - this.state.cartAmt).toFixed(0)
             }`
           }/>
         <View style={styles.content}>

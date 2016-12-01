@@ -260,7 +260,7 @@ export default class ContestMapView extends Component {
               <Text style={styles.winnings}>
                 {
                   `$${
-                    this.state.wallet
+                    this.state.wallet.toFixed(0)
                     || 0
                   }`
                 }

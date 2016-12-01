@@ -237,7 +237,7 @@ export default class ConfirmRedeem extends Component {
               </View>
               <View>
                 <Text style={styles.cartSummaryText}>
-                  {'$' + this.state.wallet}
+                  {'$' + this.state.wallet.toFixed(0)}
                 </Text>
               </View>
             </View>
@@ -249,7 +249,7 @@ export default class ConfirmRedeem extends Component {
               </View>
               <View>
                 <Text style={styles.cartSummaryText}>
-                  {'$' + (this.state.wallet - this.state.cartAmt)}
+                  {'$' + (this.state.wallet - this.state.cartAmt).toFixed(0)}
                 </Text>
               </View>
             </View>
