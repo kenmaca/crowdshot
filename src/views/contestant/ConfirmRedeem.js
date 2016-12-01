@@ -101,6 +101,7 @@ export default class ConfirmRedeem extends Component {
           createdBy: Firebase.auth().currentUser.uid,
           value: this.state.cartAmt * 100,
           description: "Award Redemption",
+          billingId: Firebase.auth().currentUser.uid,
           internal: true,
           dateCreated: Date.now()
         },
