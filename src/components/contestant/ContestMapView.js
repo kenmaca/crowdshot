@@ -42,6 +42,7 @@ export default class ContestMapView extends Component {
       },
       contests: {},
       inView: {},
+      wallet: 0,
     };
 
     this.ref = new GeoFire(
@@ -64,6 +65,12 @@ export default class ContestMapView extends Component {
 
     this.profileRef = Database.ref(
       `profiles/${
+        Firebase.auth().currentUser.uid
+      }`
+    );
+
+    this.billingRef = Database.ref(
+      `billing/${
         Firebase.auth().currentUser.uid
       }`
     );
@@ -179,12 +186,21 @@ export default class ContestMapView extends Component {
         });
       }
     });
+
+    this.billingListener = this.billingRef.on('value', data => {
+      if (data.exists()) {
+        this.setState({
+          wallet: -1 * Object.values(data.val().transactions).reduce((a, b) => a + b)
+        });
+      }
+    });
   }
 
   componentWillUnmount() {
     this.position && navigator.geolocation.clearWatch(this.position);
     this.ref.cancel();
     this.profileListener && this.profileRef.off('value', this.profileListener);
+    this.billingListener && this.billingRef.off('value', this.billingListener);
   }
 
   render() {
@@ -244,7 +260,7 @@ export default class ContestMapView extends Component {
               <Text style={styles.winnings}>
                 {
                   `$${
-                    this.state.profile.wallet
+                    this.state.wallet
                     || 0
                   }`
                 }

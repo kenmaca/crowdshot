@@ -28,11 +28,18 @@ export default class ConfirmRedeem extends Component {
       profile: {},
       cartList: [],
       cartAmt: 0,
+      wallet: 0,
       finalizedVisible: false
     };
 
     this.profileRef = Database.ref(
       `profiles/${
+        Firebase.auth().currentUser.uid
+      }`
+    );
+
+    this.billingRef = Database.ref(
+      `billing/${
         Firebase.auth().currentUser.uid
       }`
     );
@@ -48,6 +55,14 @@ export default class ConfirmRedeem extends Component {
       if (data.exists()) {
         this.setState({
           profile: data.val(),
+        });
+      }
+    });
+
+    this.billingListener = this.billingRef.on('value', data => {
+      if (data.exists()) {
+        this.setState({
+          wallet: -1 * Object.values(data.val().transactions).reduce((a, b) => a + b)
         });
       }
     });
@@ -75,10 +90,11 @@ export default class ConfirmRedeem extends Component {
 
   componentWillUnmount() {
     this.profileListener && this.profileRef.off('value', this.profileListener);
+    this.billingListener && this.billingRef.off('value', this.billingListener);
   }
 
   confirm(){
-    if (this.state.profile.wallet > this.state.cartAmt){
+    if (this.state.wallet > this.state.cartAmt){
       let { cartList } = this.state;
       let awards = {};
       for (var cartItem in cartList){
@@ -195,7 +211,7 @@ export default class ConfirmRedeem extends Component {
               </View>
               <View>
                 <Text style={styles.cartSummaryText}>
-                  {'$' + this.state.profile.wallet}
+                  {'$' + this.state.wallet}
                 </Text>
               </View>
             </View>
@@ -207,7 +223,7 @@ export default class ConfirmRedeem extends Component {
               </View>
               <View>
                 <Text style={styles.cartSummaryText}>
-                  {'$' + (this.state.profile.wallet - this.state.cartAmt)}
+                  {'$' + (this.state.wallet - this.state.cartAmt)}
                 </Text>
               </View>
             </View>

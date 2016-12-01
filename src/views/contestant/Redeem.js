@@ -25,6 +25,7 @@ export default class Redeem extends Component {
     super(props);
     this.state = {
       profile: {},
+      wallet: 0,
       rawAwards: {},
       awards: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
@@ -39,6 +40,12 @@ export default class Redeem extends Component {
 
     this.profileRef = Database.ref(
       `profiles/${
+        Firebase.auth().currentUser.uid
+      }`
+    );
+
+    this.billingRef = Database.ref(
+      `billing/${
         Firebase.auth().currentUser.uid
       }`
     );
@@ -72,11 +79,20 @@ export default class Redeem extends Component {
         });
       }
     });
+
+    this.billingListener = this.billingRef.on('value', data => {
+      if (data.exists()) {
+        this.setState({
+          wallet: -1 * Object.values(data.val().transactions).reduce((a, b) => a + b)
+        });
+      }
+    });
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
     this.profileListener && this.profileRef.off('value', this.profileListener);
+    this.billingListener && this.billingRef.off('value', this.billingListener);
   }
 
   renderRow(awardId) {
@@ -103,7 +119,7 @@ export default class Redeem extends Component {
           ]}>
           <AwardCard
             awardId={awardId}
-            balance={this.state.profile.wallet - this.state.cartAmt}
+            balance={this.state.wallet - this.state.cartAmt}
             addToCart={this.addToCart}
             showAwardDetail={this.showAwardDetail}
             inCart={this.state.cart[awardId]} />
@@ -184,7 +200,7 @@ export default class Redeem extends Component {
           rightIcon='trophy'
           rightTitle={
             `$${
-              (this.state.profile.wallet
+              (this.state.wallet
               || 0) - this.state.cartAmt
             }`
           }/>
