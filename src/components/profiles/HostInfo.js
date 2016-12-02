@@ -80,7 +80,7 @@ export default class HostInfo extends Component {
           <View style={styles.stats}>
             <Text style={styles.stat}>
               {
-                `${Object.keys(contests).length || 0} Contests Run`
+                `${Object.keys(contests).length || 0} Contests Hosted`
               }
             </Text>
             <Text style={styles.stat}>

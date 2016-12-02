@@ -45,6 +45,28 @@ export default class Profile extends Component {
   }
 
   render() {
+
+    // used to build stats
+    let completed = this.state.completedContests || {};
+    let cancelled = this.state.cancelledContests || {};
+    let contests = {
+      ...completed,
+      ...cancelled,
+      ...(
+        this.state.contests || {}
+      )
+    };
+
+    let cancelledRate = (
+      Object.keys(contests).length > 0
+      ? +(
+        (
+          Object.keys(cancelled).length
+          / Object.keys(contests).length
+        ).toFixed(2)
+      ): 0
+    );
+
     return (
       <View style={styles.container}>
         <ParallaxScrollView
@@ -102,6 +124,14 @@ export default class Profile extends Component {
               isBottom
               label='Contests Entered'
               info={this.state.countAttempts || 0} />
+            <InformationField
+              isTop
+              label='Contests Hosted'
+              info={Object.keys(contests).length || 0} />
+            <InformationField
+              isBottom
+              label='Contest Completion Rate'
+              info={`${(1 - cancelledRate) * 100}%`} />
           </View>
         </ParallaxScrollView>
         <CloseFullscreenButton />
