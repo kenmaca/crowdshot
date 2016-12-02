@@ -61,9 +61,18 @@ export default class NewPayment extends Component {
         // stripe asks for cents
         value: this.state.value * 100,
         description: this.props.description,
-        stripeCardId: this.state.stripeCardId,
-        stripeCustomerId: this.state.stripeCustomerId,
+
+        // omit stripe details if not present
+        ...(
+          this.state.stripeCardId && {
+            stripeCardId: this.state.stripeCardId,
+            stripeCustomerId: this.state.stripeCustomerId
+          }
+        ),
         billingId: this.state.billingId,
+
+        // if not provided, then this is an internal transaction
+        internal: !this.state.stripeCardId,
         dateCreated: Date.now()
       },
       '.priority': -Date.now()
@@ -167,14 +176,12 @@ export default class NewPayment extends Component {
             isDisabled={
               (
                 this.state.value
-                && !this.state.stripeCardId
-                && !this.state.stripeCustomerId
+                && !this.state.billingId
               )
               ||
               (
                 this.state.pickerPress
-                && !this.state.stripeCardId
-                && !this.state.stripeCustomerId
+                && !this.state.billingId
               )
             }
             onPress={this.charge}

@@ -43,36 +43,63 @@ export default class CardSelect extends Component {
           {
             this.state.cardSelected
             ? (
-              <View style={styles.container}>
-                <Text style={styles.textContainer}>
-                  <Text style={styles.bold}>
-                    {(() => {
+              this.state.cardSelected.lastFour
+              ? (
+                <View style={styles.container}>
+                  <Text style={styles.textContainer}>
+                    <Text style={styles.bold}>
+                      {(() => {
+                        switch(this.state.cardSelected.type) {
+                          case 1: return 'MasterCard';
+                          case 2: return 'American Express';
+                          default: return 'Visa';
+                        }
+                      })()}
+                    </Text>
+                    <Text>
+                      {' ending in '}
+                    </Text>
+                    <Text style={styles.bold}>
+                      {this.state.cardSelected.lastFour}
+                    </Text>
+                  </Text>
+                  <Icon
+                    style={styles.cardType}
+                    size={24}
+                    name={(() => {
                       switch(this.state.cardSelected.type) {
-                        case 1: return 'MasterCard';
-                        case 2: return 'American Express';
-                        default: return 'Visa';
+                        case 1: return 'cc-mastercard';
+                        case 2: return 'cc-amex';
+                        default: return 'cc-visa';
                       }
                     })()}
+                    color={Colors.Text} />
+                </View>
+              ): (
+                <View style={styles.container}>
+                  <Text style={styles.textContainer}>
+                    <Text>
+                      {'Account Credit — '}
+                    </Text>
+                    <Text style={styles.bold}>
+                      {
+                        `$${
+                          -(
+                            (
+                              Object.values(
+                                this.state.cardSelected.transactions || {}
+                              ).reduce(
+                                (a, b) => a + b,
+                                0
+                              ) / 100
+                            ).toFixed(2)
+                          )
+                        } available`
+                      }
+                    </Text>
                   </Text>
-                  <Text>
-                    {' ending in '}
-                  </Text>
-                  <Text style={styles.bold}>
-                    {this.state.cardSelected.lastFour}
-                  </Text>
-                </Text>
-                <Icon
-                  style={styles.cardType}
-                  size={24}
-                  name={(() => {
-                    switch(this.state.cardSelected.type) {
-                      case 1: return 'cc-mastercard';
-                      case 2: return 'cc-amex';
-                      default: return 'cc-visa';
-                    }
-                  })()}
-                  color={Colors.Text} />
-              </View>
+                </View>
+              )
             ): (
               <View style={styles.container}>
                 <Text style={styles.textContainer}>

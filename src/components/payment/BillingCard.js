@@ -23,7 +23,8 @@ export default class BillingCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: false
+      active: false,
+      billingId: this.props.billingId
     };
     this.ref = Database.ref(
       `billing/${this.props.billingId}`
@@ -34,8 +35,7 @@ export default class BillingCard extends Component {
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
         this.setState({
-          ...data.val(),
-          billingId: this.props.billingId
+          ...data.val()
         });
       }
     })
@@ -47,8 +47,12 @@ export default class BillingCard extends Component {
 
   render() {
     return (
-      this.state.active
-      ? (
+      (
+
+        // either the method is active or it's just account credit
+        this.state.active
+        || this.props.billingId === Firebase.auth().currentUser.uid
+      ) ? (
         <TouchableOpacity
           onPress={() => {
 
@@ -106,7 +110,25 @@ export default class BillingCard extends Component {
             ): (
               <View style={styles.content}>
               <Text style={styles.textContainer}>
-                Account Credit
+                <Text>
+                  {'Account Credit — '}
+                </Text>
+                <Text style={styles.bold}>
+                  {
+                    `$${
+                      -(
+                        (
+                          Object.values(
+                            this.state.transactions || {}
+                          ).reduce(
+                            (a, b) => a + b,
+                            0
+                          ) / 100
+                        ).toFixed(2)
+                      )
+                    } available`
+                  }
+                </Text>
               </Text>
               <CircleIcon
                 size={18}

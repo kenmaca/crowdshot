@@ -66,10 +66,7 @@ export default class Transaction extends Component {
               <OutlineText
                 color={Colors.Foreground}
                 text={`Refunded $${
-                  Math.round(
-                    this.state.value / 100,
-                    2
-                  )
+                  +((this.state.value / 100).toFixed(2))
                 }`} />
             ): (
               <Text style={[
@@ -81,10 +78,7 @@ export default class Transaction extends Component {
                 {
                   `$${
                     Math.abs(
-                      Math.round(
-                        this.state.value / 100,
-                        2
-                      )
+                      +((this.state.value / 100).toFixed(2))
                     )
                   }`
                 }

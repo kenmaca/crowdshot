@@ -91,9 +91,6 @@ export default class PaymentMethods extends Component {
                           data
                         }`
                       ).remove();
-                      Database.ref(
-                        `billing/${data}`
-                      ).remove();
                     }
                   }
                 ]

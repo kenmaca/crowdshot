@@ -37,23 +37,31 @@ export default class PaymentMethod extends Component {
   }
 
   componentDidMount() {
-    this.listener = this.ref.on('value', data => {
-      if (data.exists()) {
-        let blob = data.val();
-        this.setState({
-          ...blob,
-          transactionDataSource: new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2
-          }).cloneWithRows(
-            Object.keys(blob.transactions || {})
-          )
+    this.delay = setTimeout(
+      () => {
+        this.listener = this.ref.on('value', data => {
+          if (data.exists()) {
+            let blob = data.val();
+            this.setState({
+              ...blob,
+              transactionDataSource: new ListView.DataSource({
+                rowHasChanged: (r1, r2) => r1 !== r2
+              }).cloneWithRows(
+                Object.keys(blob.transactions || {})
+              )
+            });
+          }
+
+          this.refs.title.clearLoader();
         });
-      }
-    });
+      },
+      500
+    );
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
+    this.delay && clearTimeout(this.delay);
   }
 
   renderRow(transactionId) {
@@ -65,11 +73,45 @@ export default class PaymentMethod extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TitleBar title='Transaction History' />
-        <View style={styles.content}>
-          <PaymentCard {...this.state} />
-        </View>
+        <TitleBar
+          ref='title'
+          showLoader
+          title='Transaction History' />
+        {
+
+          // show balance total if this is an account credit
+          this.props.billingId === Firebase.auth().currentUser.uid
+          ? (
+            <View style={[
+              styles.content,
+              styles.balance
+            ]}>
+              <Text style={styles.balanceAmount}>
+                {
+                  `$${
+                    -(
+                      (
+                        Object.values(this.state.transactions || {}).reduce(
+                          (a, b) => a + b,
+                          0
+                        ) / 100
+                      ).toFixed(2)
+                    )
+                  }`
+                }
+              </Text>
+              <Text style={styles.balanceText}>
+                Available
+              </Text>
+            </View>
+          ): (
+            <View style={styles.content}>
+              <PaymentCard {...this.state} />
+            </View>
+          )
+        }
         <InputSectionHeader
+          style={styles.header}
           offset={Sizes.InnerFrame}
           label='Recent Transactions' />
         <ListView
@@ -95,9 +137,28 @@ const styles = StyleSheet.create({
     padding: Sizes.InnerFrame,
     paddingBottom: Sizes.InnerFrame * 2,
     paddingTop: 0,
-    marginBottom: Sizes.InnerFrame,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+
+  balance: {
+    alignItems: 'flex-end'
+  },
+
+  balanceAmount: {
+    fontSize: Sizes.H2,
+    fontWeight: '500',
+    color: Colors.Primary
+  },
+
+  balanceText: {
+    fontSize: Sizes.SmallText,
+    fontWeight: '100',
+    color: Colors.Text
+  },
+
+  header: {
+    marginTop: Sizes.InnerFrame
   },
 
   transactions: {
