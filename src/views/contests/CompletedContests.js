@@ -36,24 +36,32 @@ export default class CompletedContests extends Component {
   }
 
   componentDidMount() {
-    this.listener = this.ref.on('value', data => {
-      if (data.exists()) {
-        let contests = data.val();
-        this.setState({
-          blob: contests,
-          contests: new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2
-          }).cloneWithRows(Object.keys(contests))
-        });
-      }
 
-      // clear loader
-      this.refs.title.clearLoader();
-    });
+    // set a timeout to allow smooth view transition on load
+    this.delay = setTimeout(
+      () => {
+        this.listener = this.ref.on('value', data => {
+          if (data.exists()) {
+            let contests = data.val();
+            this.setState({
+              blob: contests,
+              contests: new ListView.DataSource({
+                rowHasChanged: (r1, r2) => r1 !== r2
+              }).cloneWithRows(Object.keys(contests))
+            });
+          }
+
+          // clear loader
+          this.refs.title.clearLoader();
+        });
+      },
+      500
+    );
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
+    this.delay && clearTimeout(this.delay);
   }
 
   renderRow(contestId) {

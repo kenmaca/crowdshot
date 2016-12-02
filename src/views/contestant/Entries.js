@@ -37,26 +37,34 @@ export default class Settings extends Component {
   }
 
   componentDidMount() {
-    this.listener = this.ref.on('value', data => {
 
-      // dont check exists due to empty entries allowed
-      let blob = data.val() || {};
-      this.setState({
-        rawEntries: blob,
-        entries: new ListView.DataSource({
-          rowHasChanged: (r1, r2) => r1 !== r2
-        }).cloneWithRows(
-          Object.keys(blob)
-        )
-      });
+    // delay load to smooth load transition
+    this.delay = setTimeout(
+      () => {
+        this.listener = this.ref.on('value', data => {
 
-      // and clear loader
-      this.refs.title.clearLoader();
-    });
+          // dont check exists due to empty entries allowed
+          let blob = data.val() || {};
+          this.setState({
+            rawEntries: blob,
+            entries: new ListView.DataSource({
+              rowHasChanged: (r1, r2) => r1 !== r2
+            }).cloneWithRows(
+              Object.keys(blob)
+            )
+          });
+
+          // and clear loader
+          this.refs.title.clearLoader();
+        });
+      },
+      500
+    );
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
+    this.delay && clearTimeout(this.delay);
   }
 
   renderRow(entryId) {
@@ -105,7 +113,7 @@ export default class Settings extends Component {
     return (
       <View style={styles.container}>
         <TitleBar
-          clearLoader
+          showLoader
           ref='title'
           title='Your Contest Entries' />
         <View style={styles.content}>

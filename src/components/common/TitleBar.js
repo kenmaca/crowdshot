@@ -57,7 +57,7 @@ export default class TitleBar extends Component {
           </View>
         </View>
         {
-          this.props.clearLoader && !this.state.loaded
+          this.props.showLoader && !this.state.loaded
           ? (
             <Progress.Bar
               animated
