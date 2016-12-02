@@ -68,26 +68,34 @@ export default class Login extends Component {
                       )
                     ).then(user => {
 
-                      // update profile
+                      // grab latest data if exists
                       Database.ref(
                         `profiles/${user.uid}`
-                      ).update({
-                        displayName: user.displayName,
-                        email: user.email,
-                      }).then(result => {
+                      ).once('value', profile => {
+                        profile = data.val() || {};
 
-                        // now store the photo
-                        let photoId = Database.ref(`photos`).push().key;
-                        Database.ref().update({
-                          [`photos/${photoId}`]: {
-                            createdBy: user.uid,
-                            url: user.photoURL
-                          }, [`profiles/${user.uid}/photo`]: photoId
+                        // update the profile
+                        Database.ref(
+                          `profiles/${user.uid}`
+                        ).update({
+                          displayName: user.displayName,
+                          email: user.email,
+                          dateCreated: profile.dateCreated || Date.now()
+                        }).then(result => {
+
+                          // now store the photo
+                          let photoId = Database.ref(`photos`).push().key;
+                          Database.ref().update({
+                            [`photos/${photoId}`]: {
+                              createdBy: user.uid,
+                              url: user.photoURL
+                            }, [`profiles/${user.uid}/photo`]: photoId
+                          });
                         });
-                      });
 
-                      // user logged in, ready for use
-                      Actions.loader();
+                        // user logged in, ready for use
+                        Actions.loader();
+                      });
                     }).catch(error => {});
                   }
                 );
