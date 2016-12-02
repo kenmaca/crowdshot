@@ -8,6 +8,7 @@ import Database from '../../utils/Database';
 import {
   Sizes, Colors
 } from '../../Const';
+import DateFormat from 'dateformat';
 
 // components
 import InformationField from '../../components/common/InformationField';
@@ -83,16 +84,23 @@ export default class Profile extends Component {
             </View>
             <InformationField
               isTop
-              isBottom
-              label="Region"
+              label='Region'
               info={this.state.currentRegion || 'Unknown'} />
             <InformationField
+              isBottom
+              label='Join Date'
+              info={
+                this.state.dateCreated
+                ? DateFormat(this.state.dateCreated, 'mmmm dS, yyyy')
+                : 'Unknown'
+              } />
+            <InformationField
               isTop
-              label="Contests Won"
+              label='Contests Won'
               info={this.state.countWon || 0} />
             <InformationField
               isBottom
-              label="Contests Entered"
+              label='Contests Entered'
               info={this.state.countAttempts || 0} />
           </View>
         </ParallaxScrollView>
