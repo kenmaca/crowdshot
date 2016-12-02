@@ -26,6 +26,7 @@ import CircleIcon from '../../components/common/CircleIcon';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import CameraView from '../../components/common/CameraView';
 import ContestProgressBar from '../../components/contests/ContestProgressBar';
+import HostInfo from '../../components/profiles/HostInfo';
 
 export default class ContestDetail extends Component {
   constructor(props) {
@@ -176,6 +177,11 @@ export default class ContestDetail extends Component {
                     {this.state.instructions}
                   </Text>
                 </View>
+              )
+            }
+            {
+              this.state.createdBy && (
+                <HostInfo profileId={this.state.createdBy} />
               )
             }
             <View style={styles.bottomPadding}/>
@@ -426,6 +432,7 @@ const styles = StyleSheet.create({
   },
 
   bottomPadding: {
-    paddingBottom: Sizes.OuterFrame
+    paddingBottom: Sizes.OuterFrame,
+    backgroundColor: Colors.ModalForeground
   }
 });

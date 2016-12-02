@@ -23,6 +23,7 @@ import CircleIcon from '../../components/common/CircleIcon';
 import Divider from '../../components/common/Divider';
 import Avatar from '../../components/profiles/Avatar';
 import GroupAvatar from '../../components/profiles/GroupAvatar';
+import HostInfo from '../../components/profiles/HostInfo';
 
 export default class ContestStatus extends Component {
   constructor(props) {
@@ -151,7 +152,9 @@ export default class ContestStatus extends Component {
           {
             this.state.instructions != null && (
               <View>
-                <InputSectionHeader label='Instructions' />
+                <InputSectionHeader
+                  offset={Sizes.InnerFrame}
+                  label='Instructions' />
                 <Text style={styles.text}>
                   {this.state.instructions}
                 </Text>
@@ -162,6 +165,7 @@ export default class ContestStatus extends Component {
             this.state.entries && (
               <View>
                 <InputSectionHeader
+                  offset={Sizes.InnerFrame}
                   style={styles.header}
                   label='Participants' />
                 <GroupAvatar
@@ -181,6 +185,7 @@ export default class ContestStatus extends Component {
             )
           }
           <InputSectionHeader
+            offset={Sizes.InnerFrame}
             style={styles.header}
             label='Winners' />
           <View style={styles.prizeContainer}>
@@ -195,6 +200,13 @@ export default class ContestStatus extends Component {
               )}
               renderRow={this.renderRow} />
           </View>
+          {
+            this.state.createdBy && (
+              <HostInfo
+                profileId={this.state.createdBy}
+                style={styles.host} />
+            )
+          }
         </ScrollView>
         <CloseFullscreenButton />
       </View>
@@ -214,11 +226,13 @@ const styles = StyleSheet.create({
 
   content: {
     flex: 1,
-    padding: Sizes.InnerFrame,
-    backgroundColor: Colors.ModalBackground
+    backgroundColor: Colors.ModalBackground,
+    paddingTop: Sizes.InnerFrame
   },
 
   text: {
+    marginLeft: Sizes.InnerFrame,
+    marginRight: Sizes.InnerFrame,
     fontSize: Sizes.Text,
     fontWeight: '100',
     color: Colors.AlternateText
@@ -231,6 +245,8 @@ const styles = StyleSheet.create({
   prizeContainer: {
     alignSelf: 'stretch',
     padding: Sizes.InnerFrame,
+    margin: Sizes.InnerFrame,
+    marginTop: 0,
     borderRadius: 5,
     borderColor: Colors.LightOverlay,
     borderWidth: 1
@@ -264,6 +280,12 @@ const styles = StyleSheet.create({
   },
 
   participants: {
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    marginLeft: Sizes.InnerFrame,
+    marginRight: Sizes.InnerFrame
+  },
+
+  host: {
+    paddingBottom: Sizes.OuterFrame * 2
   }
 });
