@@ -7,6 +7,7 @@ import {
 import {
   Colors, Sizes
 } from '../../Const';
+import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 import {
   Actions
@@ -60,42 +61,62 @@ export default class BillingCard extends Component {
             );
           }}
           style={styles.container}>
-          <View style={styles.content}>
-            <Icon
-              style={styles.cardType}
-              name={(() => {
-                switch(this.state.type) {
-                  case 1: return 'cc-mastercard';
-                  case 2: return 'cc-amex';
-                  default: return 'cc-visa';
-                }
-              })()}
-              size={24}
-              color={Colors.Text} />
-            <Text style={styles.textContainer}>
-              <Text style={styles.bold}>
-                {(() => {
-                  switch(this.state.type) {
-                    case 1: return 'MasterCard';
-                    case 2: return 'American Express';
-                    default: return 'Visa';
-                  }
-                })()}
+          {
+
+            // don't show icon if this is an internal
+            // credit account
+            this.props.billingId !== Firebase.auth().currentUser.uid
+            ? (
+              <View style={styles.content}>
+                <Icon
+                  style={styles.cardType}
+                  name={(() => {
+                    switch(this.state.type) {
+                      case 1: return 'cc-mastercard';
+                      case 2: return 'cc-amex';
+                      default: return 'cc-visa';
+                    }
+                  })()}
+                  size={24}
+                  color={Colors.Text} />
+                <Text style={styles.textContainer}>
+                  <Text style={styles.bold}>
+                    {(() => {
+                      switch(this.state.type) {
+                        case 1: return 'MasterCard';
+                        case 2: return 'American Express';
+                        default: return 'Visa';
+                      }
+                    })()}
+                  </Text>
+                  <Text>
+                    {' ending in '}
+                  </Text>
+                  <Text style={styles.bold}>
+                    {this.state.lastFour}
+                  </Text>
+                </Text>
+                <CircleIcon
+                  size={18}
+                  style={styles.button}
+                  color={Colors.ModalBackground}
+                  checkColor={Colors.AlternateText}
+                  icon='arrow-forward' />
+              </View>
+            ): (
+              <View style={styles.content}>
+              <Text style={styles.textContainer}>
+                Account Credit
               </Text>
-              <Text>
-                {' ending in '}
-              </Text>
-              <Text style={styles.bold}>
-                {this.state.lastFour}
-              </Text>
-            </Text>
-            <CircleIcon
-              size={18}
-              style={styles.button}
-              color={Colors.ModalBackground}
-              checkColor={Colors.AlternateText}
-              icon='arrow-forward' />
-          </View>
+              <CircleIcon
+                size={18}
+                style={styles.button}
+                color={Colors.ModalBackground}
+                checkColor={Colors.AlternateText}
+                icon='arrow-forward' />
+              </View>
+            )
+          }
           <Divider />
         </TouchableOpacity>
       ): (
@@ -121,9 +142,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Foreground
   },
 
+  cardType: {
+    marginRight: Sizes.InnerFrame
+  },
+
   textContainer: {
     flex: 1,
-    marginLeft: Sizes.InnerFrame,
     color: Colors.Text
   },
 

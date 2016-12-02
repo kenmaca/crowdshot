@@ -13,9 +13,17 @@ export default class OutlineText extends Component {
     return (
       <View style={[
         styles.container,
-        this.props.style
+        this.props.style,
+        this.props.color && {
+          borderColor: this.props.color
+        }
       ]}>
-        <Text style={styles.text}>
+        <Text style={[
+          styles.text,
+          this.props.color && {
+            color: this.props.color
+          }
+        ]}>
           {this.props.text && this.props.text.toUpperCase()}
         </Text>
       </View>

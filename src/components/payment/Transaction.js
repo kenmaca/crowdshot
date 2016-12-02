@@ -10,10 +10,15 @@ import {
 import Database from '../../utils/Database';
 import DateFormat from 'dateformat';
 
+// components
+import OutlineText from '../common/OutlineText';
+
 export default class Transaction extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      value: 0
+    };
 
     this.ref = Database.ref(
       `transactions/${
@@ -55,9 +60,37 @@ export default class Transaction extends Component {
           </Text>
         </View>
         <View style={styles.amountContainer}>
-          <Text style={styles.amount}>
-            {`$${Math.round(this.state.value / 100, 2)}`}
-          </Text>
+          {
+            this.state.stripeRefundId
+            ? (
+              <OutlineText
+                color={Colors.Foreground}
+                text={`Refunded $${
+                  Math.round(
+                    this.state.value / 100,
+                    2
+                  )
+                }`} />
+            ): (
+              <Text style={[
+                styles.amount,
+                this.state.value < 0 && {
+                  color: Colors.Primary
+                }
+              ]}>
+                {
+                  `$${
+                    Math.abs(
+                      Math.round(
+                        this.state.value / 100,
+                        2
+                      )
+                    )
+                  }`
+                }
+              </Text>
+            )
+          }
         </View>
       </View>
     );
@@ -90,6 +123,6 @@ const styles = StyleSheet.create({
   amount: {
     fontSize: Sizes.H3,
     fontWeight: '500',
-    color: Colors.Primary
+    color: Colors.Foreground
   }
 });

@@ -43,7 +43,13 @@ export default class PaymentMethods extends Component {
 
   componentDidMount() {
     this.listener = this.ref.on('value', data => {
-      let blob = data.val() || {};
+
+      // inject internal credit account inside
+      let blob = {
+        ...(data.val() || {}),
+        [Firebase.auth().currentUser.uid]: true
+      };
+
       this.setState({
         blob: blob,
         billing: new ListView.DataSource({
