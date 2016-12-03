@@ -7,10 +7,14 @@ import {
 import {
   Colors, Sizes
 } from '../../Const';
+import {
+  Actions
+} from 'react-native-router-flux';
 import Database from '../../utils/Database';
 
 // components
 import Photo from '../common/Photo';
+import Button from '../common/Button';
 import UserSummary from '../profiles/UserSummary';
 import OutlineText from '../common/OutlineText';
 import CircleIcon from '../common/CircleIcon';
@@ -44,6 +48,13 @@ export default class ContestPhotoCard extends Component {
           photoId={this.state.photoId}
           style={styles.photo}>
           <View style={styles.statusContainer}>
+            <Button
+              style={styles.reportButton}
+              container={styles.reportContainer}
+              icon='warning'
+              label='Report'
+              onPress={() => Actions.report()}/>
+            <View>
             <OutlineText
               style={styles.statusCounter}
               text={`${
@@ -51,6 +62,7 @@ export default class ContestPhotoCard extends Component {
               } of ${
                 this.props.n || 1
               }`} />
+            </View>
           </View>
           <UserSummary
             uid={this.state.createdBy} />
@@ -82,10 +94,21 @@ const styles = StyleSheet.create({
   },
 
   statusContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    justifyContent: 'space-between'
   },
 
   statusCounter: {
     marginLeft: Sizes.InnerFrame / 2
+  },
+
+  reportContainer: {
+    marginTop: Sizes.InnerFrame / 8
+  },
+
+  reportButton: {
+    backgroundColor: Colors.Transparent
   }
+
 });

@@ -17,7 +17,6 @@ import DateFormat from 'dateformat';
 
 // components
 import Button from '../common/Button';
-import InputSectionHeader from '../common/InputSectionHeader';
 import Photo from '../common/Photo';
 import Divider from '../common/Divider';
 import OutlineText from '../common/OutlineText';
