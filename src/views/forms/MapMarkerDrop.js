@@ -161,6 +161,7 @@ export default class MapMarkerDrop extends Component {
           <MapView
             ref='map'
             showsUserLocation
+            showsMyLocationButton={false}
             rotateEnabled={false}
             pitchEnabled={false}
             style={styles.map}
