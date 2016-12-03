@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Modal, Alert
+  View, StyleSheet, Text, Modal, Alert, Action
 } from 'react-native';
 import {
   Colors, Sizes
@@ -121,6 +121,7 @@ export default class NewPayment extends Component {
         <Modal
           transparent
           visible={this.state.processing}
+          onRequestClose={() => true}
           animationType='fade'>
           <ProgressBlocker
             message='Processing payment..' />

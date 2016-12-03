@@ -44,17 +44,19 @@ export default class UserSummary extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.avatar}>
-          <Avatar
-            outline
-            showRank
-            outlineColor={Colors.ModalBackground}
-            onPress={() => Actions.profile({
-              uid: this.props.uid
-            })}
-            size={48}
-            uid={this.props.uid} />
-        </View>
+      <View style={styles.avatar}>
+        <Avatar
+          outline
+          showRank
+          outlineColor={Colors.ModalBackground}
+          onPress={() => Actions.profile({
+            uid: this.props.uid
+          })}
+          size={48}
+          uid={this.props.uid} />
+      </View>
+        <View style={styles.body}>
+
         <Text style={styles.name}>
           {this.state.displayName}
         </Text>
@@ -77,8 +79,7 @@ export default class UserSummary extends Component {
                     (
                       this.state.countAttempts
                       ? (
-                        (this.state.countWon || 0)
-                        / this.state.countAttempts
+                        (this.state.countWon || 0) / this.state.countAttempts
                       ): 0
                     ) * 100
                   )
@@ -100,6 +101,7 @@ export default class UserSummary extends Component {
             </Text>
           </View>
         </View>
+        </View>
       </View>
     );
   }
@@ -107,15 +109,24 @@ export default class UserSummary extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    backgroundColor: Colors.Transparent,
+  },
+
+  body: {
     minHeight: Sizes.InnerFrame * 5,
     alignItems: 'center',
     alignSelf: 'stretch',
     backgroundColor: Colors.ModalBackground,
-    borderRadius: 5
+    borderRadius: 5,
+    paddingTop: Sizes.InnerFrame * 1.5,
+    zIndex: 0
   },
 
   avatar: {
-    marginTop: -Sizes.InnerFrame * 1.5
+    marginBottom: -Sizes.InnerFrame * 1.5,
+    zIndex: 1
   },
 
   userContainer: {
