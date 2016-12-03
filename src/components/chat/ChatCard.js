@@ -91,13 +91,13 @@ export default class ChatCard extends Component {
 
   }
 
-  formattedMessage() {
-    var fmsg = this.state.message + "";
-    if (fmsg.length > 30) {
-      var res = fmsg.substr(0, 30) + ' ...';
+  formattedMessage(message, length) {
+    var fmsg = message + "";
+    if (fmsg.length > length) {
+      var res = fmsg.substr(0, length) + ' ...';
       return res;
     }
-    return this.state.message
+    return message
   }
 
   render() {
@@ -117,10 +117,12 @@ export default class ChatCard extends Component {
             </View>
             <View style={styles.messageContainer}>
               <Text style={styles.chatTitle}>
-                [{Object.keys(this.state.avatarList).length} photographers]
+                contest nearby: {this.formattedMessage(this.state.near, 23)}
               </Text>
               <Text style={styles.message}>
-                {this.state.name}: {this.formattedMessage()}
+                {this.state.name
+                  + ': '
+                  + this.formattedMessage(this.state.message, 30)}
               </Text>
             </View>
             <Text style={styles.date}>
@@ -159,9 +161,6 @@ export default class ChatCard extends Component {
     } else if (week + 1 == newDay) {
       res = 'Yesterday'
   } else if (newDay - day < 6) {
-    console.log(newDay);
-    console.log(day)
-    console.log(week)
       //Which day of week
       if (week == 0) {
         res = 'Monday'
@@ -218,7 +217,7 @@ const styles = StyleSheet.create({
   },
 
   chatTitle: {
-    fontSize: Sizes.H3,
+    fontSize: Sizes.Text,
     color: Colors.AlternateText,
     textAlign: 'left'
   },
