@@ -47,6 +47,7 @@ export default class ChatRoom extends Component {
 
     this.listener = this.ref.on('value', data => {
         let blob = data.val() || {};
+        console.log(blob)
         this.setState({
           rawChat: blob,
           activeChat: new ListView.DataSource({
@@ -54,6 +55,7 @@ export default class ChatRoom extends Component {
           }).cloneWithRows(
             Object.keys(blob)
           )
+
         });
 
         // and clear loader
@@ -61,8 +63,6 @@ export default class ChatRoom extends Component {
     });
 
     this.chatListener = this.chatRef.on('value', data => {
-      console.log(data.val())
-      console.log(Object.values(Object.values(data.val())) + 'chatMessage')
       data.exists() && this.setState({
         chatMessage: data.val()
       })
@@ -71,7 +71,7 @@ export default class ChatRoom extends Component {
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
-    this.chatListener && this.chatRef.off('value', this.chatListener)
+    this.chatListener && this.chatRef.off('value', this.chatListener);
   }
 
   renderRow(chatId) {
