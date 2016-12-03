@@ -30,6 +30,17 @@ export default class ChatRoom extends Component {
         Firebase.auth().currentUser.uid
       }/activeChat`
     );
+
+    this.chatRef = Database.ref(
+      `chats`
+    )
+  }
+
+  emptyChat(chatId) {
+    if (this.state.chatMessage && this.state.chatMessage[chatId]) {
+      return true
+    }
+    return false
   }
 
   componentDidMount() {
@@ -48,48 +59,63 @@ export default class ChatRoom extends Component {
         // and clear loader
         this.refs.title.clearLoader();
     });
+
+    this.chatListener = this.chatRef.on('value', data => {
+      console.log(data.val())
+      console.log(Object.values(Object.values(data.val())) + 'chatMessage')
+      data.exists() && this.setState({
+        chatMessage: data.val()
+      })
+    })
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
+    this.chatListener && this.chatRef.off('value', this.chatListener)
   }
 
-  renderRow(contestId) {
+  renderRow(chatId) {
     return (
-      <View style={styles.chatContainer}>
-        <Swipeout
-          right={[
-            {
-              text: 'Remove',
-              color: Colors.Text,
-              backgroundColor: Colors.Cancel,
-              onPress: () => {
-                Alert.alert(
-                  'Remove this Chat Entry?',
-                  null,
-                  [
-                    {
-                      text: 'Cancel',
-                      style: 'cancel'
-                    }, {
-                      text: 'Remove',
-                      onPress: () => {
-                        Database.ref(
-                          `profiles/${
-                            Firebase.auth().currentUser.uid
-                          }/activeChat/${
-                            contestId
-                          }`
-                        ).remove();
-                      }
+      <View>
+        {
+          this.emptyChat(chatId) && (
+            <View style={styles.chatContainer}>
+              <Swipeout
+                right={[
+                  {
+                    text: 'Remove',
+                    color: Colors.Text,
+                    backgroundColor: Colors.Cancel,
+                    onPress: () => {
+                      Alert.alert(
+                        'Remove this Chat Entry?',
+                        null,
+                        [
+                          {
+                            text: 'Cancel',
+                            style: 'cancel'
+                          }, {
+                            text: 'Remove',
+                            onPress: () => {
+                              Database.ref(
+                                `profiles/${
+                                  Firebase.auth().currentUser.uid
+                                }/activeChat/${
+                                  chatId
+                                }`
+                              ).remove();
+                            }
+                          }
+                        ]
+                      );
                     }
-                  ]
-                );
-              }
-            }
-          ]}>
-          <ChatCard chatId={contestId} />
-      </Swipeout>
+                  }
+                ]}>
+                <ChatCard chatId={chatId} />
+              </Swipeout>
+            </View>
+          )
+        }
       </View>
     )
   }
