@@ -72,7 +72,7 @@ export default class Login extends Component {
                       Database.ref(
                         `profiles/${user.uid}`
                       ).once('value', profile => {
-                        profile = data.val() || {};
+                        profile = profile.val() || {};
 
                         // update the profile
                         Database.ref(
