@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, Animated, PanResponder,
-  ListView, TouchableOpacity
+  ListView, TouchableOpacity, Easing
 } from 'react-native';
 import {
   Actions
@@ -28,7 +28,6 @@ import Video from 'react-native-video';
 import Avatar from '../../components/profiles/Avatar';
 import OutlineText from '../../components/common/OutlineText';
 import ContestCard from '../../components/lists/ContestCard';
-import EmptyContestCard from '../../components/lists/EmptyContestCard';
 import CircleIcon from '../../components/common/CircleIcon';
 import HeaderButtons from '../../components/common/HeaderButtons';
 import HeaderButton from '../../components/common/HeaderButton';
@@ -41,7 +40,6 @@ export default class Main extends Component {
     let rawData = [false];
     this.state = {
       scrollAllowed: true,
-      lastScrolled: Date.now(),
       isDocked: true,
       pan: pan,
       rawData: rawData,
@@ -61,6 +59,8 @@ export default class Main extends Component {
     this.getPaddingStyle = this.getPaddingStyle.bind(this);
     this.top = this.top.bind(this);
     this.bottom = this.bottom.bind(this);
+    this.onLayout = this.onLayout.bind(this);
+    this.onScroll = this.onScroll.bind(this);
 
     // determine which header and greeting to display based
     // on time
@@ -83,12 +83,16 @@ export default class Main extends Component {
         // trigger that we've interally captured the
         // PanResponder
         this.shouldCapture = (
-          (
-            this.state.isDocked
-            && (gestureState.dy < -10)
-          ) || (
-            !this.state.isDocked
-            && (gestureState.dy > 10)
+          gestureState.dx > -10
+          && gestureState.dx < 10
+          && (
+            (
+              this.state.isDocked
+              && gestureState.dy < -1
+            ) || (
+              !this.state.isDocked
+              && gestureState.dy > 1
+            )
           )
         );
 
@@ -124,15 +128,22 @@ export default class Main extends Component {
           } else if (gestureState.dy > (panDiff / 3)) {
             this.bottom();
           } else {
-            Animated.spring(
+            Animated.timing(
               this.state.pan,
               {
-                toValue: 0
+                toValue: 0,
+                duration: 100,
+                easing: Easing.inOut(Easing.ease)
               }
             ).start(() => this.setState({
               scrollAllowed: true
             }));
           }
+
+          // scroll to snapped page
+          this.refs.cards._component.scrollTo({
+            x: this.currentPage * this.offset
+          });
         }
 
         // reset
@@ -174,7 +185,7 @@ export default class Main extends Component {
     this.listener = this.ref.on('value', data => {
 
       // dont check exists due to last item being removed
-      let rawData = [...Object.keys(data.val() || {}), false];
+      let rawData = Object.keys(data.val() || {});
       this.setState({
         rawData: rawData,
         data: new ListView.DataSource({
@@ -259,37 +270,55 @@ export default class Main extends Component {
   }
 
   top() {
-    Animated.spring(
+    Animated.timing(
       this.state.pan,
       {
-        toValue: -panDiff
+        toValue: -panDiff,
+        duration: 100,
+        easing: Easing.inOut(Easing.ease)
       }
-    ).start(() => this.setState({
-      animation: this.state.pan.interpolate({
-        inputRange: [0, panDiff],
-        outputRange: [0, 1],
-        extrapolate: 'clamp'
-      }),
-      isDocked: false,
-      scrollAllowed: true
-    }));
+    ).start(() => {
+      this.setState({
+        animation: this.state.pan.interpolate({
+          inputRange: [0, panDiff],
+          outputRange: [0, 1],
+          extrapolate: 'clamp'
+        }),
+        isDocked: false,
+        scrollAllowed: true
+      });
+    });
   }
 
   bottom() {
-    Animated.spring(
+    Animated.timing(
       this.state.pan,
       {
-        toValue: panDiff
+        toValue: panDiff,
+        duration: 100,
+        easing: Easing.inOut(Easing.ease)
       }
-    ).start(() => this.setState({
-      animation: this.state.pan.interpolate({
-        inputRange: [-panDiff, 0],
-        outputRange: [0, 1],
-        extrapolate: 'clamp'
-      }),
-      isDocked: true,
-      scrollAllowed: true
-    }));
+    ).start(() => {
+      this.setState({
+        animation: this.state.pan.interpolate({
+          inputRange: [-panDiff, 0],
+          outputRange: [0, 1],
+          extrapolate: 'clamp'
+        }),
+        isDocked: true,
+        scrollAllowed: true
+      });
+    });
+  }
+
+  onLayout(e) {
+    this.offset = e.nativeEvent.layout.width;
+  }
+
+  onScroll(e) {
+    this.currentPage = Math.round(
+      e.nativeEvent.contentOffset.x / this.offset
+    );
   }
 
   render() {
@@ -326,7 +355,7 @@ export default class Main extends Component {
               style={styles.location}
               text={
                 `${
-                  this.state.rawData.length - 1
+                  this.state.rawData.length
                 } Active Contests`
               } />
           </LinearGradient>
@@ -343,37 +372,32 @@ export default class Main extends Component {
           </View>
         </View>
         <AnimatedListView
+          ref='cards'
           horizontal
           pagingEnabled
-          onScroll={() => this.setState({
-            lastScrolled: Date.now()
-          })}
           scrollEnabled={this.state.scrollAllowed}
           removeClippedSubviews={false}
           dataSource={this.state.data}
+          onLayout={this.onLayout}
+          onScroll={this.onScroll}
           style={this.getListViewStyle()}
           {...this._panResponder.panHandlers}
           renderRow={
             rowData => {
               return (
-                rowData
-                ? (
-                  <View
-                    key={rowData}
-                    style={styles.cardShadow}>
-                    <View style={styles.cardContainer}>
-                      <ContestCard
-                        isCard
-                        contestId={rowData} />
-                    </View>
+                <View
+                  key={rowData}
+                  style={styles.cardShadow}>
+                  <View style={styles.cardContainer}>
+                    <ContestCard
+                      isCard
+                      toggle={
+                        this.state.isDocked
+                        ? this.top: this.bottom
+                      }
+                      contestId={rowData} />
                   </View>
-                ): (
-                  <View
-                    key={'emptyCard'}
-                    style={styles.cardShadow}>
-                    <EmptyContestCard />
-                  </View>
-                )
+                </View>
               );
             }
           } />

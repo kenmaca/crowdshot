@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, ScrollView, ListView,
-  TouchableOpacity, Alert
+  TouchableOpacity, Alert, TouchableWithoutFeedback
 } from 'react-native';
 import {
   Colors, Sizes
@@ -91,34 +91,37 @@ export default class ContestCard extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Photo
-          photoId={this.state.referencePhotoId}
-          style={styles.header}>
-          <TrophyCase
-            isOwn
-            bounty={this.state.bounty}
-            prizes={this.state.prizes}
-            onPress={() => {
-              Actions.newPayment({
-                titleText: 'Add another Prize',
-                disclaimerText: 'This will be charged to your '
-                  + 'chosen payment method immediately. Unused bounties '
-                  + 'will be refunded at the end of the contest.',
-                fixedValue: this.state.bounty,
-                description: 'Additional Bounty for Photo Contest',
-                onCharged: prizeId => Database.ref(
-                  `contests/${
-                    this.props.contestId
-                  }/prizes/${
-                    prizeId
-                  }`
-                ).set({
-                  '.value': true,
-                  '.priority': -Date.now()
-                })
-              });
-            }} />
-        </Photo>
+        <TouchableWithoutFeedback
+          onPress={this.props.toggle}>
+          <Photo
+            photoId={this.state.referencePhotoId}
+            style={styles.header}>
+            <TrophyCase
+              isOwn
+              bounty={this.state.bounty}
+              prizes={this.state.prizes}
+              onPress={() => {
+                Actions.newPayment({
+                  titleText: 'Add another Prize',
+                  disclaimerText: 'This will be charged to your '
+                    + 'chosen payment method immediately. Unused bounties '
+                    + 'will be refunded at the end of the contest.',
+                  fixedValue: this.state.bounty,
+                  description: 'Additional Bounty for Photo Contest',
+                  onCharged: prizeId => Database.ref(
+                    `contests/${
+                      this.props.contestId
+                    }/prizes/${
+                      prizeId
+                    }`
+                  ).set({
+                    '.value': true,
+                    '.priority': -Date.now()
+                  })
+                });
+              }} />
+          </Photo>
+        </TouchableWithoutFeedback>
         <View style={[
           styles.body,
           !this.props.isCard && {
