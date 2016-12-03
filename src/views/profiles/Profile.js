@@ -61,8 +61,7 @@ export default class Profile extends Component {
       Object.keys(contests).length > 0
       ? +(
         (
-          Object.keys(cancelled).length
-          / Object.keys(contests).length
+          Object.keys(cancelled).length / Object.keys(contests).length
         ).toFixed(2)
       ): 0
     );

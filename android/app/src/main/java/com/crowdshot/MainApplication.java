@@ -20,6 +20,8 @@ import com.brentvatne.react.ReactVideoPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.devfd.RNGeocoder.RNGeocoderPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
+import com.cmcewen.blurview.BlurViewPackage;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,6 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new BlurViewPackage(),
             new MapsPackage(),
             new ReactNativeIcons(),
             new RNFetchBlobPackage(),
