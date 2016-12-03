@@ -176,7 +176,8 @@ const styles = StyleSheet.create({
   photo: {
     width: 50,
     height: 50,
-    borderRadius: 5
+    borderRadius: 5,
+    backgroundColor: Colors.Transparent
   },
 
   content: {
