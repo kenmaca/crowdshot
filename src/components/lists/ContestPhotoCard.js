@@ -56,7 +56,6 @@ export default class ContestPhotoCard extends Component {
               onPress={() => Actions.report()}/>
             <View>
             <OutlineText
-              style={styles.statusCounter}
               text={`${
                 this.props.i || 1
               } of ${
@@ -97,10 +96,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'stretch',
     justifyContent: 'space-between'
-  },
-
-  statusCounter: {
-    marginLeft: Sizes.InnerFrame / 2
   },
 
   reportContainer: {
