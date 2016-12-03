@@ -93,7 +93,7 @@ export default class Photo extends Component {
         {...this.props}
         style={[
           styles.container,
-          this.props.style
+          this.props.style,
         ]}
         source={{uri: this.state.source}}
         onLoadEnd={this.props.onLoadEnd} />
@@ -102,7 +102,7 @@ export default class Photo extends Component {
         ref={c => this.c = c}
         {...this.props}
         style={[
-          styles.container,
+          styles.emptyContainer,
           this.props.style
         ]} />
     );
@@ -110,7 +110,11 @@ export default class Photo extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  emptyContainer: {
     backgroundColor: Colors.Foreground
+  },
+
+  container: {
+    backgroundColor: Colors.Transparent
   }
 });
