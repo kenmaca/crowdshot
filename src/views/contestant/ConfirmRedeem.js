@@ -264,7 +264,14 @@ export default class ConfirmRedeem extends Component {
         <CloseFullscreenButton />
         <Modal
           visible={this.state.finalizedVisible}
-          animationType='slide'>
+          onRequestClose={() => {
+            this.setState({
+              finalizedVisible: false
+            });
+            Actions.pop({
+              popNum: 2
+            });
+          }}          animationType='slide'>
           <View style={styles.finalizedContainer}>
             <View style={styles.textContainer}>
               <Text style={[
