@@ -2,10 +2,9 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Image
+  View, StyleSheet, Text
 } from 'react-native';
 
-import Photo from '../common/Photo';
 import Database from '../../utils/Database';
 import Avatar from './Avatar';
 

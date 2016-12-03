@@ -52,7 +52,10 @@ export default class Chat extends Component {
           }/activeChat/${
             this.props.chatId
           }`
-        ).set(true);
+        ).set({
+          '.value': true,
+          '.priority': -Date.now()
+        });
       }
     })
 
