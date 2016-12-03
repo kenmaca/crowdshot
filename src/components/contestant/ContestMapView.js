@@ -80,7 +80,7 @@ export default class ContestMapView extends Component {
   }
 
   onRegionChange(region, initial) {
-    if (!initial || !this.state.updated) {
+    if (initial || !this.state.updated) {
       this.ref.updateCriteria({
         center: [
           region.latitude,
@@ -97,9 +97,36 @@ export default class ContestMapView extends Component {
         )
       });
 
+      // only geocode if this is the first time we found
+      // a location
+      if (initial && !this.state.geocoded) {
+
+        // add geocoded info to profile to show current city
+        let coords = {
+          lat: region.latitude,
+          lng: region.longitude
+        };
+
+        Geocoder.geocodePosition(coords).then(location => {
+          if (location[0]) {
+            Database.ref(
+              `profiles/${
+                Firebase.auth().currentUser.uid
+              }/currentRegion`
+            ).set(`${location[0].locality}, ${location[0].adminArea}`);
+            Database.ref(
+              `profiles/${
+                Firebase.auth().currentUser.uid
+              }/currentCountry`
+            ).set(location[0].country);
+          }
+        }).catch(err => console.log(err));
+      }
+
       this.setState({
         region: region,
-        updated: true
+        updated: true,
+        geocoded: this.state.geocoded || initial
       });
     }
   }
@@ -124,27 +151,6 @@ export default class ContestMapView extends Component {
           Firebase.auth().currentUser.uid,
           [position.coords.latitude, position.coords.longitude]
         );
-
-        // add geocoded info to profile to show current city
-        let coords = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-
-        Geocoder.geocodePosition(coords).then(location => {
-          if (location[0]) {
-            Database.ref(
-              `profiles/${
-                Firebase.auth().currentUser.uid
-              }/currentRegion`
-            ).set(`${location[0].locality}, ${location[0].adminArea}`);
-            Database.ref(
-              `profiles/${
-                Firebase.auth().currentUser.uid
-              }/currentCountry`
-            ).set(location[0].country);
-          }
-        }).catch(err => console.log(err));
       },
       error => Alert.alert(error),
       {
