@@ -58,7 +58,7 @@ export default class Rank extends Component {
           styles.container,
           this.props.size && {
             fontSize: this.props.size,
-            lineHeight: this.props.size * 1.5
+            lineHeight: Math.round(this.props.size * 1.5)
           },
           this.props.style
         ]}>

@@ -106,6 +106,9 @@ export default class ContestFinalize extends Component {
         <Modal
           transparent
           visible={this.state.upsellVisible}
+          onRequestClose={() => this.setState({
+            upsellVisible: false
+          })}
           animationType='slide'>
           <TouchableWithoutFeedback
             onPress={() => this.setState({
@@ -164,6 +167,14 @@ export default class ContestFinalize extends Component {
         </Modal>
         <Modal
           visible={this.state.finalizedVisible}
+          onRequestClose={() => {
+            this.setState({
+              finalizedVisible: false
+            });
+            Actions.completed({
+              type: 'replace'
+            });
+          }}
           animationType='slide'>
           <View style={styles.container}>
             <View style={styles.textContainer}>
