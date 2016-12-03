@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Modal, Alert
+  View, StyleSheet, Text, Modal, Alert, BackAndroid, Action
 } from 'react-native';
 import {
   Colors, Sizes
@@ -34,6 +34,7 @@ export default class NewPayment extends Component {
     };
 
     this.charge = this.charge.bind(this);
+    this.ignore = this.ignore.bind(this);
   }
 
   componentDidMount() {
@@ -46,7 +47,14 @@ export default class NewPayment extends Component {
     });
   }
 
+  ignore(){
+    return true;
+  }
+
   charge() {
+
+    // disable android back
+    BackAndroid.addEventListener('hardwareBackPress', this.ignore);
 
     // block view while waiting for server to process charge
     this.setState({
@@ -112,6 +120,8 @@ export default class NewPayment extends Component {
           ]
         );
       }
+
+      BackAndroid.removeEventListener('hardwareBackPress', this.ignore);
     });
   }
 
@@ -121,6 +131,7 @@ export default class NewPayment extends Component {
         <Modal
           transparent
           visible={this.state.processing}
+          onRequestClose={() => true}
           animationType='fade'>
           <ProgressBlocker
             message='Processing payment..' />
