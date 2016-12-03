@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  StyleSheet, View, Text, Image
+  StyleSheet, View, Text, Image, findNodeHandle
 } from 'react-native';
 import Database from '../../utils/Database';
 import {
@@ -44,6 +44,10 @@ export default class Profile extends Component {
     this.ref.off('value', this.profileListener);
   }
 
+  imageLoaded() {
+    this.setState({viewRef: findNodeHandle(this.refs.backgroundImage)})
+  }
+
   render() {
 
     // used to build stats
@@ -75,15 +79,13 @@ export default class Profile extends Component {
           renderBackground={() => (
             <Photo
               photoId={this.state.photo}
-              style={styles.cover}>
-              <BlurView
-                blurType='light'
-                style={styles.blur}>
-                <View style={[
-                  styles.blur,
-                  styles.blurTint
-                ]} />
-              </BlurView>
+              style={styles.cover}
+              ref={'backgroundImage'}
+              onLoadEnd={this.imageLoaded.bind(this)}>
+                <BlurView
+                  blurType='light'
+                  viewRef={this.state.viewRef}
+                  style={[styles.blur, styles.blurTint]}/>
             </Photo>
           )}
           renderForeground={() => (

@@ -95,7 +95,8 @@ export default class Photo extends Component {
           styles.container,
           this.props.style
         ]}
-        source={{uri: this.state.source}} />
+        source={{uri: this.state.source}}
+        onLoadEnd={this.props.onLoadEnd} />
     ): (
       <View
         ref={c => this.c = c}
