@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Modal, Alert, BackAndroid
+  View, StyleSheet, Text, Modal, Alert
 } from 'react-native';
 import {
   Actions
@@ -36,17 +36,9 @@ export default class NewContest extends Component {
     };
 
     this.submit = this.submit.bind(this);
-    this.ignore = this.ignore.bind(this);
-  }
-
-  ignore(){
-    return true;
   }
 
   submit() {
-
-    // disable android back
-    BackAndroid.addEventListener('hardwareBackPress', this.ignore);
 
     // block view as we setup the contest
     this.setState({
@@ -115,8 +107,6 @@ export default class NewContest extends Component {
           processing: false,
           instructions: DEFAULT_INSTRUCTIONS
         });
-
-        BackAndroid.removeEventListener('hardwareBackPress', this.ignore);
 
         Actions.contest({
           contestId: contestId

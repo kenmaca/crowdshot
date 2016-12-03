@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Picker, Modal, TouchableOpacity, Text,
-  TouchableWithoutFeedback, Alert
+  TouchableWithoutFeedback, Alert, Platform
 } from 'react-native';
 import {
   Sizes, Colors
@@ -12,12 +12,14 @@ import {
 // components
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AndroidPicker from 'react-native-picker';
 
 export default class PriceSelectPicker extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      visible: false
+      visible: false,
+      visibleAndroid: false
     }
 
     // from 20 to 990
@@ -37,12 +39,39 @@ export default class PriceSelectPicker extends Component {
     });
   }
 
+  showAndroidPicker(){
+    let data=[];
+    this.options.map(value => (
+      data.push(`$${value}`)
+    ))
+    AndroidPicker.init({
+           pickerData: data,
+           selectedValue: this.state.selected,
+           pickerConfirmBtnText: 'Select',
+           pickerCancelBtnText: 'Cancel',
+           pickerTitleText: '',
+           pickerConfirmBtnColor: [102, 199, 92, 1],
+           pickerCancelBtnColor: [102, 199, 92, 1],
+           pickerToolBarBg: [255, 255, 255, 1],
+           pickerBg: [255, 255, 255, 1],
+           onPickerConfirm: value => {
+               this.setState({
+                 selected: value.toString().substr(1),
+                 visibleAndroid: false
+               });
+           },
+           onPickerCancel: () => this.setState({visibleAndroid:false})
+       });
+    AndroidPicker.show();
+  }
+
   render() {
     return(
       <View >
         <Modal
           transparent
           visible={this.state.visible}
+          onRequestClose={() => this.setState({visible:false})}
           animationType='fade'>
           <TouchableOpacity
             onPress={() => this.select(
@@ -72,10 +101,28 @@ export default class PriceSelectPicker extends Component {
             </TouchableWithoutFeedback>
           </TouchableOpacity>
         </Modal>
+        <Modal
+          transparent
+          visible={this.state.visibleAndroid}
+          onRequestClose={() => {
+            this.setState({visibleAndroid:false});
+            AndroidPicker.hide();
+          }}
+          onShow={() => this.showAndroidPicker()}
+          animationType='fade'>
+          <View style={styles.modal}/>
+        </Modal>
         <TouchableOpacity
-          onPress={() => this.setState({
-            visible: true
-          })}>
+          onPress={() => {
+            if (Platform === 'ios'){
+              this.setState({
+                visible: true
+              })
+            } else {
+              this.setState({
+                visibleAndroid: true
+              })
+            }}}>
           <View
             style={[
               styles.pickerButton,
