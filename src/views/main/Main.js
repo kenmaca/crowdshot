@@ -17,11 +17,10 @@ import DateFormat from 'dateformat';
 import FCM from 'react-native-fcm';
 
 // modifications
-let panDiff = 120;
+let panDiff = 160;
 let AnimatedListView = Animated.createAnimatedComponent(
   ListView
 );
-let AnimatedView = Animated.createAnimatedComponent(View);
 
 // components
 import LinearGradient from 'react-native-linear-gradient';
@@ -38,16 +37,18 @@ export default class Main extends Component {
   constructor(props) {
     super(props);
 
-    let pan = new Animated.ValueXY();
+    let pan = new Animated.Value(0);
     let rawData = [false];
     this.state = {
+      scrollAllowed: true,
+      lastScrolled: Date.now(),
       isDocked: true,
       pan: pan,
       rawData: rawData,
       data: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
       }).cloneWithRows(rawData),
-      animation: pan.y.interpolate({
+      animation: pan.interpolate({
         inputRange: [-panDiff, 0],
         outputRange: [0, 1],
         extrapolate: 'clamp'
@@ -58,6 +59,8 @@ export default class Main extends Component {
     // bindings
     this.getListViewStyle = this.getListViewStyle.bind(this);
     this.getPaddingStyle = this.getPaddingStyle.bind(this);
+    this.top = this.top.bind(this);
+    this.bottom = this.bottom.bind(this);
 
     // determine which header and greeting to display based
     // on time
@@ -75,76 +78,65 @@ export default class Main extends Component {
 
     // PanResponder setup
     this._panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: (
-        evt, gestureState
-      ) => true,
-      onStartShouldSetPanResponderCapture: (
-        evt, gestureState
-      ) => true,
-      onMoveShouldSetPanResponder: (
-        evt, gestureState
-      ) => (
-        (gestureState.dy < (-panDiff / 6))
-        || (gestureState.dy > (panDiff / 6))
-      ),
-      onMoveShouldSetPanResponderCapture: (
-        evt, gestureState
-      ) => (
-        (gestureState.dy < (-panDiff / 6))
-        || (gestureState.dy > (panDiff / 6))
-      ),
-      onPanResponderGrant: () => {},
-      onPanResponderMove: Animated.event(
-        [null, {
-          dx: this.state.pan.x,
-          dy: this.state.pan.y
-        }]
-      ),
-      onPanResponderRelease: (evt, gestureState) => {
-        let shouldToggle = (
-          this.state.isDocked
-          ? (gestureState.dy < (-panDiff / 3))
-          : (gestureState.dy > (panDiff / 3))
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+
+        // trigger that we've interally captured the
+        // PanResponder
+        this.shouldCapture = (
+          (
+            this.state.isDocked
+            && (gestureState.dy < -10)
+          ) || (
+            !this.state.isDocked
+            && (gestureState.dy > 10)
+          )
         );
 
-        if (!shouldToggle) {
+        return this.shouldCapture;
+      },
+      onPanResponderGrant: () => {
 
-          // return to original position
-          Animated.spring(
-            this.state.pan.y,
-            {toValue: 0}
-          ).start();
-        } else {
-
-          // toggle between docked and zoomed
-          Animated.spring(
-            this.state.pan.y,
-            {
-              toValue: (
-                this.state.isDocked
-                ? -panDiff
-                : panDiff
-              )
-            }
-          ).start(() => {
-            this.setState({
-              isDocked: !this.state.isDocked,
-              animation: (
-                !this.state.isDocked
-                ? this.state.pan.y.interpolate({
-                  inputRange: [-panDiff, 0],
-                  outputRange: [0, 1],
-                  extrapolate: 'clamp'
-                })
-                : this.state.pan.y.interpolate({
-                  inputRange: [0, panDiff],
-                  outputRange: [0, 1],
-                  extrapolate: 'clamp'
-                })
-              )
-            });
+        // only act if we've been internally granted
+        // by *this* onMoveShouldSetPanResponderCapture
+        // and not the built in ListView's
+        if (this.shouldCapture && this.state.scrollAllowed) {
+          this.setState({
+            scrollAllowed: false
           });
         }
+      },
+      onPanResponderMove: (evt, gestureState) => {
+        this.shouldCapture && Animated.event(
+          [null, {
+            dy: this.state.pan
+          }]
+        )(evt, gestureState);
+      },
+      onPanResponderRelease: (
+        evt, gestureState
+      ) => {
+        if (this.shouldCapture) {
+          if (
+            this.state.isDocked
+            && (gestureState.dy < (-panDiff / 3))
+          ) {
+            this.top();
+          } else if (gestureState.dy > (panDiff / 3)) {
+            this.bottom();
+          } else {
+            Animated.spring(
+              this.state.pan,
+              {
+                toValue: 0
+              }
+            ).start(() => this.setState({
+              scrollAllowed: true
+            }));
+          }
+        }
+
+        // reset
+        this.shouldCapture = false;
       }
     });
 
@@ -247,12 +239,6 @@ export default class Main extends Component {
             extrapolate: 'clamp'
           }),
         }, {
-          translateX: this.state.animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, 0.8],
-            extrapolate: 'clamp'
-          })
-        }, {
           translateY: this.state.animation.interpolate({
             inputRange: [0, 1],
             outputRange: [0, Sizes.Height / 2],
@@ -270,6 +256,40 @@ export default class Main extends Component {
         outputRange: [0, Sizes.Width / 2.6]
       })
     }
+  }
+
+  top() {
+    Animated.spring(
+      this.state.pan,
+      {
+        toValue: -panDiff
+      }
+    ).start(() => this.setState({
+      animation: this.state.pan.interpolate({
+        inputRange: [0, panDiff],
+        outputRange: [0, 1],
+        extrapolate: 'clamp'
+      }),
+      isDocked: false,
+      scrollAllowed: true
+    }));
+  }
+
+  bottom() {
+    Animated.spring(
+      this.state.pan,
+      {
+        toValue: panDiff
+      }
+    ).start(() => this.setState({
+      animation: this.state.pan.interpolate({
+        inputRange: [-panDiff, 0],
+        outputRange: [0, 1],
+        extrapolate: 'clamp'
+      }),
+      isDocked: true,
+      scrollAllowed: true
+    }));
   }
 
   render() {
@@ -325,6 +345,10 @@ export default class Main extends Component {
         <AnimatedListView
           horizontal
           pagingEnabled
+          onScroll={() => this.setState({
+            lastScrolled: Date.now()
+          })}
+          scrollEnabled={this.state.scrollAllowed}
           removeClippedSubviews={false}
           dataSource={this.state.data}
           style={this.getListViewStyle()}
