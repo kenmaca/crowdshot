@@ -85,7 +85,7 @@ export default class HostInfo extends Component {
             </Text>
             <Text style={styles.stat}>
               {
-                `${(1 - cancelledRate) * 100}% Completion`
+                `${Math.round((1 - cancelledRate) * 100)}% Completion`
               }
             </Text>
           </View>
