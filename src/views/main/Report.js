@@ -58,6 +58,7 @@ export default class Chat extends Component {
             })}
             multiline={true}
             numberOfLines={10}
+            underlineColorAndroid={Colors.Transparent}
             returnKeyType='done'
              />
         </View>
