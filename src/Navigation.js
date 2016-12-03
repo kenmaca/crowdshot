@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Navigator, Platform, StatusBar
+  View, StyleSheet, Navigator, Platform, StatusBar, Alert
 } from 'react-native';
 import {
   Router, Scene, Actions
@@ -154,10 +154,19 @@ export default class Navigation extends Component {
                 initial
                 hideNavBar
                 key='mainMain'
-                component={Main}
                 title='Your Contests'
                 iconName='home'
-                icon={TabButton} />
+                onPress={() => Actions.mainMainView({
+                  toggle: true
+                })}
+                icon={TabButton}>
+                <Scene
+                  initial
+                  hideNavBar
+                  key='mainMainView'
+                  component={Main}
+                  type='refresh' />
+              </Scene>
               <Scene
                 hideNavBar
                 key='mainBroadcast'

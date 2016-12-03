@@ -159,6 +159,10 @@ export default class Main extends Component {
     );
   }
 
+  componentWillReceiveProps(props) {
+    props.toggle && this.bottom();
+  }
+
   componentDidMount() {
 
     // initialize FCM
