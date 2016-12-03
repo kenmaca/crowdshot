@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
   circularPhoto: {
     width: 80,
     height: 80,
-    backgroundColor: Colors.ModalBackground
   },
 
   content: {

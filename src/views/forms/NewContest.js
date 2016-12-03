@@ -107,7 +107,7 @@ export default class NewContest extends Component {
           processing: false,
           instructions: DEFAULT_INSTRUCTIONS
         });
-        
+
         Actions.contest({
           contestId: contestId
         });
@@ -121,6 +121,7 @@ export default class NewContest extends Component {
         <Modal
           transparent
           visible={this.state.processing}
+          onRequestClose={() => Actions.pop()}
           animationType='fade'>
           <ProgressBlocker
             message='Setting up your Contest..' />
