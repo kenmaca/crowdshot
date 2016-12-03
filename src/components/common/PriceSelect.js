@@ -20,12 +20,26 @@ import PriceSelectPicker from './PriceSelectPicker';
 export default class PriceSelect extends Component {
   constructor(props) {
     super(props);
+
+    this.options = this.props.options || [0, 1, 5, 10];
     this.state = {
-      options: (
-        this.props.options ? this.props.options[0]: 0
-      ),
-      button: true
+      selected: this.options[0]
     };
+
+    this.select = this.select.bind(this);
+  }
+
+  select(value) {
+    this.setState({
+      selected: value
+    });
+
+    // outer callback
+    (this.props.onSelected
+      && this.props.onSelected(
+        value
+      )
+    );
   }
 
   render() {
@@ -35,27 +49,12 @@ export default class PriceSelect extends Component {
         <View style={styles.container}>
           <View style={styles.buttonContainer}>
             {
-              (this.props.options ||
-                [0, 1, 5, 10]
-              ).map((value, i) => (
+              this.options.map(value => (
                 <Button
-                  key={i}
-                  onPress={() => {
-                    this.setState({
-                      options: value,
-                      button: true
-                    });
-
-                    // outer callback
-                    (
-                      this.props.onSelected
-                      && this.props.onSelected(
-                        value
-                      )
-                    );
-                  }}
+                  key={Math.random()}
+                  onPress={() => this.select(value)}
                   color={
-                    (this.state.button && this.state.options === value)
+                    this.state.selected === value
                     ? Colors.Primary
                     : Colors.Disabled
                   }
@@ -63,22 +62,11 @@ export default class PriceSelect extends Component {
                   label={`$${value}`} />
               ))
             }
-            <View
-              style={
-                (this.state.button)
-                ? [styles.picker, {backgroundColor: Colors.Disabled}]
-                : [styles.picker, {backgroundColor: Colors.Primary}]}>
-              <PriceSelectPicker
-                onSelected={amount => this.props.onSelected(amount)}
-                onButtonPress={change => {this.setState({
-                  button: change
-                });
-                (
-                  this.props.onButtonPress && this.props.onButtonPress(!change)
-                )
-              }}>
-              </PriceSelectPicker>
-            </View>
+            <PriceSelectPicker
+              highlighted={
+                this.options.indexOf(this.state.selected) < 0
+              }
+              onSelected={this.select} />
           </View>
         </View>
       </Field>
@@ -100,19 +88,9 @@ const styles = StyleSheet.create({
 
   button: {
     padding: 5,
-    borderRadius: 16,
-    width: 32,
-    height: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden'
-  },
-
-  picker: {
-    padding: 5,
-    borderRadius: 20,
-    width: 40,
-    height: 40,
+    borderRadius: 17,
+    width: 34,
+    height: 34,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden'
