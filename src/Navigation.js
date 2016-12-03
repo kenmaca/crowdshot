@@ -46,6 +46,7 @@ import ProfileEdit from './views/profiles/ProfileEdit';
 
 // components
 import TabButton from './components/common/TabButton';
+import YourContestsTabButton from './components/contests/YourContestsTabButton';
 
 export default class Navigation extends Component {
   componentDidMount() {
@@ -159,7 +160,7 @@ export default class Navigation extends Component {
                 onPress={() => Actions.mainMainView({
                   toggle: true
                 })}
-                icon={TabButton}>
+                icon={YourContestsTabButton}>
                 <Scene
                   initial
                   hideNavBar
