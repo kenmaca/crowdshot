@@ -30,8 +30,7 @@ export default class NewPayment extends Component {
       stripeCustomerId: null,
       billingId: null,
       value: null,
-      processing: false,
-      pickerPress: true
+      processing: false
     };
 
     this.charge = this.charge.bind(this);
@@ -69,10 +68,14 @@ export default class NewPayment extends Component {
             stripeCustomerId: this.state.stripeCustomerId
           }
         ),
-        billingId: this.state.billingId,
+
+        // if billingId not provided, use internal account credit
+        billingId: (
+          this.state.billingId || Firebase.auth().currentUser.uid
+        ),
 
         // if not provided, then this is an internal transaction
-        internal: !this.state.stripeCardId,
+        internal: !this.state.stripeCardId || !this.state.billingId,
         dateCreated: Date.now()
       },
       '.priority': -Date.now()
@@ -146,9 +149,6 @@ export default class NewPayment extends Component {
                 onSelected={amount => this.setState({
                   value: amount
                 })}
-                onButtonPress={change => this.setState({
-                  pickerPress: change
-                })}
                 subtitle={
                   this.props.priceSubtext
                   || 'Awarded to the winner'
@@ -174,15 +174,8 @@ export default class NewPayment extends Component {
           </View>
           <Button
             isDisabled={
-              (
-                this.state.value
-                && !this.state.billingId
-              )
-              ||
-              (
-                this.state.pickerPress
-                && !this.state.billingId
-              )
+              this.state.value
+              && !this.state.billingId
             }
             onPress={this.charge}
             onPressDisabled={() => Alert.alert(
