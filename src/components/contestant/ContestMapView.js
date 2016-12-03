@@ -30,7 +30,6 @@ export default class ContestMapView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      updated: false,
       profile: {},
       region: {
 
@@ -80,55 +79,52 @@ export default class ContestMapView extends Component {
   }
 
   onRegionChange(region, initial) {
-    if (initial || !this.state.updated) {
-      this.ref.updateCriteria({
-        center: [
-          region.latitude,
-          region.longitude
-        ],
-        radius: GeoFire.distance(
-          [region.latitude, region.longitude],
-          [
-            Math.min(90, Math.max(-90, region.latitude
-              + region.latitudeDelta / 2)),
-            Math.min(180, Math.max(-180, region.longitude
-              + region.longitudeDelta / 2))
-          ]
-        )
-      });
+    this.ref.updateCriteria({
+      center: [
+        region.latitude,
+        region.longitude
+      ],
+      radius: GeoFire.distance(
+        [region.latitude, region.longitude],
+        [
+          Math.min(90, Math.max(-90, region.latitude
+            + region.latitudeDelta / 2)),
+          Math.min(180, Math.max(-180, region.longitude
+            + region.longitudeDelta / 2))
+        ]
+      )
+    });
 
-      // only geocode if this is the first time we found
-      // a location
-      if (initial && !this.state.geocoded) {
+    // only geocode if this is the first time we found
+    // a location
+    if (initial && !this.state.geocoded) {
 
-        // add geocoded info to profile to show current city
-        let coords = {
-          lat: region.latitude,
-          lng: region.longitude
-        };
+      // add geocoded info to profile to show current city
+      let coords = {
+        lat: region.latitude,
+        lng: region.longitude
+      };
 
-        Geocoder.geocodePosition(coords).then(location => {
-          if (location[0]) {
-            Database.ref(
-              `profiles/${
-                Firebase.auth().currentUser.uid
-              }/currentRegion`
-            ).set(`${location[0].locality}, ${location[0].adminArea}`);
-            Database.ref(
-              `profiles/${
-                Firebase.auth().currentUser.uid
-              }/currentCountry`
-            ).set(location[0].country);
-          }
-        }).catch(err => console.log(err));
-      }
-
-      this.setState({
-        region: region,
-        updated: true,
-        geocoded: this.state.geocoded || initial
-      });
+      Geocoder.geocodePosition(coords).then(location => {
+        if (location[0]) {
+          Database.ref(
+            `profiles/${
+              Firebase.auth().currentUser.uid
+            }/currentRegion`
+          ).set(`${location[0].locality}, ${location[0].adminArea}`);
+          Database.ref(
+            `profiles/${
+              Firebase.auth().currentUser.uid
+            }/currentCountry`
+          ).set(location[0].country);
+        }
+      }).catch(err => console.log(err));
     }
+
+    this.setState({
+      region: region,
+      geocoded: this.state.geocoded || initial
+    });
   }
 
   componentDidMount() {
@@ -172,11 +168,6 @@ export default class ContestMapView extends Component {
         },
         distance: distance
       };
-
-      // helps trigger initial load
-      this.setState({
-        updated: true
-      });
     });
 
     // remove when out of view
@@ -240,9 +231,7 @@ export default class ContestMapView extends Component {
                 <View style={styles.shadow}>
                   <View style={styles.textContainer}>
                     <Text style={styles.text}>
-                      {this.state.updated
-                        ? "No active contests found — try moving the map around"
-                        : "Looking for contests"}
+                      No active contests found — try moving the map around
                     </Text>
                   </View>
                 </View>
