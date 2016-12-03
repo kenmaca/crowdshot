@@ -27,6 +27,11 @@ export default class PriceSelectPicker extends Component {
       (v, i) => (i + 2) * 10
     );
 
+    this.androidOptions=[];
+    this.options.map(value => (
+      this.androidOptions.push(`$${value}`)
+    ))
+
     // methods
     this.select = this.select.bind(this);
   }
@@ -40,12 +45,8 @@ export default class PriceSelectPicker extends Component {
   }
 
   showAndroidPicker(){
-    let data=[];
-    this.options.map(value => (
-      data.push(`$${value}`)
-    ))
     AndroidPicker.init({
-           pickerData: data,
+           pickerData: this.androidOptions,
            selectedValue: this.state.selected,
            pickerConfirmBtnText: 'Select',
            pickerCancelBtnText: 'Cancel',
@@ -56,7 +57,7 @@ export default class PriceSelectPicker extends Component {
            pickerBg: [255, 255, 255, 1],
            onPickerConfirm: value => {
                this.setState({
-                 selected: value.toString().substr(1),
+                 selected: [Math.round(value.toString().substr(1))],
                  visibleAndroid: false
                });
            },
