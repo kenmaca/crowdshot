@@ -288,7 +288,9 @@ export default class ContestCard extends Component {
                         ).set(true);
 
                         // and out
-                        Actions.mainMain();
+                        Actions.mainMainView({
+                          toggle: true
+                        });
                       }
                     }, {
                       text: 'Cancel',
