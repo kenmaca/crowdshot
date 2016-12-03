@@ -18,6 +18,7 @@ import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import InformationField from '../../components/common/InformationField';
 import ProfileSettings from '../../components/profiles/ProfileSettings';
+import Toggle from '../../components/common/Toggle';
 
 export default class Settings extends Component {
   constructor(props) {
@@ -76,11 +77,22 @@ export default class Settings extends Component {
               })
             })}>
             <InformationField
-              isBottom
               pressable
               color={Colors.Background}
               label='Transaction History' />
           </TouchableOpacity>
+          <Toggle
+            isBottom
+            onChange={value => this.ref.update({
+              blockNotifications: !value
+            })}
+            active={!this.state.blockNotifications}
+            color={Colors.Background}
+            label='Receive Notifications'
+            subtitle={
+              'Toggle all notifications for chat, nearby contests, '
+              + 'and contest updates'
+            } />
           <View style={styles.footer}>
             <Image
               style={styles.logo}

@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
   },
 
   labelContainer: {
+    flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'center'
   },
@@ -92,6 +93,7 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
+    flexWrap: 'wrap',
     color: Colors.SubduedText,
     fontSize: Sizes.SmallText,
     fontStyle: 'italic'
