@@ -51,18 +51,6 @@ export default class ContestCard extends Component {
 
   componentDidMount() {
 
-    // add to owner's list
-    Database.ref(
-      `profiles/${
-        Firebase.auth().currentUser.uid
-      }/activeChat/${
-        this.props.contestId
-      }`
-    ).set({
-      '.value': true,
-      '.priority': -Date.now()
-    });
-
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
         this.setState({
