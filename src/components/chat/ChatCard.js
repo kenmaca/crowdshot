@@ -117,7 +117,7 @@ export default class ChatCard extends Component {
             </View>
             <View style={styles.messageContainer}>
               <Text style={styles.chatTitle}>
-                contest nearby: {this.formattedMessage(this.state.near, 23)}
+                {this.formattedMessage(this.state.near, 30)}
               </Text>
               <Text style={styles.message}>
                 {this.state.name
@@ -158,23 +158,23 @@ export default class ChatCard extends Component {
       } else {
         res = hour + ':' + ("0" + (minutes + 1)).slice(-2) + ' AM'
       }
-    } else if (week + 1 == newDay) {
+    } else if (week + 1 == newDay || (week == 6 && newDay == 0)) {
       res = 'Yesterday'
-  } else if (newDay - day < 6) {
+  } else if (newDay - week < 6) {
       //Which day of week
-      if (week == 0) {
+      if (week == 1) {
         res = 'Monday'
-      } else if (week == 1) {
-        res = 'Tuesday'
       } else if (week == 2) {
-        res = 'Wednsday'
+        res = 'Tuesday'
       } else if (week == 3) {
-        res = 'Thursday'
+        res = 'Wednsday'
       } else if (week == 4) {
-        res = 'Friday'
+        res = 'Thursday'
       } else if (week == 5) {
-        res = 'Satuday'
+        res = 'Friday'
       } else if (week == 6) {
+        res = 'Satuday'
+      } else if (week == 0) {
         res = 'Sunday'
       }
     } else {
