@@ -47,7 +47,6 @@ export default class ChatRoom extends Component {
 
     this.listener = this.ref.on('value', data => {
         let blob = data.val() || {};
-        console.log(blob)
         this.setState({
           rawChat: blob,
           activeChat: new ListView.DataSource({

@@ -13,7 +13,6 @@ export default class ChatAvatar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      avatarList: ["6P2NtwmzQWh0opdbuy0JwqSgPR02"],
       initialized: false,
     }
 
