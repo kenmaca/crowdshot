@@ -24,7 +24,7 @@ export default class CloseFullscreenButton extends Component {
   render() {
     return (
       <View>
-        {Platform === 'ios' ?
+        {Platform.OS === 'ios' ?
         <TouchableOpacity
           style={styles.container}
           onPress={this.props.action || Actions.pop}>

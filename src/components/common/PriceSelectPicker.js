@@ -34,6 +34,14 @@ export default class PriceSelectPicker extends Component {
 
   }
 
+  select(value, close) {
+    close && this.props.onSelected && this.props.onSelected(value);
+    this.setState({
+      selected: value,
+      visible: !close
+    });
+  }
+
   showAndroidPicker(){
     AndroidPicker.init({
            pickerData: this.androidOptions,
@@ -106,7 +114,7 @@ export default class PriceSelectPicker extends Component {
         </Modal>
         <TouchableOpacity
           onPress={() => {
-            if (Platform === 'ios'){
+            if (Platform.OS === 'ios'){
               this.setState({
                 visible: true
               })
