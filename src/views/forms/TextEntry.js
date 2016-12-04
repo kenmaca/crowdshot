@@ -39,6 +39,7 @@ export default class TextEntry extends Component {
             <TextInput
               multiline
               autoFocus
+              underlineColorAndroid={Colors.Transparent}
               value={this.state.value}
               placeholderTextColor={Colors.SubduedText}
               onContentSizeChange={e => this.setState({
