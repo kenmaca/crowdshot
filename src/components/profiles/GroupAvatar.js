@@ -71,9 +71,6 @@ export default class GroupAvatar extends Component {
                   width: this.props.size,
                   borderRadius: this.props.size / 2,
                   marginRight: this.props.size / 8 * -1
-                },
-                this.props.outlineColor && {
-                  backgroundColor: this.props.outlineColor
                 }
               ]}
               key={`${uid}-${Math.random()}`}>
@@ -135,7 +132,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginRight: 5
+    marginRight: 5,
+    backgroundColor: Colors.Transparent
   },
 
   outline: {
@@ -145,7 +143,7 @@ const styles = StyleSheet.create({
     marginRight: -5,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.Outline
+    backgroundColor: Colors.Transparent
   },
 
   collapsedContainer: {
