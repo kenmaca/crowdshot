@@ -60,9 +60,10 @@ export default class Avatar extends Component {
 
     return (
       <TouchableHighlight
+        style={styles.touchable}
         onPress={this.props.onPress}
         underlayColor={Colors.Transparent}>
-        <View>
+        <View style={styles.touchable}>
           <View
             style={[
               styles.container,
@@ -83,9 +84,6 @@ export default class Avatar extends Component {
                   width: innerSize,
                   height: innerSize,
                   borderRadius: innerSize / 2
-                },
-                this.props.color && {
-                  backgroundColor: this.props.color
                 }
               ]}
               photoId={this.state.photo} />
@@ -112,6 +110,10 @@ export default class Avatar extends Component {
 }
 
 const styles = StyleSheet.create({
+  touchable: {
+    backgroundColor: Colors.Transparent
+  },
+
   container: {
     backgroundColor: Colors.Outline,
     borderRadius: 10,
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Transparent,
     borderRadius: 10,
     width: 20,
-    height: 20,
+    height: 20
   },
 
   rank: {
