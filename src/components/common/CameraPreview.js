@@ -16,9 +16,6 @@ const Blob = RNFetchBlob.polyfill.Blob;
 
 
 // components
-import {
-  BlurView
-} from 'react-native-blur';
 import CircleIcon from './CircleIcon';
 import * as Progress from 'react-native-progress';
 import * as Animatable from 'react-native-animatable';
@@ -47,8 +44,7 @@ export default class CameraPreview extends Component {
   render() {
     return (
       <View style={styles.wrapper}>
-        <BlurView
-          blurType='dark'
+        <View
           style={styles.container}>
           <Image
             style={styles.preview}
@@ -78,7 +74,7 @@ export default class CameraPreview extends Component {
                 let realXML = window.XMLHttpRequest;
                 window.Blob = Blob;
                 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
-                
+
                 Blob.clearCache().then(() => {
                   Blob.build(
                     RNFetchBlob.wrap(
@@ -143,7 +139,7 @@ export default class CameraPreview extends Component {
             color={Colors.Primary}
             progress={this.state.progress}
             width={Sizes.Width * 0.9} />
-        </BlurView>
+        </View>
       </View>
     );
   }
@@ -152,14 +148,15 @@ export default class CameraPreview extends Component {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
+    backgroundColor: Colors.DarkOverlay
   },
 
   container: {
     flex: 1,
     alignSelf: 'stretch',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 
   preview: {
