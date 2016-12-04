@@ -119,6 +119,7 @@ export default class Settings extends Component {
         <View style={styles.content}>
           <ListView
             key={Math.random()}
+            enableEmptySections
             scrollEnabled
             dataSource={this.state.entries}
             style={styles.entries}
