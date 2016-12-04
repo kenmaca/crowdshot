@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  StyleSheet, View, Image, Alert, TouchableOpacity, Modal
+  StyleSheet, View, Image, Alert, TouchableOpacity, Modal, Platform
 } from 'react-native';
 import {
   Sizes, Colors
@@ -62,6 +62,11 @@ export default class CameraView extends Component {
         <Modal
           transparent
           animationType='slide'
+          onRequestClose={() => {
+            this.setState({
+              preview: null
+            });
+          }}
           visible={!!this.state.preview}>
           <CameraPreview
             cancel={() => {
@@ -123,7 +128,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignSelf: 'stretch',
-    backgroundColor: Colors.Primary
+    backgroundColor: 'black'
   },
 
   camera: {
@@ -153,7 +158,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Transparent,
     borderColor: Colors.Text,
     borderWidth: 4,
-    margin: Sizes.OuterFrame
+    marginBottom: Platform === 'ios' ? Sizes.OuterFrame : 0,
+    marginTop: Sizes.OuterFrame
   },
 
   placeHolder: {
