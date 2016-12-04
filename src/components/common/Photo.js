@@ -115,6 +115,6 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    backgroundColor: Colors.Transparent
+    backgroundColor: Colors.Foreground
   }
 });
