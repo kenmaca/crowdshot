@@ -25,11 +25,12 @@ export default class CircleIcon extends Component {
         },
         this.props.style
       ]}>
-        <View style={this.props.shadowStyle}>
+        <View>
           {
             this.props.fontAwesome
             ? (
               <FontAwesomeIcon
+                style={this.props.shadowStyle}
                 size={this.props.size && (this.props.size * 0.6) || 12}
                 name={this.props.icon || 'check'}
                 color={
@@ -39,6 +40,7 @@ export default class CircleIcon extends Component {
                 } />
             ): (
               <Icon
+                style={this.props.shadowStyle}
                 size={this.props.size && (this.props.size * 0.6) || 12}
                 name={this.props.icon || 'check'}
                 color={
