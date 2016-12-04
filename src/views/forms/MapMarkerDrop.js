@@ -184,51 +184,47 @@ export default class MapMarkerDrop extends Component {
                     coordinate={this.state.profiles[profileId]}>
                     <ProfileRankPin
                       profileId={profileId}
-                      innerSize={markerSizes.inner}
-                      outerSize={markerSizes.outer} />
+                      innerSize={10}
+                      outerSize={12} />
                   </MapView.Marker>
                 );
               })
             }
-            <View style={styles.pinShadow}>
-              <View style={styles.pinContainer}>
-                <TouchableOpacity
-                  onPress={this.select}
-                  style={styles.pinContent}>
-                  <Icon
-                    name='flag'
-                    color={Colors.AlternateText}
-                    size={48} />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <TitleBar
-              title='Select the Contest Location'
-              style={[
-                styles.titleContainer,
-                this.state.motion && {
-                  height: 0,
-                  padding: 0,
-                  paddingTop: 0
-                }
-              ]} />
-            <View style={styles.buttonContainer}>
-              <Button
-                onPress={this.select}
-                style={
-                  this.state.motion && {
-                    paddingLeft: 0,
-                    paddingRight: 0,
-                    paddingTop: 0,
-                    paddingBottom: 0,
-                    height: 0
-                  }
-                }
-                squareBorders
-                color={Colors.Primary}
-                label='Set Location' />
-            </View>
           </MapView>
+        </View>
+        <TitleBar
+          title='Select the Contest Location'
+          style={[
+            styles.titleContainer,
+            this.state.motion && {
+              height: 0,
+              padding: 0,
+              paddingTop: 0
+            }
+          ]} />
+        <View style={styles.buttonContainer}>
+          <Button
+            onPress={this.select}
+            style={
+              this.state.motion && {
+                paddingLeft: 0,
+                paddingRight: 0,
+                paddingTop: 0,
+                paddingBottom: 0,
+                height: 0
+              }
+            }
+            squareBorders
+            color={Colors.Primary}
+            label='Set Location' />
+        </View>
+        <View style={styles.pinShadow}>
+          <View style={styles.pinContainer}>
+            <Icon
+              name='flag'
+              color={Colors.AlternateText}
+              size={48} />
+          </View>
         </View>
         <CloseFullscreenButton />
       </View>
@@ -253,28 +249,13 @@ const styles = StyleSheet.create({
   },
 
   pinContainer: {
-    top: -Sizes.InnerFrame / 2.3,
     alignItems: 'center'
   },
 
-  pin: {
-    top: -Sizes.InnerFrame / 4,
-    zIndex: -100,
-    width: Sizes.InnerFrame / 2,
-    height: Sizes.InnerFrame / 2,
-    backgroundColor: Colors.Foreground,
-    transform: [
-      {
-        rotate: '45deg'
-      }
-    ]
-  },
-
-  pinContent: {
-    left: Sizes.InnerFrame / 1.2
-  },
-
   pinShadow: {
+    position: 'absolute',
+    top: Sizes.Height / 2 - Sizes.InnerFrame * 3.5,
+    left: Sizes.Width / 2 - Sizes.InnerFrame,
     backgroundColor: Colors.Transparent,
     shadowColor: Colors.Overlay,
     shadowOpacity: 1,
