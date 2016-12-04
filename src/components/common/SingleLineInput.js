@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  StyleSheet, TextInput
+  StyleSheet, TextInput, Platform
 } from 'react-native';
 import {
   Sizes, Colors
@@ -42,6 +42,7 @@ export default class SingleLineInput extends Component {
           placeholderTextColor={Colors.SubduedText}
           {...this.props}
           clearButtonMode='always'
+          underlineColorAndroid={Colors.Transparent}
           onChangeText={text => {
             text = (
               !!this.props.onChangeText ?
@@ -52,7 +53,12 @@ export default class SingleLineInput extends Component {
               value: text
             });
           }}
-          style={styles.input} />
+          style={[
+            styles.input,
+            Platform.OS !== 'ios' && {
+              paddingRight: Sizes.OuterFrame
+            }
+          ]} />
       </Field>
     );
   }
@@ -60,9 +66,11 @@ export default class SingleLineInput extends Component {
 
 const styles = StyleSheet.create({
   input: {
+    padding: 0,
     color: Colors.Text,
     fontSize: Sizes.Text,
     textAlign: 'right',
-    flex: 1,
+    height: Sizes.Text * 2,
+    flex: 2
   }
 });

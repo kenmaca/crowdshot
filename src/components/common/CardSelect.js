@@ -107,7 +107,7 @@ export default class CardSelect extends Component {
                 </Text>
                 <CircleIcon
                   style={styles.cardType}
-                  size={18}
+                  size={14}
                   color={Colors.ModalBackground}
                   checkColor={Colors.AlternateText}
                   icon='arrow-forward' />
@@ -122,7 +122,7 @@ export default class CardSelect extends Component {
 
 const styles = StyleSheet.create({
   touchable: {
-    flex: 1
+    flex: 2
   },
 
   container: {
