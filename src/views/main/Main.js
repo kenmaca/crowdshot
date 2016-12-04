@@ -379,6 +379,7 @@ export default class Main extends Component {
           ref='cards'
           horizontal
           pagingEnabled
+          enableEmptySections
           scrollEnabled={this.state.scrollAllowed}
           removeClippedSubviews={false}
           dataSource={this.state.data}

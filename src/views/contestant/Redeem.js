@@ -209,6 +209,7 @@ export default class Redeem extends Component {
         <View style={styles.content}>
           <ListView
             scrollEnabled
+            enableEmptySections
             dataSource={this.state.awards}
             style={styles.entries}
             renderRow={this.renderRow.bind(this)} />

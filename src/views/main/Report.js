@@ -111,6 +111,7 @@ export default class Chat extends Component {
                 offset={Sizes.OuterFrame}
                 label={"Problem Description"} />
               <TextInput
+                underlineColorAndroid={Colors.Transparent}
                 style={[styles.inputstyle,
                   {
                     borderColor: this.state.focus
