@@ -32,16 +32,6 @@ export default class PriceSelectPicker extends Component {
       this.androidOptions.push(`$${value}`)
     ))
 
-    // methods
-    this.select = this.select.bind(this);
-  }
-
-  select(value, close) {
-    close && this.props.onSelected && this.props.onSelected(value);
-    this.setState({
-      selected: value,
-      visible: !close
-    });
   }
 
   showAndroidPicker(){
@@ -60,6 +50,7 @@ export default class PriceSelectPicker extends Component {
                  selected: [Math.round(value.toString().substr(1))],
                  visibleAndroid: false
                });
+               this.props.onSelected && this.props.onSelected(value);
            },
            onPickerCancel: () => this.setState({visibleAndroid:false})
        });
