@@ -128,6 +128,7 @@ export default class ChatRoom extends Component {
           ref='title' />
         <View style={styles.content}>
           <ListView
+            enableEmptySections
             key={Math.random()}
             scrollEnabled
             dataSource={this.state.activeChat}
