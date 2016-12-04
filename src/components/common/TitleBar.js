@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, Platform
 } from 'react-native';
 import {
   Colors, Sizes
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingTop: Sizes.InnerFrame * 4,
+    paddingTop: Platform === 'ios' ? Sizes.InnerFrame * 4 : Sizes.OuterFrame,
     backgroundColor: Colors.Foreground
   },
 

@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  StyleSheet, TouchableOpacity
+  StyleSheet, TouchableOpacity, Platform, View
 } from 'react-native';
 import {
   Sizes, Colors
@@ -23,20 +23,26 @@ export default class CloseFullscreenButton extends Component {
 
   render() {
     return (
-      <TouchableOpacity
-        style={styles.container}
-        onPress={this.props.action || Actions.pop}>
-        <Animatable.View
-          animation='zoomIn'
-          delay={250}
-          duration={300}>
-          <Icon
-            style={styles.icon}
-            name='close'
-            color={Colors.Text}
-            size={28} />
-        </Animatable.View>
-      </TouchableOpacity>
+      <View>
+        {Platform === 'ios' ?
+        <TouchableOpacity
+          style={styles.container}
+          onPress={this.props.action || Actions.pop}>
+          <Animatable.View
+            animation='zoomIn'
+            delay={250}
+            duration={300}>
+            <Icon
+              style={styles.icon}
+              name='close'
+              color={Colors.Text}
+              size={28} />
+          </Animatable.View>
+        </TouchableOpacity>
+        :
+        <View/>
+        }
+      </View>
     );
   }
 }
