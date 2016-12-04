@@ -225,21 +225,6 @@ export default class ContestMapView extends Component {
                 );
               })
             }
-            {
-              (
-                Object.keys(this.state.inView).length > 0
-              ) ? (
-                <View />
-              ): (
-                <View style={styles.shadow}>
-                  <View style={styles.textContainer}>
-                    <Text style={styles.text}>
-                      No active contests found — try moving the map around
-                    </Text>
-                  </View>
-                </View>
-              )
-            }
           </MapView>
           <HeaderButtons>
             <HeaderButton
@@ -265,6 +250,21 @@ export default class ContestMapView extends Component {
               </Text>
             </TouchableOpacity>
           </HeaderButtons>
+          {
+            (
+              Object.keys(this.state.inView).length > 0
+            ) ? (
+              <View />
+            ): (
+              <View style={styles.overlay}>
+                <View style={[styles.shadow, styles.textContainer]}>
+                  <Text style={styles.text}>
+                    No active contests found — try moving the map around
+                  </Text>
+                </View>
+              </View>
+            )
+          }
         </View>
       </View>
     );
@@ -287,6 +287,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end'
+  },
+
+  overlay: {
+    flex: 1,
+    position: 'absolute',
+    top: Sizes.Height - Sizes.OuterFrame * 5.5,
+    left: 0,
+    backgroundColor: Colors.Transparent,
+    width: Sizes.Width,
+    alignItems: 'center',
   },
 
   shadow: {
