@@ -153,7 +153,6 @@ export default class Navigation extends Component {
               type='replace'>
               <Scene
                 initial
-                hideNavBar
                 key='mainMain'
                 title='Your Contests'
                 iconName='home'

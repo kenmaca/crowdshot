@@ -20,6 +20,9 @@ import Database from '../../utils/Database';
 export default class Loader extends Component {
   componentDidMount() {
 
+    // globally remove
+    StatusBar.setHidden(true, 'slide');
+
     // handle version check before anything else
     Database.ref('config').once('value', config => {
       config = config.val();

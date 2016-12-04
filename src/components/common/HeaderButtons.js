@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     top: 0,
     width: Sizes.Width,
     padding: Sizes.InnerFrame,
-    paddingTop: Sizes.OuterFrame,
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'flex-end'

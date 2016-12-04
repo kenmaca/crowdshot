@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingTop: Sizes.InnerFrame * 4.5,
+    paddingTop: Sizes.InnerFrame * 4,
     backgroundColor: Colors.Foreground
   },
 

@@ -13,6 +13,7 @@ import {
 
 // components
 import CircleIcon from './CircleIcon';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import * as Animatable from 'react-native-animatable';
 
 export default class CloseFullscreenButton extends Component {
@@ -29,12 +30,11 @@ export default class CloseFullscreenButton extends Component {
           animation='zoomIn'
           delay={250}
           duration={300}>
-          <CircleIcon
-            icon='close'
-            color={Colors.Transparent}
-            checkColor={Colors.Text}
-            shadowStyle={styles.shadow}
-            size={50} />
+          <Icon
+            style={styles.icon}
+            name='close'
+            color={Colors.Text}
+            size={28} />
         </Animatable.View>
       </TouchableOpacity>
     );
@@ -43,18 +43,12 @@ export default class CloseFullscreenButton extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    top: Sizes.InnerFrame,
-    left: 0,
+    top: 0,
+    padding: Sizes.InnerFrame,
     position: 'absolute'
   },
 
-  shadow: {
-    shadowColor: Colors.Overlay,
-    shadowOpacity: 1,
-    shadowRadius: 5,
-    shadowOffset: {
-      height: 1,
-      width: 0
-    }
+  icon: {
+    backgroundColor: Colors.Transparent
   }
 });

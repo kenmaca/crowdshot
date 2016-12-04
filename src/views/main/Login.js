@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, Text, StyleSheet, Image, StatusBar, Alert
+  View, Text, StyleSheet, Image, Alert
 } from 'react-native';
 import {
   Actions
@@ -22,8 +22,6 @@ import Button from '../../components/common/Button';
 
 export default class Login extends Component {
   render() {
-    StatusBar.setHidden(true, 'slide');
-
     return (
       <Photo
         photoId='appLoginBackground'
