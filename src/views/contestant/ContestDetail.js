@@ -195,6 +195,7 @@ export default class ContestDetail extends Component {
         <CloseFullscreenButton/>
         <Modal
           transparent
+          onRequestClose={() => this.setState({cameraVisible:false})}
           animationType='fade'
           visible={this.state.cameraVisible}>
           <CameraView
@@ -241,6 +242,7 @@ export default class ContestDetail extends Component {
         </Modal>
         <Modal
           transparent
+          onRequestClose={() => this.setState({preview:null})}
           animationType='fade'
           visible={this.state.preview != null}>
           <View style={styles.previewContainer}>

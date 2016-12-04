@@ -280,6 +280,7 @@ export default class NewPaymentMethod extends Component {
       <View style={styles.container}>
         <Modal
           transparent
+          onRequestClose={true}
           visible={this.state.processing}
           animationType='fade'>
           <ProgressBlocker

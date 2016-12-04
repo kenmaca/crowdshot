@@ -40,8 +40,10 @@ export default class MapMarkerDrop extends Component {
         latitudeDelta: LAT_DELTA,
         longitudeDelta: LNG_DELTA
       },
-      profiles: {}
+      profiles: {},
     };
+
+    this.mounted = true;
 
     this.ref = new GeoFire(
       Database.ref('profileLocations')
@@ -68,14 +70,18 @@ export default class MapMarkerDrop extends Component {
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
-      position => this.setState({
-        current: {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: LAT_DELTA,
-          longitudeDelta: LNG_DELTA
+      position => {
+        if (this.mounted){
+          this.setState({
+            current: {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              latitudeDelta: LAT_DELTA,
+              longitudeDelta: LNG_DELTA
+            }
+          })
         }
-      }),
+      },
       error => console.log(error),
       {
         enableHighAccuracy: true,
@@ -83,6 +89,7 @@ export default class MapMarkerDrop extends Component {
         maximumAge: 1000
       }
     );
+
 
     // and update when a new profile comes into view
     this.ref.on('key_entered', (profileId, location, distance) => {
@@ -93,19 +100,11 @@ export default class MapMarkerDrop extends Component {
           latitude: location[0],
           longitude: location[1]
         };
-
-        // helps trigger initial load
-        this.setState({
-          updated: true
-        });
       }
     });
   }
 
   select() {
-
-    // out
-    Actions.pop();
 
     // outer callback
     this.props.onSelected && this.props.onSelected(
@@ -114,6 +113,8 @@ export default class MapMarkerDrop extends Component {
         this.state.current.longitude
       ]
     );
+    // out
+    Actions.pop();
   }
 
   // helps avoid jitterness by delaying reappear
@@ -126,32 +127,35 @@ export default class MapMarkerDrop extends Component {
   }
 
   onRegionChange(region, motion) {
-    this.ref.updateCriteria({
-      center: [
-        region.latitude,
-        region.longitude
-      ],
-      radius: GeoFire.distance(
-        [region.latitude, region.longitude],
-        [
-          Math.min(90, Math.max(-90, region.latitude
-            + region.latitudeDelta / 2)),
-          Math.min(180, Math.max(-180, region.longitude
-            + region.longitudeDelta / 2))
-        ]
-      )
-    });
+    if (this.mounted){
+      this.ref.updateCriteria({
+        center: [
+          region.latitude,
+          region.longitude
+        ],
+        radius: GeoFire.distance(
+          [region.latitude, region.longitude],
+          [
+            Math.min(90, Math.max(-90, region.latitude
+              + region.latitudeDelta / 2)),
+            Math.min(180, Math.max(-180, region.longitude
+              + region.longitudeDelta / 2))
+          ]
+        )
+      });
 
-    // helps avoid jitterness by delaying reappear
-    this.motion && clearTimeout(this.motion);
-    if (motion) this.setState({
-      current: region,
-      motion: true
-    }); else this.stopMotion();
+      // helps avoid jitterness by delaying reappear
+      this.motion && clearTimeout(this.motion);
+      if (motion) this.setState({
+        current: region,
+        motion: true
+      }); else this.stopMotion();
+    }
   }
 
   componentWillUnmount() {
     this.ref.cancel();
+    this.mounted = false;
   }
 
   render() {
