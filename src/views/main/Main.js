@@ -407,6 +407,9 @@ export default class Main extends Component {
           } />
         <HeaderButtons>
           <HeaderButton
+            icon='report'
+            onPress={Actions.report} />
+          <HeaderButton
             icon='chat-bubble'
             onPress={Actions.chatroom} />
           <HeaderButton
