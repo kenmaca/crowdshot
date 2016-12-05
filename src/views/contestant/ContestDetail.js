@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, ScrollView, ListView,
-  TouchableOpacity, Alert, Modal
+  TouchableOpacity, Alert, Modal, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes
@@ -31,6 +31,9 @@ import HostInfo from '../../components/profiles/HostInfo';
 export default class ContestDetail extends Component {
   constructor(props) {
     super(props);
+
+    StatusBar.setHidden(true, 'slide');
+
     this.state = {
       cameraVisible: false,
       preview: null,
@@ -188,8 +191,45 @@ export default class ContestDetail extends Component {
           </ScrollView>
         </View>
         <ParticipateButton
-          onPress={() => this.setState({
-            cameraVisible: true
+      //    onPress={() => this.setState({
+      //      cameraVisible: true
+      //    })}
+          onPress={() => Actions.newContestPhoto({
+            onTaken:photoId => {
+          //    Actions.pop()
+
+              let entryId = this.entriesRef.push({
+                '.value': {
+                  createdBy: Firebase.auth().currentUser.uid,
+                  dateCreated: Date.now(),
+                  photoId: photoId
+                },
+                '.priority': -Date.now()
+              }).key
+
+              // and add to profile's list of entries
+              Database.ref(
+                `profiles/${
+                  Firebase.auth().currentUser.uid
+                }/entries/${
+                  entryId
+                }`
+              ).set({
+                '.value': this.props.contestId,
+                '.priority': -Date.now()
+              });
+
+              // and update profile counts
+              let attempts = Database.ref(
+                `profiles/${
+                  Firebase.auth().currentUser.uid
+                }/countAttempts`
+              )
+              attempts.once(
+                'value',
+                data => attempts.set((data.val() || 0) + 1)
+              );
+            }
           })}
           contest={this.state} />
         <CloseFullscreenButton/>

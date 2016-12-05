@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingTop: Platform === 'ios' ? Sizes.InnerFrame * 4 : Sizes.OuterFrame,
+    paddingTop: Platform.OS === 'ios' ? Sizes.InnerFrame * 4 : Sizes.OuterFrame,
     backgroundColor: Colors.Foreground
   },
 

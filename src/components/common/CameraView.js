@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Transparent,
     borderColor: Colors.Text,
     borderWidth: 4,
-    marginBottom: Platform === 'ios' ? Sizes.OuterFrame : 0,
+    marginBottom: Platform.OS === 'ios' ? Sizes.OuterFrame : 0,
     marginTop: Sizes.OuterFrame
   },
 
