@@ -232,7 +232,7 @@ export default class ContestDetail extends Component {
             }
           })}
           contest={this.state} />
-        <CloseFullscreenButton/>
+        <CloseFullscreenButton back />
         <Modal
           transparent
           onRequestClose={() => this.setState({cameraVisible:false})}

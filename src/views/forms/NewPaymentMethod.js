@@ -358,7 +358,7 @@ export default class NewPaymentMethod extends Component {
           )}
           color={Colors.Primary}
           label='Add Credit Card' />
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

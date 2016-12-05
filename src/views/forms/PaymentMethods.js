@@ -129,7 +129,7 @@ export default class PaymentMethods extends Component {
             </Text>
           </TouchableOpacity>
         </View>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

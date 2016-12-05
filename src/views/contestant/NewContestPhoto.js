@@ -38,7 +38,7 @@ export default class NewContestPhoto extends Component {
               );
             }} />
         </View>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

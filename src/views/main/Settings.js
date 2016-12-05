@@ -107,7 +107,7 @@ export default class Settings extends Component {
             </Text>
           </View>
         </View>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

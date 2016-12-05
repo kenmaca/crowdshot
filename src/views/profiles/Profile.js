@@ -135,7 +135,7 @@ export default class Profile extends Component {
               info={`${Math.round((1 - cancelledRate) * 100)}%`} />
           </View>
         </ParallaxScrollView>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

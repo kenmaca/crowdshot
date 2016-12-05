@@ -135,7 +135,7 @@ export default class ChatRoom extends Component {
             style={styles.activeChat}
             renderRow={this.renderRow.bind(this)} />
         </View>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

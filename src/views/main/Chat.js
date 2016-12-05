@@ -116,7 +116,7 @@ export default class Chat extends Component {
           user={{
             _id: Firebase.auth().currentUser.uid
           }} />
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

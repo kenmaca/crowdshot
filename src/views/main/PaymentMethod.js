@@ -120,7 +120,7 @@ export default class PaymentMethod extends Component {
           dataSource={this.state.transactionDataSource}
           style={styles.transactions}
           renderRow={this.renderRow.bind(this)} />
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

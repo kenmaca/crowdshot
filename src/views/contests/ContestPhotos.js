@@ -138,7 +138,7 @@ export default class ContestPhotos extends Component {
             if (i >= this.state.entries.length - 1) {
             }
           }} />
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
         <ListView
           horizontal
           pagingEnabled

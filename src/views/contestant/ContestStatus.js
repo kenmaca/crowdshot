@@ -208,7 +208,7 @@ export default class ContestStatus extends Component {
             )
           }
         </ScrollView>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

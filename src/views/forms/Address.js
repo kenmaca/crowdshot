@@ -129,7 +129,7 @@ export default class Settings extends Component {
             label='Update Address'
             color={Colors.Primary} />
         </View>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

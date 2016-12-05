@@ -189,7 +189,7 @@ export default class NewPayment extends Component {
               || 'Add bounty to contest'
             } />
         </View>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }
