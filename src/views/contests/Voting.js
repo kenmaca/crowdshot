@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, ListView, TouchableOpacity,
-  Modal
+  Modal, TouchableWithoutFeedback
 } from 'react-native';
 import {
   Colors, Sizes
@@ -65,15 +65,11 @@ export default class Voting extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          console.log(this.refs);
-          console.log(this.refs.swiper);
-          // this.refs.cards.setState({
-          //   card: entryId
-          // });
-
           this.setState({
             visible: true
-          });
+          }, () => this.refs.swiper.setState({
+            card: entryId
+          }));
         }}>
         <ContestThumbnail
           size={
@@ -90,12 +86,15 @@ export default class Voting extends Component {
 
   renderCard(entryId) {
     return (
-      <ContestPhotoCard
-        key={entryId}
-        contestId={this.props.contestId}
-        entryId={entryId}
-        i={this.state.cards.indexOf(entryId) + 1}
-        n={this.state.cards.length} />
+      <TouchableOpacity
+        activeOpacity={1}>
+        <ContestPhotoCard
+          key={entryId}
+          contestId={this.props.contestId}
+          entryId={entryId}
+          i={this.state.cards.indexOf(entryId) + 1}
+          n={this.state.cards.length} />
+      </TouchableOpacity>
     );
   }
 
@@ -104,25 +103,49 @@ export default class Voting extends Component {
       <View style={styles.container}>
         <Modal
           transparent
-          ref='swiper'
           visible={this.state.visible}
           onRequestClose={() => true}
           animationType='fade'>
-          <View style={styles.voteContainer}>
-            <SwipeCards
-              loop
-              ref='cards'
-              containerStyle={styles.vote}
-              cards={this.state.cards}
-              renderCard={this.renderCard}
-              cardRemoved={i => {
-                if (i >= this.state.cards.length - 1) {
-                  this.setState({
-                    visible: false
-                  });
-                }
-              }} />
-          </View>
+          <SwipeCards
+            ref='swiper'
+            containerStyle={styles.vote}
+            cards={this.state.cards}
+            renderCard={this.renderCard}
+            yupText='Shortlist!'
+            noText='Nope!'
+            handleYup={entry => {
+              Database.ref(
+                `entries/${
+                  this.props.contestId
+                }/${
+                  entry
+                }`
+              ).update({
+                selected: true
+              });
+            }}
+            handleNope={entry => {
+              Database.ref(
+                `entries/${
+                  this.props.contestId
+                }/${
+                  entry
+                }`
+              ).update({
+                selected: false
+              });
+            }}
+            cardRemoved={i => {
+              if (i >= this.state.cards.length - 1) {
+                this.setState({
+                  visible: false
+                });
+              }
+            }} />
+          <CloseFullscreenButton
+            action={() => this.setState({
+              visible: false
+            })} />
         </Modal>
         <TitleBar title='Contest Voting' />
         <View style={styles.entryContainer}>
@@ -134,7 +157,7 @@ export default class Voting extends Component {
             dataSource={this.state.entries}
             contentContainerStyle={styles.entries} />
         </View>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }
@@ -159,17 +182,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start'
   },
 
-  voteContainer: {
+  vote: {
     flex: 1,
+    alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.DarkOverlay
-  },
-
-  vote: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.Transparent
   }
 });

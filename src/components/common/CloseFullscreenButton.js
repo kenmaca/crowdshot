@@ -32,7 +32,7 @@ export default class CloseFullscreenButton extends Component {
                 delay={250}
                 duration={300}>
                 <CircleIcon
-                  icon='close'
+                  icon={this.props.back ? 'arrow-back': 'close'}
                   color={Colors.Transparent}
                   checkColor={Colors.Text}
                   shadowStyle={styles.shadow}
