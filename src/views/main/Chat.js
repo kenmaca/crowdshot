@@ -39,11 +39,13 @@ export default class Chat extends Component {
     );
 
     this.onSend = this.onSend.bind(this);
+
+    this.updateTimeClosed = this.updateTimeClosed.bind(this);
   }
 
   componentDidMount() {
-
     this.activeChatListener = this.activeChatRef.on('value', data => {
+      dateOpened = Date.now()
       if(!data.exists()) {
         //add to owner's list
         Database.ref(
@@ -53,7 +55,7 @@ export default class Chat extends Component {
             this.props.chatId
           }`
         ).set({
-          '.value': true,
+          '.value': `${dateOpened}`,
           '.priority': -Date.now()
         });
       }
@@ -75,11 +77,20 @@ export default class Chat extends Component {
         });
       }
     });
+
+    this.chatListener = this.ref.limitToLast(1).on('value', data => {
+      console.log(Object.keys(data.val())[0])
+      data.exists() && this.setState({
+        dateClosed: Object.keys(data.val())[0]
+      })
+    })
+
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('child_added', this.listener);
     this.activeChatListener && this.activeChatRef.off('value', this.activeChatListener);
+    this.chatListener && this.ref.off('value', this.chatListener);
   }
 
   onSend(messages) {
@@ -91,6 +102,12 @@ export default class Chat extends Component {
         }
       });
     }
+  }
+
+  updateTimeClosed() {
+    this.state.dateClosed && this.activeChatRef.set({
+      '.value': this.state.dateClosed
+    })
   }
 
   renderAvatar(message) {
@@ -116,7 +133,10 @@ export default class Chat extends Component {
           user={{
             _id: Firebase.auth().currentUser.uid
           }} />
-        <CloseFullscreenButton back />
+          <CloseFullscreenButton back />
+          {
+            this.updateTimeClosed()
+          }
       </View>
     );
   }
