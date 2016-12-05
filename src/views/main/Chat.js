@@ -25,7 +25,8 @@ export default class Chat extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: []
+      messages: [],
+      dateClosed: null,
     };
 
     this.ref = Database.ref(
@@ -78,13 +79,6 @@ export default class Chat extends Component {
       }
     });
 
-    this.chatListener = this.ref.limitToLast(1).on('value', data => {
-      console.log(Object.keys(data.val())[0])
-      data.exists() && this.setState({
-        dateClosed: Object.keys(data.val())[0]
-      })
-    })
-
   }
 
   componentWillUnmount() {
@@ -105,9 +99,21 @@ export default class Chat extends Component {
   }
 
   updateTimeClosed() {
-    this.state.dateClosed && this.activeChatRef.set({
-      '.value': this.state.dateClosed
+    // this.chatListener = this.ref.limitToLast(1).on('value', data => {
+    //   console.log(Object.keys(data.val())[0])
+    //   data.exists() && this.setState({
+    //     dateClosed: Object.keys(data.val())[0]
+    //   })
+    // })
+    Database.ref(
+      `chats/${this.props.chatId}`).limitToLast(1).on('value', data => {
+      data.exists && this.activeChatRef.set({
+        '.value': Object.keys(data.val())[0]
+      })
     })
+    // this.state.dateClosed && this.activeChatRef.set({
+    //   '.value': this.state.dateClosed
+    // })
   }
 
   renderAvatar(message) {
@@ -134,9 +140,7 @@ export default class Chat extends Component {
             _id: Firebase.auth().currentUser.uid
           }} />
           <CloseFullscreenButton back />
-          {
-            this.updateTimeClosed()
-          }
+          {this.updateTimeClosed()}
       </View>
     );
   }
