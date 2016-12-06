@@ -49,9 +49,6 @@ export default class UserSummary extends Component {
           outline
           showRank
           outlineColor={Colors.ModalBackground}
-          onPress={() => Actions.profile({
-            uid: this.props.uid
-          })}
           size={48}
           uid={this.props.uid} />
       </View>
