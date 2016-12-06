@@ -49,13 +49,7 @@ export default class Chat extends Component {
       dateOpened = Date.now()
       if(!data.exists()) {
         //add to owner's list
-        Database.ref(
-          `profiles/${
-            Firebase.auth().currentUser.uid
-          }/activeChat/${
-            this.props.chatId
-          }`
-        ).set({
+        this.activeChatRef.set({
           '.value': `${dateOpened}`,
           '.priority': -Date.now()
         });
