@@ -10,7 +10,6 @@ export default class ChatRoomHeaderButton extends Component {
 
     constructor(props) {
       super(props);
-
       this.state = {
         unread: 0
       }
@@ -41,7 +40,7 @@ export default class ChatRoomHeaderButton extends Component {
                   blob.map(i => {
                     if (i > date.val()) {
                       this.setState({
-                        unread: this.state.unread + 1
+                        unread: +1
                       })
                     }
                   })

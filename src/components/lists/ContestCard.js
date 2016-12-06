@@ -49,6 +49,33 @@ export default class ContestCard extends Component {
     );
   }
 
+  unread(chatId) {
+    //number of unread messages init
+    var unread = 0;
+
+    //get the latest chat closed time
+    //get the number of unread messages
+    Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/activeChat/${chatId}`
+    ).once('value', date => {
+      Database.ref(
+        `chats/${chatId}`
+      ).on('value', data => {
+        if (data.exists()) {
+          let blob = Object.keys(data.val())
+          blob.map(i => {
+            if (i > date.val()) {
+              unread ++
+            }
+          })
+        }
+      })
+    })
+    return unread;
+  }
+
   componentDidMount() {
 
     this.listener = this.ref.on('value', data => {
@@ -194,6 +221,16 @@ export default class ContestCard extends Component {
                   color={Colors.Foreground}
                   icon='message'
                   label='Open contest chat' />
+                  {
+                    this.unread(this.props.contestId) > 0
+                    && (
+                      <View style={styles.unreadContainer}>
+                        <Text style={styles.unread}>
+                          {this.unread(this.props.contestId)}
+                        </Text>
+                      </View>
+                    )
+                  }
               </TouchableOpacity>
             </View>
             <View style={styles.content}>
@@ -395,5 +432,22 @@ const styles = StyleSheet.create({
   footerContainer: {
     margin: Sizes.InnerFrame,
     alignSelf: 'stretch'
+  },
+
+  unreadContainer: {
+    position: 'absolute',
+    top: 6,
+    right: Sizes.InnerFrame,
+    padding: Sizes.InnerFrame /2,
+    paddingTop: Sizes.InnerFrame /4,
+    paddingBottom: Sizes.InnerFrame /4,
+    borderRadius: 20,
+    backgroundColor: Colors.Cancel
+  },
+
+  unread: {
+    fontSize: Sizes.SmallText,
+    color: Colors.Text,
+    fontWeight: '500'
   }
 });
