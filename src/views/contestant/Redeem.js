@@ -19,6 +19,7 @@ import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import AwardCard from '../../components/lists/AwardCard';
 import Swipeout from 'react-native-swipeout';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 export default class Redeem extends Component {
   constructor(props) {
@@ -198,14 +199,23 @@ export default class Redeem extends Component {
         <TitleBar
           clearLoader
           ref='title'
-          title='Redeem Your Prizes'
-          rightIcon='trophy'
-          rightTitle={
-            `$${
-              ((this.state.wallet
-              || 0) - this.state.cartAmt).toFixed(0)
-            }`
-          }/>
+          title='Redeem Your Prizes'>
+          <FontAwesomeIcon
+            name='trophy'
+            color={Colors.Text}
+            size={Sizes.H1} />
+          <Text style={styles.wallet}>
+            {
+              `$${
+                (
+                  (
+                    this.state.wallet || 0
+                  ) - this.state.cartAmt
+                ).toFixed(0)
+              }`
+            }
+          </Text>
+        </TitleBar>
         <View style={styles.content}>
           <ListView
             scrollEnabled
@@ -248,5 +258,12 @@ const styles = StyleSheet.create({
   entryContainer: {
     margin: Sizes.InnerFrame / 2,
     marginBottom: 0,
+  },
+
+  wallet: {
+    color: Colors.Text,
+    fontSize: Sizes.H1,
+    fontWeight: '300',
+    marginLeft: Sizes.InnerFrame / 2
   }
 });
