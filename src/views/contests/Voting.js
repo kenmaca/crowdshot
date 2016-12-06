@@ -22,6 +22,7 @@ import CloseFullscreenButton from '../../components/common/CloseFullscreenButton
 import ContestThumbnail from '../../components/lists/ContestThumbnail';
 import Button from '../../components/common/Button';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import ContestFinalize from '../../components/lists/ContestFinalize';
 
 export default class Voting extends Component {
   constructor(props) {
@@ -98,6 +99,7 @@ export default class Voting extends Component {
               - (Sizes.OuterFrame * 2)
             ) / 3 - 2
           }
+          rejectedOverlay={Colors.WhiteOverlay}
           contestId={this.props.contestId}
           entryId={entryId} />
       </TouchableOpacity>
@@ -186,6 +188,7 @@ export default class Voting extends Component {
           <Button
             label='Finalize Contest'
             color={Colors.Primary}
+            onPress={() => this.refs.finalize.finalize()}
             isDisabled={
 
               // disallow premature end
@@ -203,7 +206,7 @@ export default class Voting extends Component {
               // disallow under selection if selected
               // less than number of available prizes
               ) || (
-                countEntries > countPrizes
+                countEntries >= countPrizes
                 && countSelected < countPrizes
               )
             }
@@ -221,7 +224,7 @@ export default class Voting extends Component {
                     countEntries < countPrizes
                     && countEntries > countSelected
                   ) || (
-                    countEntries > countPrizes
+                    countEntries >= countPrizes
                     && countSelected < countPrizes
                   )
                 ) {
@@ -262,6 +265,10 @@ export default class Voting extends Component {
             dataSource={this.state.entries}
             contentContainerStyle={styles.entries} />
         </View>
+        <ContestFinalize
+          ref='finalize'
+          {...this.state.contest}
+          contestId={this.props.contestId} />
         <CloseFullscreenButton back />
       </View>
     );
