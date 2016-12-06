@@ -15,8 +15,6 @@ import {
 import DateFormat from 'dateformat';
 
 // components
-import TitleBar from '../../components/common/TitleBar';
-import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import Photo from '../../components/common/Photo';
 import Divider from '../../components/common/Divider';
 import InputSectionHeader from '../../components/common/InputSectionHeader';

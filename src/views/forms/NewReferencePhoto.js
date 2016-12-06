@@ -42,7 +42,7 @@ export default class NewReferencePhoto extends Component {
               );
             }} />
         </View>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

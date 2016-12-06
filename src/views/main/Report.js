@@ -147,7 +147,7 @@ export default class Chat extends Component {
             }
           }}
           label={"Submit"} />
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

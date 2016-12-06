@@ -245,9 +245,8 @@ export default class ContestCard extends Component {
                       renderRow={data => {
                         return (
                           <TouchableOpacity
-                            onPress={() => Actions.contestPhotos({
-                              contestId: this.props.contestId,
-                              startCard: data
+                            onPress={() => Actions.voting({
+                              contestId: this.props.contestId
                             })}>
                             <ContestThumbnail
                               size={80}

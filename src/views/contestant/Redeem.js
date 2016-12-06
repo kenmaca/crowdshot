@@ -225,7 +225,7 @@ export default class Redeem extends Component {
             'You don\'t have anything in your cart'
           )}
           disabledColor={Colors.MediumDarkOverlay} />
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

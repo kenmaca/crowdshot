@@ -43,46 +43,26 @@ export default class ContestPhotoCard extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Photo
-          photoId={this.state.photoId}
-          style={styles.photo}>
-          <View style={styles.statusContainer}>
-            <Button
-              style={styles.reportButton}
-              container={styles.reportContainer}
-              icon='warning'
-              label='Report'
-              onPress={() => Actions.report()}/>
-            <View>
-            <OutlineText
-              text={`${
-                this.props.i || 1
-              } of ${
-                this.props.n || 1
-              }`} />
-            </View>
-          </View>
-          <UserSummary
-            uid={this.state.createdBy} />
-        </Photo>
-      </View>
+      <Photo
+        photoId={this.state.photoId}
+        style={styles.container}>
+        <View style={styles.statusContainer}>
+          <OutlineText
+            text={`${
+              this.props.i || 1
+            } of ${
+              this.props.n || 1
+            }`} />
+        </View>
+        <UserSummary
+          uid={this.state.createdBy} />
+      </Photo>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    shadowColor: Colors.Overlay,
-    shadowOpacity: 1,
-    shadowRadius: 5,
-    shadowOffset: {
-      height: 1,
-      width: 0
-    }
-  },
-
-  photo: {
     padding: Sizes.InnerFrame,
     alignItems: 'flex-end',
     justifyContent: 'space-between',

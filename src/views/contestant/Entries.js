@@ -125,7 +125,7 @@ export default class Settings extends Component {
             style={styles.entries}
             renderRow={this.renderRow.bind(this)} />
         </View>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

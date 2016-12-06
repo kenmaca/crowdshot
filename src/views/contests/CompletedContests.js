@@ -83,7 +83,7 @@ export default class CompletedContests extends Component {
           dataSource={this.state.contests}
           style={styles.contests}
           renderRow={this.renderRow} />
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

@@ -261,7 +261,7 @@ export default class ConfirmRedeem extends Component {
           color={Colors.Primary}
           onPress={() => this.confirm()}
           label={"Confirm"} />
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
         <Modal
           visible={this.state.finalizedVisible}
           onRequestClose={() => {

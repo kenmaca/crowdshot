@@ -128,6 +128,16 @@ export default class ChatCard extends Component {
             <Text style={styles.date}>
               {this.formattedDate()}
             </Text>
+            {
+              this.props.unread > 0
+              && (
+                <View style={styles.unreadContainer}>
+                  <Text style={styles.unread}>
+                    {this.props.unread}
+                  </Text>
+                </View>
+              )
+            }
           </View>
         </TouchableOpacity>
       </View>
@@ -239,5 +249,25 @@ const styles = StyleSheet.create({
   date: {
     color: Colors.AlternateText,
     fontSize: Sizes.Text
+  },
+
+  unreadContainer: {
+    position: 'absolute',
+    right: Sizes.InnerFrame,
+    bottom: Sizes.InnerFrame,
+    alignSelf: 'center',
+    alignItems: 'center',
+    padding: Sizes.InnerFrame / 4,
+    paddingLeft: Sizes.InnerFrame,
+    paddingRight: Sizes.InnerFrame,
+    borderRadius: 50,
+    backgroundColor: Colors.Cancel
+  },
+
+  unread: {
+    fontSize: Sizes.SmallText,
+    color: Colors.Text,
+    fontStyle: 'italic',
+    fontWeight: '900'
   }
 })

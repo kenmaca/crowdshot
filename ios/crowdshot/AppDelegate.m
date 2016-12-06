@@ -66,7 +66,7 @@
 #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
   [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification.request.content.userInfo];
-  if ([[notification.request.content.userInfo valueForKey:@"show_in_foreground"] isEqualToString:@"true"]){
+  if ([[notification.request.content.userInfo valueForKey:@"show_in_foreground"] isEqualToString:@"true "]){
     completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
   } else {
     completionHandler(UNNotificationPresentationOptionNone);

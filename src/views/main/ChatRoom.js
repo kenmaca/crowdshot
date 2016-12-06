@@ -22,7 +22,8 @@ export default class ChatRoom extends Component {
       rawChat: {},
       activeChat: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 != r2
-      })
+      }),
+      totalUnread: 0
     };
 
     this.ref = Database.ref(
@@ -34,6 +35,10 @@ export default class ChatRoom extends Component {
     this.chatRef = Database.ref(
       `chats`
     )
+
+    this.emptyChat = this.emptyChat.bind(this);
+
+    this.unread = this.unread.bind(this);
   }
 
   emptyChat(chatId) {
@@ -41,6 +46,31 @@ export default class ChatRoom extends Component {
       return true
     }
     return false
+  }
+
+  unread(chatId) {
+    //number of unread messages init
+    var unread = 0;
+
+    //get the latest chat closed time
+    //get the number of unread messages
+    Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/activeChat/${chatId}`
+    ).once('value', date => {
+      Database.ref(
+        `chats/${chatId}`
+      ).on('value', data => {
+        let blob = Object.keys(data.val())
+        blob.map(i => {
+          if (i > date.val()) {
+            unread ++
+          }
+        })
+      })
+    })
+    return unread;
   }
 
   componentDidMount() {
@@ -110,7 +140,9 @@ export default class ChatRoom extends Component {
                     }
                   }
                 ]}>
-                <ChatCard chatId={chatId} />
+                <ChatCard
+                  chatId={chatId}
+                  unread={this.unread(chatId)} />
               </Swipeout>
             </View>
           )
@@ -135,7 +167,7 @@ export default class ChatRoom extends Component {
             style={styles.activeChat}
             renderRow={this.renderRow.bind(this)} />
         </View>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton back />
       </View>
     );
   }

@@ -23,22 +23,24 @@ export default class CloseFullscreenButton extends Component {
   render() {
     return (
       <View style={styles.container}>
-        { Platform.OS === 'ios' ?
-        <TouchableOpacity
-          onPress={this.props.action || Actions.pop}>
-          <Animatable.View
-            animation='zoomIn'
-            delay={250}
-            duration={300}>
-            <CircleIcon
-              icon='close'
-              color={Colors.Transparent}
-              checkColor={Colors.Text}
-              shadowStyle={styles.shadow}
-              size={50} />
-          </Animatable.View>
-        </TouchableOpacity>
-        : <View/> }
+        {
+          Platform.OS === 'ios' && (
+            <TouchableOpacity
+              onPress={this.props.action || Actions.pop}>
+              <Animatable.View
+                animation='zoomIn'
+                delay={250}
+                duration={300}>
+                <CircleIcon
+                  icon={this.props.back ? 'arrow-back': 'close'}
+                  color={Colors.Transparent}
+                  checkColor={Colors.Text}
+                  shadowStyle={styles.shadow}
+                  size={50} />
+              </Animatable.View>
+            </TouchableOpacity>
+          )
+        }
       </View>
     );
   }
@@ -46,8 +48,9 @@ export default class CloseFullscreenButton extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    top: Sizes.InnerFrame/2,
+    top: 0,
     left: 0,
+    padding: Sizes.InnerFrame / 2,
     position: 'absolute'
   },
 
