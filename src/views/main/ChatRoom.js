@@ -22,8 +22,7 @@ export default class ChatRoom extends Component {
       rawChat: {},
       activeChat: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 != r2
-      }),
-      totalUnread: 0
+      })
     };
 
     this.ref = Database.ref(

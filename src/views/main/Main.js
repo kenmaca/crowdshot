@@ -31,6 +31,7 @@ import ContestCard from '../../components/lists/ContestCard';
 import CircleIcon from '../../components/common/CircleIcon';
 import HeaderButtons from '../../components/common/HeaderButtons';
 import HeaderButton from '../../components/common/HeaderButton';
+import ChatRoomHeaderButton from '../../components/chat/ChatRoomHeaderButton';
 
 export default class Main extends Component {
   constructor(props) {
@@ -410,7 +411,7 @@ export default class Main extends Component {
           <HeaderButton
             icon='report'
             onPress={Actions.report} />
-          <HeaderButton
+          <ChatRoomHeaderButton
             icon='chat-bubble'
             onPress={Actions.chatroom} />
           <HeaderButton
