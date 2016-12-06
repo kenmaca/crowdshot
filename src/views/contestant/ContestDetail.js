@@ -35,7 +35,6 @@ export default class ContestDetail extends Component {
     StatusBar.setHidden(true, 'slide');
 
     this.state = {
-      cameraVisible: false,
       preview: null,
       entries: {},
       thumbnails: new ListView.DataSource({
@@ -191,12 +190,8 @@ export default class ContestDetail extends Component {
           </ScrollView>
         </View>
         <ParticipateButton
-      //    onPress={() => this.setState({
-      //      cameraVisible: true
-      //    })}
           onPress={() => Actions.newContestPhoto({
             onTaken:photoId => {
-          //    Actions.pop()
 
               let entryId = this.entriesRef.push({
                 '.value': {
@@ -233,53 +228,6 @@ export default class ContestDetail extends Component {
           })}
           contest={this.state} />
         <CloseFullscreenButton back />
-        <Modal
-          transparent
-          onRequestClose={() => this.setState({cameraVisible:false})}
-          animationType='fade'
-          visible={this.state.cameraVisible}>
-          <CameraView
-            onUploaded={(photoId) => {
-              this.setState({
-                cameraVisible: false,
-              });
-
-              let entryId = this.entriesRef.push({
-                '.value': {
-                  createdBy: Firebase.auth().currentUser.uid,
-                  dateCreated: Date.now(),
-                  photoId: photoId
-                },
-                '.priority': -Date.now()
-              }).key
-
-              // and add to profile's list of entries
-              Database.ref(
-                `profiles/${
-                  Firebase.auth().currentUser.uid
-                }/entries/${
-                  entryId
-                }`
-              ).set({
-                '.value': this.props.contestId,
-                '.priority': -Date.now()
-              });
-
-              // and update profile counts
-              let attempts = Database.ref(
-                `profiles/${
-                  Firebase.auth().currentUser.uid
-                }/countAttempts`
-              )
-              attempts.once(
-                'value',
-                data => attempts.set((data.val() || 0) + 1)
-              );
-            }}
-            />
-          <CloseFullscreenButton
-            action={() => this.setState({cameraVisible:false})}/>
-        </Modal>
         <Modal
           transparent
           onRequestClose={() => this.setState({preview:null})}

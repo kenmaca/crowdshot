@@ -119,11 +119,13 @@ export default class MapMarkerDrop extends Component {
 
   // helps avoid jitterness by delaying reappear
   stopMotion() {
-    this.motion = setTimeout(
-      () => this.setState({
-        motion: false
-      }), 50
-    );
+    this.motion = setTimeout(() => {
+      if (this.mounted){
+        this.setState({
+          motion: false
+        }), 50
+      }
+    });
   }
 
   onRegionChange(region, motion) {
