@@ -44,60 +44,59 @@ export default class UserSummary extends Component {
   render() {
     return (
       <View style={styles.container}>
-      <View style={styles.avatar}>
-        <Avatar
-          outline
-          showRank
-          outlineColor={Colors.ModalBackground}
-          size={48}
-          uid={this.props.uid} />
-      </View>
-        <View style={styles.body}>
-
-        <Text style={styles.name}>
-          {this.state.displayName}
-        </Text>
-        <View style={styles.userContainer}>
-          <View style={styles.statContainer}>
-            <Text style={styles.statTitle}>
-              {
-                this.state.countWon || 0
-              }
-            </Text>
-            <Text style={styles.statDescription}>
-              CONTESTS WON
-            </Text>
-          </View>
-          <View style={styles.statContainer}>
-            <Text style={styles.statTitle}>
-              {
-                `${
-                  Math.round(
-                    (
-                      this.state.countAttempts
-                      ? (
-                        (this.state.countWon || 0) / this.state.countAttempts
-                      ): 0
-                    ) * 100
-                  )
-                }%`
-              }
-            </Text>
-            <Text style={styles.statDescription}>
-              SUCCESS RATE
-            </Text>
-          </View>
-          <View style={styles.statContainer}>
-            <Text style={styles.statTitle}>
-              {
-                this.state.countAttempts || 0
-              }
-            </Text>
-            <Text style={styles.statDescription}>
-              PHOTOS
-            </Text>
-          </View>
+        <View style={styles.avatar}>
+          <Avatar
+            outline
+            showRank
+            outlineColor={Colors.ModalBackground}
+            size={48}
+            uid={this.props.uid} />
         </View>
+        <View style={styles.body}>
+          <Text style={styles.name}>
+            {this.state.displayName}
+          </Text>
+          <View style={styles.userContainer}>
+            <View style={styles.statContainer}>
+              <Text style={styles.statTitle}>
+                {
+                  this.state.countWon || 0
+                }
+              </Text>
+              <Text style={styles.statDescription}>
+                CONTESTS WON
+              </Text>
+            </View>
+            <View style={styles.statContainer}>
+              <Text style={styles.statTitle}>
+                {
+                  `${
+                    Math.round(
+                      (
+                        this.state.countAttempts
+                        ? (
+                          (this.state.countWon || 0) / this.state.countAttempts
+                        ): 0
+                      ) * 100
+                    )
+                  }%`
+                }
+              </Text>
+              <Text style={styles.statDescription}>
+                SUCCESS RATE
+              </Text>
+            </View>
+            <View style={styles.statContainer}>
+              <Text style={styles.statTitle}>
+                {
+                  this.state.countAttempts || 0
+                }
+              </Text>
+              <Text style={styles.statDescription}>
+                PHOTOS
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
     );
