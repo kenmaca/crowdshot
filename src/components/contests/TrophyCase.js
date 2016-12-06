@@ -18,7 +18,12 @@ export default class TrophyCase extends Component {
       <TouchableOpacity
         style={styles.container}
         onPress={this.props.onPress}>
-        <Text style={styles.trophyAmount}>
+        <Text style={[
+          styles.trophyAmount,
+          this.props.color && {
+            color: this.props.color
+          }
+        ]}>
           {
             `$${this.props.bounty || 0}`
           }

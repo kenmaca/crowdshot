@@ -20,6 +20,8 @@ import ContestPhotoCard from '../../components/lists/ContestPhotoCard';
 import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import ContestThumbnail from '../../components/lists/ContestThumbnail';
+import Button from '../../components/common/Button';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 export default class Voting extends Component {
   constructor(props) {
@@ -27,13 +29,21 @@ export default class Voting extends Component {
     this.state = {
       visible: false,
       cards: [],
+      blob: {},
       entries: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
-      })
+      }),
+      contest: {}
     };
 
     this.ref = Database.ref(
       `entries/${
+        this.props.contestId
+      }`
+    );
+
+    this.contestRef = Database.ref(
+      `contests/${
         this.props.contestId
       }`
     );
@@ -46,12 +56,22 @@ export default class Voting extends Component {
   componentDidMount() {
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
-        let entries = Object.keys(data.val());
+        let blob = data.val();
+        let entries = Object.keys(blob);
         this.setState({
           entries: this.state.entries.cloneWithRows(
             entries
           ),
-          cards: entries
+          cards: entries,
+          blob: blob
+        });
+      }
+    });
+
+    this.contestListener = this.contestRef.on('value', data => {
+      if (data.exists()) {
+        this.setState({
+          contest: data.val()
         });
       }
     });
@@ -99,6 +119,16 @@ export default class Voting extends Component {
   }
 
   render() {
+    let countPrizes = (
+      this.state.contest.prizes
+      && Object.keys(
+        this.state.contest.prizes
+      ).length
+    ) || 0;
+    let countSelected = Object.values(
+      this.state.blob
+    ).filter(entry => entry.selected).length || 0;
+
     return (
       <View style={styles.container}>
         <Modal
@@ -147,7 +177,32 @@ export default class Voting extends Component {
               visible: false
             })} />
         </Modal>
-        <TitleBar title='Contest Voting' />
+        <TitleBar
+          title='Contest Voting'>
+          <Button
+            label='Finalize Contest'
+            color={Colors.Primary} />
+        </TitleBar>
+        <View style={styles.trophies}>
+          {
+            new Array(
+              Math.max(countPrizes, countSelected)
+            ).fill(true).map((trophy, i) => (
+              <FontAwesomeIcon
+                key={Math.random()}
+                name='trophy'
+                color={
+                  i < countSelected
+                  ? i < countPrizes
+                    ? Colors.Primary
+                    : Colors.Overlay
+                  : Colors.Trophy
+                }
+                size={Sizes.H3}
+                style={styles.trophy} />
+            ))
+          }
+        </View>
         <View style={styles.entryContainer}>
           <ListView
             key={Math.random()}
@@ -188,5 +243,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.DarkOverlay
+  },
+
+  trophies: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: Sizes.InnerFrame,
+    paddingTop: 0,
+    paddingLeft: Sizes.OuterFrame,
+    paddingRight: Sizes.OuterFrame,
+    backgroundColor: Colors.Foreground
+  },
+
+  trophy: {
+    marginRight: Sizes.InnerFrame / 2
   }
 });

@@ -76,36 +76,44 @@ export default class PaymentMethod extends Component {
         <TitleBar
           ref='title'
           showLoader
-          title='Transaction History' />
-        {
+          title='Transaction History'>
+          {
 
-          // show balance total if this is an account credit
-          this.props.billingId === Firebase.auth().currentUser.uid
-          ? (
+            // show balance total if this is an account credit
+            this.props.billingId === Firebase.auth().currentUser.uid
+            && (
+              <View style={[
+                styles.content,
+                styles.balance
+              ]}>
+                <Text style={styles.balanceAmount}>
+                  {
+                    `$${
+                      -(
+                        (
+                          Object.values(this.state.transactions || {}).reduce(
+                            (a, b) => a + b,
+                            0
+                          ) / 100
+                        ).toFixed(2)
+                      )
+                    }`
+                  }
+                </Text>
+                <Text style={styles.balanceText}>
+                  Available
+                </Text>
+              </View>
+            )
+          }
+        </TitleBar>
+        {
+          this.props.billingId !== Firebase.auth().currentUser.uid
+          && (
             <View style={[
               styles.content,
-              styles.balance
+              styles.card
             ]}>
-              <Text style={styles.balanceAmount}>
-                {
-                  `$${
-                    -(
-                      (
-                        Object.values(this.state.transactions || {}).reduce(
-                          (a, b) => a + b,
-                          0
-                        ) / 100
-                      ).toFixed(2)
-                    )
-                  }`
-                }
-              </Text>
-              <Text style={styles.balanceText}>
-                Available
-              </Text>
-            </View>
-          ): (
-            <View style={styles.content}>
               <PaymentCard {...this.state} />
             </View>
           )
@@ -133,16 +141,17 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    backgroundColor: Colors.Foreground,
-    padding: Sizes.InnerFrame,
-    paddingBottom: Sizes.InnerFrame * 2,
-    paddingTop: 0,
     alignItems: 'center',
     justifyContent: 'center'
   },
 
   balance: {
     alignItems: 'flex-end'
+  },
+
+  card: {
+    paddingBottom: Sizes.OuterFrame,
+    backgroundColor: Colors.Foreground
   },
 
   balanceAmount: {

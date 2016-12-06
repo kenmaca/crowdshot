@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
   horizontal: {
     alignSelf: 'stretch',
     flexDirection: 'row',
+    alignItems: 'flex-end',
     justifyContent: 'space-between'
   },
 
