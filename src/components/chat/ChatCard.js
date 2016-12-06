@@ -177,7 +177,7 @@ export default class ChatCard extends Component {
       } else if (week == 2) {
         res = 'Tuesday'
       } else if (week == 3) {
-        res = 'Wednsday'
+        res = 'Wednesday'
       } else if (week == 4) {
         res = 'Thursday'
       } else if (week == 5) {
