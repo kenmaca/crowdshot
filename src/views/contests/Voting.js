@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, ListView, TouchableOpacity,
-  Modal, TouchableWithoutFeedback
+  Modal, TouchableWithoutFeedback, Alert
 } from 'react-native';
 import {
   Colors, Sizes
@@ -125,9 +125,13 @@ export default class Voting extends Component {
         this.state.contest.prizes
       ).length
     ) || 0;
-    let countSelected = Object.values(
+    let entries = Object.values(
       this.state.blob
-    ).filter(entry => entry.selected).length || 0;
+    );
+    let countEntries = entries.length || 0;
+    let countSelected = entries.filter(
+      entry => entry.selected
+    ).length || 0;
 
     return (
       <View style={styles.container}>
@@ -181,7 +185,53 @@ export default class Voting extends Component {
           title='Contest Voting'>
           <Button
             label='Finalize Contest'
-            color={Colors.Primary} />
+            color={Colors.Primary}
+            isDisabled={
+
+              // disallow premature end
+              Date.now() < this.state.contest.endDate
+
+              // disallow insufficient prizes
+              || countSelected > countPrizes
+
+              // disallow under selection if more
+              // prizes than entries (must select all)
+              || (
+                countEntries < countPrizes
+                && countEntries > countSelected
+
+              // disallow under selection if selected
+              // less than number of available prizes
+              ) || (
+                countEntries > countPrizes
+                && countSelected < countPrizes
+              )
+            }
+            onPressDisabled={
+              () => {
+                if (Date.now() < this.state.contest.endDate) {
+                  Alert.alert('Contest has not ended yet.');
+                } else if (countSelected > countPrizes) {
+                  Alert.alert(
+                    'Too many entries selected',
+                    'Please add more bounties or unselect some entries.'
+                  );
+                } else if (
+                  (
+                    countEntries < countPrizes
+                    && countEntries > countSelected
+                  ) || (
+                    countEntries > countPrizes
+                    && countSelected < countPrizes
+                  )
+                ) {
+                  Alert.alert(
+                    'Select more entries',
+                    'You still have some available prizes to award.'
+                  );
+                }
+              }
+            } />
         </TitleBar>
         <View style={styles.trophies}>
           {
