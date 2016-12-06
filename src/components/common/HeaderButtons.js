@@ -11,9 +11,17 @@ import {
 export default class HeaderButtons extends Component {
   render() {
     return (
-      <View
-        children={this.props.children}
-        style={styles.container} />
+      <View style={styles.container}>
+        {
+          this.props.children.map(child => (
+            <View
+              key={Math.random()}
+              style={styles.shadow}>
+              {child}
+            </View>
+          ))
+        }
+      </View>
     );
   }
 }
@@ -33,5 +41,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end'
+  },
+
+  shadow: {
+    backgroundColor: Colors.Transparent,
+    shadowColor: Colors.Overlay,
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    shadowOffset: {
+      height: 0,
+      width: 0
+    }
   }
 });

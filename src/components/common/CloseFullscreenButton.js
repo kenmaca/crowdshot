@@ -35,7 +35,6 @@ export default class CloseFullscreenButton extends Component {
                   icon={this.props.back ? 'arrow-back': 'close'}
                   color={Colors.Transparent}
                   checkColor={Colors.Text}
-                  shadowStyle={styles.shadow}
                   size={50} />
               </Animatable.View>
             </TouchableOpacity>

@@ -19,7 +19,6 @@ export default class HeaderButton extends Component {
         style={this.props.style}>
         <CircleIcon
           fontAwesome={this.props.fontAwesome}
-          shadowStyle={styles.shadowStyle}
           style={styles.container}
           color={Colors.Transparent}
           size={36}
@@ -42,12 +41,6 @@ export default class HeaderButton extends Component {
 const styles = StyleSheet.create({
   container: {
     marginLeft: Sizes.InnerFrame,
-  },
-
-  shadowStyle: {
-    textShadowColor: Colors.Overlay,
-    textShadowOffset: {width: 2, height: 1},
-    textShadowRadius: 10
   },
 
   unreadContainer: {
