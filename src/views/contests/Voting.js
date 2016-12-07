@@ -13,6 +13,7 @@ import Database from '../../utils/Database';
 import {
   Actions
 } from 'react-native-router-flux';
+import * as Animatable from 'react-native-animatable';
 
 // components
 import SwipeCards from 'react-native-swipe-cards';
@@ -22,6 +23,7 @@ import CloseFullscreenButton from '../../components/common/CloseFullscreenButton
 import ContestThumbnail from '../../components/lists/ContestThumbnail';
 import Button from '../../components/common/Button';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import ContestFinalize from '../../components/lists/ContestFinalize';
 
 export default class Voting extends Component {
@@ -53,6 +55,7 @@ export default class Voting extends Component {
     this.renderCard = this.renderCard.bind(this);
     this.renderRow = this.renderRow.bind(this);
     this.isVotingIncomplete = this.isVotingIncomplete.bind(this);
+    this.hintSwing = this.hintSwing.bind(this);
   }
 
   componentDidMount() {
@@ -81,6 +84,7 @@ export default class Voting extends Component {
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
+    this.swing && clearTimeout(this.swing);
   }
 
   renderRow(entryId) {
@@ -157,6 +161,11 @@ export default class Voting extends Component {
     );
   }
 
+  hintSwing(duration, delay) {
+    this.refs.hint.swing(duration);
+    this.swing = setTimeout(this.hintSwing, delay, duration, delay);
+  }
+
   render() {
     let countPrizes = (
       this.state.contest.prizes
@@ -172,9 +181,13 @@ export default class Voting extends Component {
       entry => entry.selected
     ).length || 0;
 
+    // disable hintSwing if modal not present
+    !this.state.visible && this.swing && clearTimeout(this.swing);
+
     return (
       <View style={styles.container}>
         <Modal
+          ref='modal'
           transparent
           visible={this.state.visible}
           onRequestClose={() => true}
@@ -223,6 +236,22 @@ export default class Voting extends Component {
                 )
               );
             }} />
+          <View style={styles.hintContainer}>
+            <Animatable.View
+              ref='hint'
+              animation='bounceInUp'
+              duration={500}
+              onAnimationEnd={() => this.hintSwing(300, 5000)}
+              style={styles.hint}>
+              <Icon
+                name='touch-app'
+                size={Sizes.H2}
+                color={Colors.Text} />
+              <Text style={styles.hintText}>
+                Swipe to vote
+              </Text>
+            </Animatable.View>
+          </View>
           <CloseFullscreenButton
             action={() => this.setState({
               visible: false
@@ -346,5 +375,25 @@ const styles = StyleSheet.create({
 
   trophy: {
     marginRight: Sizes.InnerFrame / 2
+  },
+
+  hintContainer: {
+    position: 'absolute',
+    bottom: Sizes.InnerFrame,
+    width: Sizes.Width,
+    alignItems: 'center',
+    backgroundColor: Colors.Transparent
+  },
+
+  hint: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  hintText: {
+    marginLeft: Sizes.InnerFrame / 2,
+    fontSize: Sizes.H4,
+    color: Colors.Text
   }
 });
