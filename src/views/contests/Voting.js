@@ -52,6 +52,7 @@ export default class Voting extends Component {
     // methods
     this.renderCard = this.renderCard.bind(this);
     this.renderRow = this.renderRow.bind(this);
+    this.isVotingIncomplete = this.isVotingIncomplete.bind(this);
   }
 
   componentDidMount() {
@@ -120,6 +121,42 @@ export default class Voting extends Component {
     );
   }
 
+  isVotingIncomplete() {
+    let countPrizes = (
+      this.state.contest.prizes
+      && Object.keys(
+        this.state.contest.prizes
+      ).length
+    ) || 0;
+    let entries = Object.values(
+      this.state.blob
+    );
+    let countEntries = entries.length || 0;
+    let countSelected = entries.filter(
+      entry => entry.selected
+    ).length || 0;
+
+    // determine if contest is incomplete
+    return (
+
+      // disallow insufficient prizes
+      countSelected > countPrizes
+
+      // disallow under selection if more
+      // prizes than entries (must select all)
+      || (
+        countEntries < countPrizes
+        && countEntries > countSelected
+
+      // disallow under selection if selected
+      // less than number of available prizes
+      ) || (
+        countEntries >= countPrizes
+        && countSelected < countPrizes
+      )
+    );
+  }
+
   render() {
     let countPrizes = (
       this.state.contest.prizes
@@ -143,6 +180,7 @@ export default class Voting extends Component {
           onRequestClose={() => true}
           animationType='fade'>
           <SwipeCards
+            loop
             ref='swiper'
             containerStyle={styles.vote}
             cards={this.state.cards}
@@ -158,7 +196,14 @@ export default class Voting extends Component {
                 }`
               ).update({
                 selected: true
-              });
+              }).then(
+                () => (
+                  !this.isVotingIncomplete()
+                  && this.setState({
+                    visible: false
+                  })
+                )
+              );
             }}
             handleNope={entry => {
               Database.ref(
@@ -169,14 +214,14 @@ export default class Voting extends Component {
                 }`
               ).update({
                 selected: false
-              });
-            }}
-            cardRemoved={i => {
-              if (i >= this.state.cards.length - 1) {
-                this.setState({
-                  visible: false
-                });
-              }
+              }).then(
+                () => (
+                  !this.isVotingIncomplete()
+                  && this.setState({
+                    visible: false
+                  })
+                )
+              );
             }} />
           <CloseFullscreenButton
             action={() => this.setState({
@@ -193,22 +238,7 @@ export default class Voting extends Component {
 
               // disallow premature end
               Date.now() < this.state.contest.endDate
-
-              // disallow insufficient prizes
-              || countSelected > countPrizes
-
-              // disallow under selection if more
-              // prizes than entries (must select all)
-              || (
-                countEntries < countPrizes
-                && countEntries > countSelected
-
-              // disallow under selection if selected
-              // less than number of available prizes
-              ) || (
-                countEntries >= countPrizes
-                && countSelected < countPrizes
-              )
+              || this.isVotingIncomplete()
             }
             onPressDisabled={
               () => {
