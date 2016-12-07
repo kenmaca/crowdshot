@@ -272,11 +272,44 @@ export default class Voting extends Component {
             onPressDisabled={
               () => {
                 if (Date.now() < this.state.contest.endDate) {
-                  Alert.alert('Contest has not ended yet.');
+                  Alert.alert(
+                    'Contest has not ended yet',
+                    'We\'re still waiting for more entries. Come back '
+                    + 'later to select the winners'
+                  );
                 } else if (countSelected > countPrizes) {
                   Alert.alert(
                     'Too many entries selected',
-                    'Please add more bounties or unselect some entries.'
+                    'Please add more bounties or unselect some entries',
+                    [
+                      {
+                        text: 'Later'
+                      }, {
+                        text: 'Unselect entries',
+                        onPress: () => this.setState({
+                          visible: true
+                        })
+                      }, {
+                        text: 'Add more bounties',
+                        onPress: () => Actions.newPayment({
+                          titleText: 'Add another Prize',
+                          disclaimerText: 'This will be charged to your '
+                            + 'chosen payment method immediately.',
+                          fixedValue: this.state.contest.bounty,
+                          description: 'Additional Bounty for Photo Contest',
+                          onCharged: prizeId => Database.ref(
+                            `contests/${
+                              this.props.contestId
+                            }/prizes/${
+                              prizeId
+                            }`
+                          ).set({
+                            '.value': true,
+                            '.priority': -Date.now()
+                          })
+                        })
+                      }
+                    ]
                   );
                 } else if (
                   (
@@ -289,7 +322,17 @@ export default class Voting extends Component {
                 ) {
                   Alert.alert(
                     'Select more entries',
-                    'You still have some available prizes to award.'
+                    'You still have some available prizes to award',
+                    [
+                      {
+                        text: 'Later'
+                      }, {
+                        text: 'Vote',
+                        onPress: () => this.setState({
+                          visible: true
+                        })
+                      }
+                    ]
                   );
                 }
               }
