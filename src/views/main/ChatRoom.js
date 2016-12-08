@@ -35,16 +35,12 @@ export default class ChatRoom extends Component {
       `chats`
     )
 
-    this.emptyChat = this.emptyChat.bind(this);
-
+    this.isChatEmpty = this.isChatEmpty.bind(this);
     this.unread = this.unread.bind(this);
   }
 
-  emptyChat(chatId) {
-    if (this.state.chatMessage && this.state.chatMessage[chatId]) {
-      return true
-    }
-    return false
+  isChatEmpty(chatId) {
+    return !!(this.state.chatMessage && this.state.chatMessage[chatId]);
   }
 
   unread(chatId) {
@@ -106,7 +102,7 @@ export default class ChatRoom extends Component {
     return (
       <View>
         {
-          this.emptyChat(chatId) && (
+          this.isChatEmpty(chatId) && (
             <View style={styles.chatContainer}>
               <Swipeout
                 right={[
@@ -155,7 +151,7 @@ export default class ChatRoom extends Component {
       <View style={styles.container}>
         <TitleBar
           clearLoader
-          title='Crowd Chat'
+          title='Messages'
           ref='title' />
         <View style={styles.content}>
           <ListView
@@ -190,8 +186,7 @@ const styles = StyleSheet.create({
   },
 
   chatContainer: {
-    margin: Sizes.InnerFrame / 2,
-    marginBottom: 0
+    marginBottom: 2
   },
 
   title: {
