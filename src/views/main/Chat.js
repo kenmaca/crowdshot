@@ -48,40 +48,50 @@ export default class Chat extends Component {
   }
 
   componentDidMount() {
-    this.listener = this.ref.on('child_added', data => {
-      if (data.exists()) {
+    this.delay = setTimeout(
+      () => {
+        this.listener = this.ref.on('child_added', data => {
+          if (data.exists()) {
 
-        // record synchronously
-        let message = data.val();
-        this.messages[data.key] = {
-          _id: Object.keys(this.messages).length,
-          text: message.message,
-          createdAt: new Date(parseInt(data.key)),
-          user: {
-            _id: message.createdBy,
-            name: message.createdBy
+            // record synchronously
+            let message = data.val();
+            this.messages[data.key] = {
+              _id: Object.keys(this.messages).length,
+              text: message.message,
+              createdAt: new Date(parseInt(data.key)),
+              user: {
+                _id: message.createdBy,
+                name: message.createdBy
+              }
+            };
+
+            // save async with synced image
+            this.setState({
+              messages: Object.values(this.messages)
+            });
+
+            // clear loader
+            this.refs.title.clearLoader();
           }
-        };
-
-        // save async with synced image
-        this.setState({
-          messages: Object.values(this.messages)
         });
-      }
-    });
 
-    this.contestListener = this.contestRef.on(
-      'value', data => data.exists() && this.setState({
-        contestCreatedBy: data.val()
-      })
+        this.contestListener = this.contestRef.on(
+          'value', data => data.exists() && this.setState({
+            contestCreatedBy: data.val()
+          })
+        );
+
+        // add to owner's subscribed list of chats
+        this.subscribe();
+      },
+      500
     );
-
-    // add to owner's subscribed list of chats
-    this.subscribe();
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('child_added', this.listener);
+    this.contestListener && this.contestRef.off('value', this.contestListener);
+    this.delay && clearTimeout(this.delay);
   }
 
   onSend(messages) {
@@ -123,7 +133,10 @@ export default class Chat extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TitleBar title={this.props.title || 'Contest Chat'}>
+        <TitleBar
+          showLoader
+          ref='title'
+          title={this.props.title || 'Contest Chat'}>
           <GroupAvatar
             uids={[
 
