@@ -1,4 +1,4 @@
-package com.crowdshot2;
+package com.crowdshot;
 
 import android.content.Intent;
 import com.facebook.react.ReactActivity;
