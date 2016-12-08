@@ -24,7 +24,13 @@ export default class CloseFullscreenButton extends Component {
     return (
       <View style={styles.container}>
         {
-          Platform.OS === 'ios' && (
+
+          // only show if iOS or if this is a close
+          // button (which is mandatory)
+          (
+            Platform.OS === 'ios'
+            || !this.props.back
+          ) && (
             <TouchableOpacity
               onPress={this.props.action || Actions.pop}>
               <Animatable.View
