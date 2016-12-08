@@ -18,6 +18,7 @@ import Photo from '../common/Photo';
 import CircleIconInfo from '../common/CircleIconInfo';
 import Avatar from '../profiles/Avatar';
 import ChatAvatar from '../profiles/ChatAvatar';
+import GroupAvatar from '../profiles/GroupAvatar';
 
 export default class ChatCard extends Component {
   constructor(props) {
@@ -161,74 +162,81 @@ export default class ChatCard extends Component {
   }
 
   render() {
-    return(
-      <View style={styles.outline}>
-        <TouchableOpacity
-          onPress={() => Actions.chat({
-            chatId: this.props.chatId,
-            title: 'Contest Chat'
-          })}>
-          <View style={styles.item}>
-            <View style={styles.avatar}>
-              <ChatAvatar
-                uids={[
+    return (
+      this.state.last
+      ? (
+        <View style={styles.outline}>
+          <TouchableOpacity
+            onPress={() => Actions.chat({
+              chatId: this.props.chatId,
+              title: 'Contest Chat'
+            })}>
+            <View style={styles.item}>
+              <View style={styles.avatar}>
+                <GroupAvatar
+                  limit={1}
+                  outlineColor={Colors.ModalForeground}
+                  uids={[
 
-                  // unique since could be duplicates
-                  ...new Set(
-                    [
-                      ...Object.values(this.state.messages).map(
-                        message => message.createdBy
-                      ),
+                    // unique since could be duplicates
+                    ...new Set(
+                      [
+                        ...Object.values(this.state.messages).map(
+                          message => message.createdBy
+                        ),
 
-                      // inject the contest owner
-                      this.state.contest.createdBy
-                    ]
-                  )
-                ]} />
-            </View>
-            <View style={styles.messageContainer}>
-              <Text style={[
-                styles.chatTitle,
-                this.state.unread > 0 && styles.bold
-              ]}>
-                {
-                  this.formattedMessage(
-                    this.state.lastAuthor || 'Unknown',
-                    30
-                  )
-                }
-              </Text>
-              <Text style={[
-                styles.message,
-                this.state.unread > 0 && styles.bold
-              ]}>
-                {
-                  this.formattedMessage(
-                    this.state.last
-                    ? this.state.messages[
+                        // inject the contest owner
+                        this.state.contest.createdBy
+                      ]
+                    )
+                  ]} />
+              </View>
+              <View style={styles.messageContainer}>
+                <Text style={[
+                  styles.chatTitle,
+                  this.state.unread > 0 && styles.bold
+                ]}>
+                  {
+                    this.formattedMessage(
+                      this.state.lastAuthor || 'Unknown',
+                      30
+                    )
+                  }
+                </Text>
+                <Text style={[
+                  styles.message,
+                  this.state.unread > 0 && styles.bold
+                ]}>
+                  {
+                    this.formattedMessage(
                       this.state.last
-                    ].message: '',
-                    30
-                  )
-                }
+                      ? this.state.messages[
+                        this.state.last
+                      ].message: '',
+                      30
+                    )
+                  }
+                </Text>
+              </View>
+              <Text style={styles.date}>
+                {this.formattedDate(this.state.last)}
               </Text>
+              {
+                this.state.unread > 0
+                && (
+                  <View style={styles.unreadContainer}>
+                    <Text style={styles.unread}>
+                      {this.state.unread}
+                    </Text>
+                  </View>
+                )
+              }
             </View>
-            <Text style={styles.date}>
-              {this.formattedDate(this.state.last)}
-            </Text>
-            {
-              this.state.unread > 0
-              && (
-                <View style={styles.unreadContainer}>
-                  <Text style={styles.unread}>
-                    {this.state.unread}
-                  </Text>
-                </View>
-              )
-            }
-          </View>
-        </TouchableOpacity>
-      </View>
+          </TouchableOpacity>
+        </View>
+      ): (
+        <View />
+      )
     );
   }
 
@@ -297,7 +305,8 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    marginLeft: 0
+    minWidth: Sizes.InnerFrame * 5,
+    alignItems: 'flex-start'
   },
 
   photo: {

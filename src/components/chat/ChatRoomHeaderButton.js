@@ -15,15 +15,15 @@ export default class ChatRoomHeaderButton extends Component {
 
     // all refs keyed by id to {ref: Reference, listener: Listener}
     this.ref = {};
-  }
-
-  componentDidMount() {
     this.rootRef = Database.ref(
       `profiles/${
         Firebase.auth().currentUser.uid
       }/activeChat`
     );
-    this.rootlistener = this.rootRef.on(
+  }
+
+  componentDidMount() {
+    this.rootListener = this.rootRef.on(
       'value', chats => {
         if (chats.exists()) {
 

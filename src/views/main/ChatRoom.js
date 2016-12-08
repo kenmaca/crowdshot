@@ -19,8 +19,7 @@ export default class ChatRoom extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rawChat: {},
-      activeChat: new ListView.DataSource({
+      chats: new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 != r2
       })
     };
@@ -31,66 +30,21 @@ export default class ChatRoom extends Component {
       }/activeChat`
     );
 
-    this.chatRef = Database.ref(
-      `chats`
-    )
-
-    this.isChatEmpty = this.isChatEmpty.bind(this);
-    this.unread = this.unread.bind(this);
-  }
-
-  isChatEmpty(chatId) {
-    return !!(this.state.chatMessage && this.state.chatMessage[chatId]);
-  }
-
-  unread(chatId) {
-    //number of unread messages init
-    var unread = 0;
-
-    //get the latest chat closed time
-    //get the number of unread messages
-    Database.ref(
-      `profiles/${
-        Firebase.auth().currentUser.uid
-      }/activeChat/${chatId}`
-    ).once('value', date => {
-      Database.ref(
-        `chats/${chatId}`
-      ).on('value', data => {
-        let blob = Object.keys(data.val())
-        blob.map(i => {
-          if (i > date.val()) {
-            unread ++
-          }
-        })
-      })
-    })
-    return unread;
+    this.renderRow = this.renderRow.bind(this);
   }
 
   componentDidMount() {
-
     this.listener = this.ref.on('value', data => {
-        let blob = data.val() || {};
-        this.setState({
-          rawChat: blob,
-          activeChat: new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2
-          }).cloneWithRows(
-            Object.keys(blob)
-          )
+      let blob = data.val() || {};
+      this.setState({
+        chats: this.state.chats.cloneWithRows(
+          Object.keys(blob)
+        )
+      });
 
-        });
-
-        // and clear loader
-        this.refs.title.clearLoader();
+      // and clear loader
+      this.refs.title.clearLoader();
     });
-
-    this.chatListener = this.chatRef.on('value', data => {
-      data.exists() && this.setState({
-        chatMessage: data.val()
-      })
-    })
   }
 
   componentWillUnmount() {
@@ -100,50 +54,42 @@ export default class ChatRoom extends Component {
 
   renderRow(chatId) {
     return (
-      <View>
-        {
-          this.isChatEmpty(chatId) && (
-            <View style={styles.chatContainer}>
-              <Swipeout
-                right={[
-                  {
-                    text: 'Remove',
-                    color: Colors.Text,
-                    backgroundColor: Colors.Cancel,
-                    onPress: () => {
-                      Alert.alert(
-                        'Remove this Chat Entry?',
-                        null,
-                        [
-                          {
-                            text: 'Cancel',
-                            style: 'cancel'
-                          }, {
-                            text: 'Remove',
-                            onPress: () => {
-                              Database.ref(
-                                `profiles/${
-                                  Firebase.auth().currentUser.uid
-                                }/activeChat/${
-                                  chatId
-                                }`
-                              ).remove();
-                            }
-                          }
-                        ]
-                      );
+      <View style={styles.chatContainer}>
+        <Swipeout
+          right={[
+            {
+              text: 'Unsubscribe',
+              color: Colors.Text,
+              backgroundColor: Colors.Cancel,
+              onPress: () => {
+                Alert.alert(
+                  'Unsubscribe from this message?',
+                  null,
+                  [
+                    {
+                      text: 'Cancel',
+                      style: 'cancel'
+                    }, {
+                      text: 'Remove',
+                      onPress: () => {
+                        Database.ref(
+                          `profiles/${
+                            Firebase.auth().currentUser.uid
+                          }/activeChat/${
+                            chatId
+                          }`
+                        ).remove();
+                      }
                     }
-                  }
-                ]}>
-                <ChatCard
-                  chatId={chatId}
-                  unread={this.unread(chatId)} />
-              </Swipeout>
-            </View>
-          )
-        }
+                  ]
+                );
+              }
+            }
+          ]}>
+          <ChatCard chatId={chatId} />
+        </Swipeout>
       </View>
-    )
+    );
   }
 
   render() {
@@ -156,20 +102,17 @@ export default class ChatRoom extends Component {
         <View style={styles.content}>
           <ListView
             enableEmptySections
-            key={Math.random()}
             scrollEnabled
-            dataSource={this.state.activeChat}
+            key={Math.random()}
+            dataSource={this.state.chats}
             style={styles.activeChat}
-            renderRow={this.renderRow.bind(this)} />
+            renderRow={this.renderRow} />
         </View>
         <CloseFullscreenButton back />
       </View>
     );
   }
-
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -192,4 +135,4 @@ const styles = StyleSheet.create({
   title: {
     alignItems: 'center'
   }
-})
+});
