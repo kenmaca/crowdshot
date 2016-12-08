@@ -146,7 +146,6 @@ const styles = StyleSheet.create({
   },
 
   entryContainer: {
-    margin: Sizes.InnerFrame / 2,
-    marginBottom: 0,
+    marginBottom: 2,
   }
 });
