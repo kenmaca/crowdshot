@@ -14,9 +14,6 @@ import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 
 // components
-import Photo from '../common/Photo';
-import CircleIconInfo from '../common/CircleIconInfo';
-import Avatar from '../profiles/Avatar';
 import GroupAvatar from '../profiles/GroupAvatar';
 
 export default class ChatCard extends Component {
@@ -311,12 +308,6 @@ const styles = StyleSheet.create({
   avatar: {
     minWidth: Sizes.InnerFrame * 5,
     alignItems: 'flex-start'
-  },
-
-  photo: {
-    width: 50,
-    height: 50,
-    borderRadius: 5
   },
 
   item: {
