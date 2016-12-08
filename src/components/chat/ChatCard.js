@@ -286,16 +286,15 @@ const styles = StyleSheet.create({
   },
 
   chatTitle: {
-    fontSize: Sizes.Text,
+    fontSize: Sizes.H4,
     color: Colors.AlternateText,
     textAlign: 'left'
   },
 
   message: {
-    fontSize: Sizes.Text,
+    fontSize: Sizes.H4,
     color: Colors.SubduedText,
-    textAlign: 'left',
-    paddingTop: 5
+    textAlign: 'left'
   },
 
   bold: {
