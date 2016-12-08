@@ -17,7 +17,6 @@ import Database from '../../utils/Database';
 import Photo from '../common/Photo';
 import CircleIconInfo from '../common/CircleIconInfo';
 import Avatar from '../profiles/Avatar';
-import ChatAvatar from '../profiles/ChatAvatar';
 import GroupAvatar from '../profiles/GroupAvatar';
 
 export default class ChatCard extends Component {
@@ -113,7 +112,8 @@ export default class ChatCard extends Component {
                       ) {
                         this.setState({
                           last: date,
-                          lastAuthor: author.val()
+                          lastAuthor: author.val(),
+                          lastAuthorId: blob[date].createdBy
                         });
                       }
                     }
@@ -181,6 +181,10 @@ export default class ChatCard extends Component {
                     // unique since could be duplicates
                     ...new Set(
                       [
+
+                        // inject last author as first to show instead
+                        // of collapsing
+                        this.state.lastAuthorId,
                         ...Object.values(this.state.messages).map(
                           message => message.createdBy
                         ),
