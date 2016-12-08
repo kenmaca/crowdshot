@@ -262,7 +262,21 @@ export default class Voting extends Component {
           <Button
             label='Finalize Contest'
             color={Colors.Primary}
-            onPress={() => this.refs.finalize.finalize()}
+            onPress={() => Alert.alert(
+              'End this contest?',
+              'Prizes will be awarded to selected entrants and '
+                + 'selected photos will be added to your account '
+                + 'for download. Unselected photos will be deleted '
+                + 'and your decision will be irreversible.',
+              [
+                {
+                  text: 'Cancel'
+                }, {
+                  text: 'Finalize',
+                  onPress: () => this.refs.finalize.finalize()
+                }
+              ]
+            )}
             isDisabled={
 
               // disallow premature end
