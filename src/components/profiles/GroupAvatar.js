@@ -50,6 +50,10 @@ export default class GroupAvatar extends Component {
     });
   }
 
+  componentDidMount() {
+    this.componentWillReceiveProps(this.props);
+  }
+
   // TODO: implement tappable collapsed icon to show modal of
   // all collapsed users
   render() {

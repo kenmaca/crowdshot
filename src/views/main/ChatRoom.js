@@ -34,22 +34,29 @@ export default class ChatRoom extends Component {
   }
 
   componentDidMount() {
-    this.listener = this.ref.on('value', data => {
-      let blob = data.val() || {};
-      this.setState({
-        chats: this.state.chats.cloneWithRows(
-          Object.keys(blob)
-        )
-      });
 
-      // and clear loader
-      this.refs.title.clearLoader();
-    });
+    // delay load for transition smoothing
+    this.delay = setTimeout(
+      () => {
+        this.listener = this.ref.on('value', data => {
+          let blob = data.val() || {};
+          this.setState({
+            chats: this.state.chats.cloneWithRows(
+              Object.keys(blob)
+            )
+          });
+
+          // and clear loader
+          this.refs.title.clearLoader();
+        });
+      },
+      500
+    );
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
-    this.chatListener && this.chatRef.off('value', this.chatListener);
+    this.delay && clearTimeout(this.delay);
   }
 
   renderRow(chatId) {
@@ -96,7 +103,7 @@ export default class ChatRoom extends Component {
     return (
       <View style={styles.container}>
         <TitleBar
-          clearLoader
+          showLoader
           title='Messages'
           ref='title' />
         <View style={styles.content}>

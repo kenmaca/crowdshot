@@ -14,9 +14,6 @@ import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 
 // components
-import Photo from '../common/Photo';
-import CircleIconInfo from '../common/CircleIconInfo';
-import Avatar from '../profiles/Avatar';
 import GroupAvatar from '../profiles/GroupAvatar';
 
 export default class ChatCard extends Component {
@@ -65,19 +62,19 @@ export default class ChatCard extends Component {
             if (data.exists()) {
 
               // reset due to new data incoming
-              let blob = data.val() || {};
+              this.blob = data.val() || this.blob || {};
               this.componentWillUnmount(true);
               this.setState({
                 last: 0,
                 lastAuthor: null,
-                messages: blob
+                messages: this.blob
               });
 
               // and generate individual listeners for authors
               // if their message is last (which likely will be
               // every message since database is stored by decreasing
               // date)
-              Object.keys(blob).map(date => {
+              Object.keys(this.blob).map(date => {
 
                 // update unread counts synchronous
                 if (date > this.state.lastRead) {
@@ -97,7 +94,7 @@ export default class ChatCard extends Component {
                   this.ref[date] = {};
                   this.ref[date].ref = Database.ref(
                     `profiles/${
-                      blob[date].createdBy
+                      this.blob[date].createdBy
                     }/displayName`
                   );
                   this.ref[date].listener = this.ref[date].ref.on(
@@ -113,7 +110,7 @@ export default class ChatCard extends Component {
                         this.setState({
                           last: date,
                           lastAuthor: author.val(),
-                          lastAuthorId: blob[date].createdBy
+                          lastAuthorId: this.blob[date].createdBy
                         });
                       }
                     }
@@ -191,7 +188,7 @@ export default class ChatCard extends Component {
 
                         // inject the contest owner
                         this.state.contest.createdBy
-                      ]
+                      ].filter(uid => uid)
                     )
                   ]} />
               </View>
@@ -311,12 +308,6 @@ const styles = StyleSheet.create({
   avatar: {
     minWidth: Sizes.InnerFrame * 5,
     alignItems: 'flex-start'
-  },
-
-  photo: {
-    width: 50,
-    height: 50,
-    borderRadius: 5
   },
 
   item: {

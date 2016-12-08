@@ -132,12 +132,16 @@ export default class ContestMapView extends Component {
             `profiles/${
               Firebase.auth().currentUser.uid
             }/currentRegion`
-          ).set(`${location[0].locality}, ${location[0].adminArea}`);
+          ).set(
+            [
+              location[0].locality, location[0].adminArea
+            ].filter(l => l).join(', ') || 'Unknown'
+          );
           Database.ref(
             `profiles/${
               Firebase.auth().currentUser.uid
             }/currentCountry`
-          ).set(location[0].country);
+          ).set(location[0].country || 'Unknown');
         }
       }).catch(err => console.log(err));
     }
