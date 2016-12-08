@@ -18,6 +18,7 @@ import {
   GiftedChat
 } from 'react-native-gifted-chat';
 import Avatar from '../../components/profiles/Avatar';
+import GroupAvatar from '../../components/profiles/GroupAvatar';
 import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 
@@ -31,6 +32,10 @@ export default class Chat extends Component {
 
     this.ref = Database.ref(
       `chats/${this.props.chatId}`
+    );
+
+    this.contestRef = Database.ref(
+      `contests/${this.props.chatId}/createdBy`
     );
 
     // methods
@@ -64,6 +69,12 @@ export default class Chat extends Component {
         });
       }
     });
+
+    this.contestListener = this.contestRef.on(
+      'value', data => data.exists() && this.setState({
+        contestCreatedBy: data.val()
+      })
+    );
 
     // add to owner's subscribed list of chats
     this.subscribe();
@@ -112,7 +123,21 @@ export default class Chat extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TitleBar title={this.props.title || 'Contest Chat'} />
+        <TitleBar title={this.props.title || 'Contest Chat'}>
+          <GroupAvatar
+            uids={[
+
+              // include the contest owner if this Chat
+              // is a contest chat
+              ...new Set([
+                this.state.contestCreatedBy,
+                ...this.state.messages.map(
+                  message => message.user._id
+                )
+              ].filter(uid => uid))
+            ]}
+            limit={5} />
+        </TitleBar>
         <GiftedChat
 
           // resort each and every time
