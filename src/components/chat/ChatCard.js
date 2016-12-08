@@ -154,13 +154,7 @@ export default class ChatCard extends Component {
                       this.state.contest.createdBy
                     ]
                   )
-                ].filter(
-
-                  // filter out self profile
-                  profileId => (
-                    profileId !== Firebase.auth().currentUser.uid
-                  )
-                )} />
+                ]} />
             </View>
             <View style={styles.messageContainer}>
               <Text style={styles.chatTitle}>
@@ -229,7 +223,7 @@ export default class ChatCard extends Component {
       }
     } else if (week + 1 == newDay || (week == 6 && newDay == 0)) {
       res = 'Yesterday'
-  } else if (newDay - week < 6) {
+    } else if (newDay - week < 6) {
       //Which day of week
       if (week == 1) {
         res = 'Monday'
@@ -329,4 +323,4 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     fontWeight: '900'
   }
-})
+});
