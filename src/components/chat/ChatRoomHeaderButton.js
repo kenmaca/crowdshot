@@ -13,7 +13,8 @@ export default class ChatRoomHeaderButton extends Component {
       unread: 0
     };
 
-    // all refs keyed by id to {ref: Reference, listener: Listener}
+    // all refs keyed by id
+    // to {ref: Reference, listener: Listener, unread: int}
     this.ref = {};
     this.rootRef = Database.ref(
       `profiles/${
@@ -29,26 +30,36 @@ export default class ChatRoomHeaderButton extends Component {
 
           // reset count since new data incoming
           this.componentWillUnmount(true);
-          this.setState({
-            unread: 0
-          });
 
           // now, check chats for individual unread
           let blob = chats.val();
           Object.keys(blob).map(chatId => {
 
             // start up a new listener for that chat
-            this.ref[chatId] = {};
+            this.ref[chatId] = {unread: 0};
             this.ref[chatId].ref = Database.ref(
               `chats/${chatId}`
             );
             this.ref[chatId].listener = this.ref[chatId].ref.on(
               'value', data => {
                 if (data.exists()) {
+
+                  // reset unread for this chat
+                  this.ref[chatId].unread = 0;
                   Object.keys(data.val()).map(date => {
-                    if (date > blob[chatId]) this.setState({
-                      unread: this.state.unread + 1
-                    });
+                    if (date > blob[chatId]) {
+
+                      // update unread synchronously to prevent
+                      // out of order updates
+                      this.ref[chatId].unread++;
+                      this.setState({
+
+                        // always retotal each time
+                        unread: Object.values(this.ref).map(
+                          chat => chat.unread
+                        ).reduce((a, b) => a + b, 0)
+                      });
+                    }
                   });
                 }
               }
