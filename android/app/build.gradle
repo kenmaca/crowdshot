@@ -144,6 +144,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-google-location')
     compile project(':react-native-picker')
     compile project(':react-native-photo-view')
     compile project(':react-native-share')

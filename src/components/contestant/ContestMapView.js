@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   StyleSheet, View, Text, Animated, PanResponder,
-  TouchableOpacity, Alert
+  TouchableOpacity, Alert, DeviceEventEmitter, Platform
 } from 'react-native';
 import {
   Sizes, Colors
@@ -15,6 +15,7 @@ import {
   Actions
 } from 'react-native-router-flux';
 import Geocoder from 'react-native-geocoder';
+import RNGLocation from 'react-native-google-location';
 
 // components
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -78,6 +79,26 @@ export default class ContestMapView extends Component {
     this.onRegionChange = this.onRegionChange.bind(this);
   }
 
+  onLocationChange (e: Event) {
+    let region = {
+      latitude: e.Latitude,
+      longitude: e.Longitude,
+      latitudeDelta: this.state.region.latitudeDelta,
+      longitudeDelta: this.state.region.longitudeDelta
+    };
+
+    // trigger initial load
+    this.onRegionChange(region, true);
+
+    // update server about contestant whereabouts
+    new GeoFire(Database.ref('profileLocations')).set(
+      Firebase.auth().currentUser.uid,
+      [e.Latitude, e.Longitude]
+    );
+
+    this.evEmitter.remove();
+  }
+
   onRegionChange(region, initial) {
     this.ref.updateCriteria({
       center: [
@@ -134,31 +155,40 @@ export default class ContestMapView extends Component {
   componentDidMount() {
 
     // setup default location
-    this.position = navigator.geolocation.watchPosition(
-      position => {
-        let region = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: this.state.region.latitudeDelta,
-          longitudeDelta: this.state.region.longitudeDelta
-        };
+    if (Platform.OS === 'ios') {
+      this.position = navigator.geolocation.watchPosition(
+        position => {
+          let region = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: this.state.region.latitudeDelta,
+            longitudeDelta: this.state.region.longitudeDelta
+          };
 
-        // trigger initial load
-        this.onRegionChange(region, true);
+          // trigger initial load
+          this.onRegionChange(region, true);
 
-        // update server about contestant whereabouts
-        new GeoFire(Database.ref('profileLocations')).set(
-          Firebase.auth().currentUser.uid,
-          [position.coords.latitude, position.coords.longitude]
-        );
-      },
-      error => Alert.alert(error),
-      {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 1000
+          // update server about contestant whereabouts
+          new GeoFire(Database.ref('profileLocations')).set(
+            Firebase.auth().currentUser.uid,
+            [position.coords.latitude, position.coords.longitude]
+          );
+        },
+        error => Alert.alert(error),
+        {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 1000
+        }
+      );
+    } else {
+      if (!this.evEmitter) {
+        // Register Listener Callback - has to be removed later
+        this.evEmitter = DeviceEventEmitter.addListener('updateLocation', this.onLocationChange.bind(this));
+        // Initialize RNGLocation
+        RNGLocation.getLocation();
       }
-    );
+    }
 
     // and update when a new contest comes into view
     this.ref.on('key_entered', (key, location, distance) => {
@@ -197,6 +227,8 @@ export default class ContestMapView extends Component {
         });
       }
     });
+
+
   }
 
   componentWillUnmount() {
@@ -204,6 +236,8 @@ export default class ContestMapView extends Component {
     this.ref.cancel();
     this.profileListener && this.profileRef.off('value', this.profileListener);
     this.billingListener && this.billingRef.off('value', this.billingListener);
+
+    this.evEmitter.remove();
   }
 
   render() {

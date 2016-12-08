@@ -23,7 +23,7 @@ import com.BV.LinearGradient.LinearGradientPackage;
 import com.devfd.RNGeocoder.RNGeocoderPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
 import com.cmcewen.blurview.BlurViewPackage;
-
+import com.timhagn.rngloc.RNGLocation;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,6 +57,7 @@ public class MainApplication extends Application implements ReactApplication {
             new LinearGradientPackage(),
             new RNGeocoderPackage(),
             new FIRMessagingPackage(),
+            new RNGLocation(),
             new FBSDKPackage(mCallbackManager)
       );
     }
