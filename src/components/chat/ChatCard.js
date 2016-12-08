@@ -107,6 +107,14 @@ export default class ChatCard extends Component {
                   );
                   this.ref[date].listener = this.ref[date].ref.on(
                     'value', author => {
+
+                      // kill listener immediately
+                      this.ref[date].listener
+                        && this.ref[date].ref.off(
+                          'value',
+                          this.ref[date].listener
+                        );
+
                       if (
                         author.exists()
 

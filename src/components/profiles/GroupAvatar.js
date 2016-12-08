@@ -77,7 +77,7 @@ export default class GroupAvatar extends Component {
                   marginRight: this.props.size / 8 * -1
                 }
               ]}
-              key={`${uid}-${Math.random()}`}>
+              key={uid}>
               <Avatar
                 outline
                 showRank={this.props.showRank}
@@ -85,8 +85,7 @@ export default class GroupAvatar extends Component {
                 onPress={() => Actions.profile({uid: uid})}
                 color={this.props.color || Colors.Primary}
                 size={this.props.size || 40}
-                uid={uid}
-                key={`${uid}-${Math.random()}`} />
+                uid={uid} />
             </View>
           ))
         }

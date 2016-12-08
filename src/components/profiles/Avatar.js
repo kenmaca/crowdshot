@@ -40,15 +40,19 @@ export default class Avatar extends Component {
 
   componentDidMount() {
     this.listener = this.ref.on('value', data => {
-      data.exists()
-      && this.setState({
-        ...data.val()
-      });
+      if (data.exists()) {
+        this.setState({
+          ...data.val()
+        });
+
+        // kill reload after initial load
+        this.ref.off('value', this.listener);
+      }
     });
   }
 
   componentWillUnmount() {
-    this.ref.off('value', this.listener);
+    this.listener && this.ref.off('value', this.listener);
   }
 
   render() {

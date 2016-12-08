@@ -41,57 +41,66 @@ export default class Chat extends Component {
     // methods
     this.onSend = this.onSend.bind(this);
     this.subscribe = this.subscribe.bind(this);
+    this.refresh = this.refresh.bind(this);
 
     // synchronous list of messages to prevent
     // race condition
     this.messages = {};
+    this.messageLength = Object.keys(this.messages).length;
   }
 
   componentDidMount() {
-    this.delay = setTimeout(
-      () => {
-        this.listener = this.ref.on('child_added', data => {
-          if (data.exists()) {
+    this.listener = this.ref.on('child_added', data => {
+      if (data.exists()) {
 
-            // record synchronously
-            let message = data.val();
-            this.messages[data.key] = {
-              _id: Object.keys(this.messages).length,
-              text: message.message,
-              createdAt: new Date(parseInt(data.key)),
-              user: {
-                _id: message.createdBy,
-                name: message.createdBy
-              }
-            };
-
-            // save async with synced image
-            this.setState({
-              messages: Object.values(this.messages)
-            });
-
-            // clear loader
-            this.refs.title.clearLoader();
+        // record synchronously
+        let message = data.val();
+        this.messages[data.key] = {
+          _id: Object.keys(this.messages).length,
+          text: message.message,
+          createdAt: new Date(parseInt(data.key)),
+          user: {
+            _id: message.createdBy,
+            name: message.createdBy
           }
-        });
+        };
+      }
+    });
 
-        this.contestListener = this.contestRef.on(
-          'value', data => data.exists() && this.setState({
-            contestCreatedBy: data.val()
-          })
-        );
-
-        // add to owner's subscribed list of chats
-        this.subscribe();
-      },
-      500
+    this.contestListener = this.contestRef.on(
+      'value', data => data.exists() && this.setState({
+        contestCreatedBy: data.val()
+      })
     );
+
+    // trigger refresh
+    this.delay = setTimeout(this.refresh, 250, 500);
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('child_added', this.listener);
     this.contestListener && this.contestRef.off('value', this.contestListener);
     this.delay && clearTimeout(this.delay);
+  }
+
+  refresh(delay) {
+    this.setState({
+      messages: Object.values(this.messages)
+    });
+
+    // clear loader
+    this.refs.title.clearLoader();
+
+    // add to owner's subscribed list of chats only
+    // if messages has grown
+    let currentLength = Object.keys(this.messages).length;
+    if (currentLength > this.messageLength) {
+      this.messageLength = currentLength;
+      this.subscribe();
+    }
+
+    // trigger future refresh
+    this.delay = setTimeout(this.refresh, delay, delay)
   }
 
   onSend(messages) {
