@@ -77,7 +77,6 @@ export default class ContestCard extends Component {
   }
 
   componentDidMount() {
-
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
         this.setState({
@@ -160,7 +159,7 @@ export default class ContestCard extends Component {
             start={this.state.dateCreated}
             end={this.state.endDate}
             interval={20000}
-            onPressComplete={() => Actions.contestPhotos({
+            onPressComplete={() => Actions.voting({
               contestId: this.props.contestId
             })}
             onPressIncomplete={() => Actions.newPayment({
