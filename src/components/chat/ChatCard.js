@@ -10,9 +10,10 @@ import {
 import {
   Actions
 } from 'react-native-router-flux';
-
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
+
+// components
 import Photo from '../common/Photo';
 import CircleIconInfo from '../common/CircleIconInfo';
 import Avatar from '../profiles/Avatar';
@@ -23,86 +24,114 @@ export default class ChatCard extends Component {
     super(props);
     this.state = {
       contest: {},
-      avatarList: {}
+      messages: {}
+    };
 
-    }
-
-    this.ref = Database.ref(
+    this.contestRef = Database.ref(
       `contests/${
         this.props.chatId
       }`
-    )
+    );
 
     this.chatRef = Database.ref(
       `chats/${
         this.props.chatId
       }`
-    )
+    );
 
-    this.nameRef = Database.ref(
-      `profiles`
-    )
+    // listing of all generated refs and listeners
+    this.ref = {};
+  }
 
-  };
+  componentDidMount() {
+    this.contestListener = this.contestRef.on('value', data => {
+      if (data.exists()) {
+        this.setState({
+          contest: data.val()
+        });
+      }
+    });
 
-    componentDidMount() {
-      this.listener = this.ref.on('value', data => {
+    this.chatListener = this.chatRef.on(
+      'value', data => {
         if (data.exists()) {
+
+          // reset due to new data incoming
+          let blob = data.val() || {};
+          this.componentWillUnmount(true);
           this.setState({
-            ...data.val()
+            last: 0,
+            lastAuthor: null,
+            messages: blob
+          });
+
+          // and generate individual listeners for authors
+          // if their message is last (which likely will be
+          // every message since database is stored by decreasing
+          // date)
+          Object.keys(blob).map(date => {
+            if (date > this.last) {
+
+              // sync store last date, can't use state
+              // since synchronous order not guaranteed
+              // and will produce race conditions
+              this.last = date;
+              this.ref[date] = {};
+              this.ref[date].ref = Database.ref(
+                `profiles/${
+                  blob[date].createdBy
+                }/displayName`
+              );
+              this.ref[date].listener = this.ref[date].ref.on(
+                'value', author => {
+                  if (
+                    author.exists()
+
+                    // need to recompare again since last may have
+                    // lapsed and changed due to async on listener
+                    // timeframe
+                    && this.last === date
+                  ) {
+                    this.setState({
+                      last: date,
+                      lastAuthor: author.val()
+                    });
+                  }
+                }
+              );
+            }
           });
         }
-      });
+      }
+    );
+  }
 
-      this.chatListener = this.chatRef.limitToLast(1).on('value', data => {
-        if (data.exists()) {
-          var person = Object.values(data.val())[0].createdBy
-          this.nameListener = this.nameRef.on('value', data => {
-            data.exists() && this.setState({
-              name: data.val()[person].displayName
-            })
-          });
-          this.setState({
-            message: Object.values(data.val())[0].message,
-            time: Object.keys(data.val())[0],
-          })
-        }
-      });
+  componentWillUnmount(reset) {
+    Object.values(this.ref).map(ref => {
+      ref.ref.off('value', ref.listener);
+    });
 
-
-      this.avatarListener = this.chatRef.on('value', data => {
-        if (data.exists()){
-          var avatar = Object.values(data.val())
-          avatar.map(i => {
-            this.state.avatarList[i.createdBy] = i.createdBy
-          })
-          this.setState({
-            avatarList: this.state.avatarList
-          })
-        }
-      })
+    // not actually unmounting, so prepare for next load
+    if (reset) {
+      this.ref = {};
+      this.last = 0;
+    } else {
+      this.contestlistener && this.contestRef.off('value', this.contestListener);
+      this.chatListener && this.chatRef.off('value', this.chatListenser);
     }
-
-  componentWillUnmount() {
-    this.listener && this.ref.off('value', this.listener);
-    this.avatarListener && this.chatRef.off('value', this.avatarListener);
-    this.chatListener && this.chatRef.off('value', this.chatListenser);
-    this.nameListener && this.nameRef.off('value', this.nameListener);
-
   }
 
   formattedMessage(message, length) {
-    var fmsg = message + "";
-    if (fmsg.length > length) {
-      var res = fmsg.substr(0, length) + ' ...';
-      return res;
-    }
-    return message
+    let fmsg = message + '';
+    return (
+      fmsg.length > length
+      ? `${fmsg.substr(0, length)}..`
+      : fmsg
+    );
   }
 
   render() {
-    // let avatars =
-      return(
+    return(
       <View style={styles.outline}>
         <TouchableOpacity
           onPress={() => Actions.chat({
@@ -112,21 +141,50 @@ export default class ChatCard extends Component {
           <View style={styles.item}>
             <View style={styles.avatar}>
               <ChatAvatar
-                uids={Object.keys(this.state.avatarList)}
-                length={Object.keys(this.state.avatarList).length}/>
+                uids={[
+
+                  // unique since could be duplicates
+                  ...new Set(
+                    [
+                      ...Object.values(this.state.messages).map(
+                        message => message.createdBy
+                      ),
+
+                      // inject the contest owner
+                      this.state.contest.createdBy
+                    ]
+                  )
+                ].filter(
+
+                  // filter out self profile
+                  profileId => (
+                    profileId !== Firebase.auth().currentUser.uid
+                  )
+                )} />
             </View>
             <View style={styles.messageContainer}>
               <Text style={styles.chatTitle}>
-                {this.formattedMessage(this.state.near, 30)}
+                {
+                  this.formattedMessage(
+                    this.state.lastAuthor || 'Unknown',
+                    30
+                  )
+                }
               </Text>
               <Text style={styles.message}>
-                {this.state.name
-                  + ': '
-                  + this.formattedMessage(this.state.message, 30)}
+                {
+                  this.formattedMessage(
+                    this.state.last
+                    ? this.state.messages[
+                      this.state.last
+                    ].message: '',
+                    30
+                  )
+                }
               </Text>
             </View>
             <Text style={styles.date}>
-              {this.formattedDate()}
+              {this.formattedDate(this.state.last)}
             </Text>
             {
               this.props.unread > 0
@@ -143,12 +201,13 @@ export default class ChatCard extends Component {
       </View>
     );
   }
-  formattedDate() {
+
+  formattedDate(time) {
 
     //Within a day => time
     //Within a week => monday
     //Ow, date
-    var date = new Date(Number(this.state.time));
+    var date = new Date(Number(time));
     var year = date.getFullYear();
     var month = date.getMonth();
     var day = date.getDate();

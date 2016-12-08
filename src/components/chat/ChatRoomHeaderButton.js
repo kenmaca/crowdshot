@@ -38,7 +38,6 @@ export default class ChatRoomHeaderButton extends Component {
           Object.keys(blob).map(chatId => {
 
             // start up a new listener for that chat
-            console.log(`starting listener for ${chatId}`);
             this.ref[chatId] = {};
             this.ref[chatId].ref = Database.ref(
               `chats/${chatId}`

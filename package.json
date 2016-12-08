@@ -36,6 +36,7 @@
     "react-native-swipeout": "git+https://github.com/dancormier/react-native-swipeout.git",
     "react-native-swiper": "^1.5.3",
     "react-native-tabs": "^1.0.9",
+    "react-native-timeago": "^0.3.0",
     "react-native-vector-icons": "^3.0.0",
     "react-native-video": "^0.9.0"
   },
