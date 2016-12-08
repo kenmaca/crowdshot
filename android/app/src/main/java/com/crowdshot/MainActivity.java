@@ -1,4 +1,4 @@
-package com.crowdshot;
+package com.crowdshot2;
 
 import android.content.Intent;
 import com.facebook.react.ReactActivity;
@@ -25,7 +25,7 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "crowdshot";
+        return "crowdshot2";
     }
 
     @Override

@@ -1,5 +1,5 @@
 {
-  "name": "Crowdshot",
+  "name": "crowdshot",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -11,8 +11,8 @@
     "dateformat": "^1.0.12",
     "firebase": "^3.6.1",
     "geofire": "^4.1.2",
-    "react": "15.3.2",
-    "react-native": "0.36.0",
+    "react": "15.4.0",
+    "react-native": "0.39.0",
     "react-native-animatable": "^0.6.1",
     "react-native-blur": "^1.1.1",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git#fb3b12b4f1a2ed8d1b20cc21a9b52117878b2c35",
@@ -40,7 +40,7 @@
     "react-native-timeago": "^0.3.0",
     "react-native-vector-icons": "^3.0.0",
     "react-native-video": "^0.9.0",
-    "whatwg-fetch": "^2.0.1"
+    "whatwg-fetch": "^1.1.1"
   },
   "jest": {
     "preset": "jest-react-native"
