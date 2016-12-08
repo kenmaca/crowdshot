@@ -33,52 +33,44 @@ export default class Chat extends Component {
       `chats/${this.props.chatId}`
     );
 
-    this.activeChatRef = Database.ref(
-      `profiles/${
-        Firebase.auth().currentUser.uid
-      }/activeChat/${this.props.chatId}`
-    );
-
+    // methods
     this.onSend = this.onSend.bind(this);
+    this.subscribe = this.subscribe.bind(this);
 
-    this.updateTimeClosed = this.updateTimeClosed.bind(this);
+    // synchronous list of messages to prevent
+    // race condition
+    this.messages = {};
   }
 
   componentDidMount() {
-    this.activeChatListener = this.activeChatRef.on('value', data => {
-      dateOpened = Date.now()
-      if(!data.exists()) {
-        //add to owner's list
-        this.activeChatRef.set({
-          '.value': `${dateOpened}`,
-          '.priority': -Date.now()
-        });
-      }
-    })
-
     this.listener = this.ref.on('child_added', data => {
       if (data.exists()) {
+
+        // record synchronously
         let message = data.val();
+        this.messages[data.key] = {
+          _id: Object.keys(this.messages).length,
+          text: message.message,
+          createdAt: new Date(parseInt(data.key)),
+          user: {
+            _id: message.createdBy,
+            name: message.createdBy
+          }
+        };
+
+        // save async with synced image
         this.setState({
-          messages: [{
-            _id: this.state.messages.length,
-            text: message.message,
-            createdAt: new Date(parseInt(data.key)),
-            user: {
-              _id: message.createdBy,
-              name: message.createdBy
-            }
-          }, ...this.state.messages]
+          messages: Object.values(this.messages)
         });
       }
     });
 
+    // add to owner's subscribed list of chats
+    this.subscribe();
   }
 
   componentWillUnmount() {
     this.listener && this.ref.off('child_added', this.listener);
-    this.activeChatListener && this.activeChatRef.off('value', this.activeChatListener);
-    this.chatListener && this.ref.off('value', this.chatListener);
   }
 
   onSend(messages) {
@@ -92,13 +84,17 @@ export default class Chat extends Component {
     }
   }
 
-  updateTimeClosed() {
+  subscribe() {
     Database.ref(
-      `chats/${this.props.chatId}`).limitToLast(1).on('value', data => {
-      data.exists() && this.activeChatRef.set({
-        '.value': Object.keys(data.val())[0]
-      })
-    })
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/activeChat/${
+        this.props.chatId
+      }`
+    ).set({
+      '.priority': -Date.now(),
+      '.value': Date.now()
+    });
   }
 
   renderAvatar(message) {
@@ -118,14 +114,19 @@ export default class Chat extends Component {
       <View style={styles.container}>
         <TitleBar title={this.props.title || 'Contest Chat'} />
         <GiftedChat
-          messages={this.state.messages}
+
+          // resort each and every time
+          messages={
+            this.state.messages.sort(
+              (a, b) => b.createdAt - a.createdAt
+            )
+          }
           onSend={this.onSend}
           renderAvatar={this.renderAvatar}
           user={{
             _id: Firebase.auth().currentUser.uid
           }} />
           <CloseFullscreenButton back />
-          {this.updateTimeClosed()}
       </View>
     );
   }
