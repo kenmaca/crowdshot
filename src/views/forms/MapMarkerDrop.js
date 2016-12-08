@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, TouchableOpacity
+  View, StyleSheet, Text, TouchableOpacity, DeviceEventEmitter, Platform
 } from 'react-native';
 import {
   Colors, Sizes
@@ -20,6 +20,7 @@ const LNG_DELTA = 0.01;
 const MARKER_SIZE = 30;
 
 // components
+import RNGLocation from 'react-native-google-location';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import TitleBar from '../../components/common/TitleBar';
 import MapView from 'react-native-maps';
@@ -69,27 +70,35 @@ export default class MapMarkerDrop extends Component {
   }
 
   componentDidMount() {
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        if (this.mounted){
-          this.setState({
-            current: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              latitudeDelta: LAT_DELTA,
-              longitudeDelta: LNG_DELTA
-            }
-          })
+    if (Platform.OS === 'ios'){
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          if (this.mounted){
+            this.setState({
+              current: {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                latitudeDelta: LAT_DELTA,
+                longitudeDelta: LNG_DELTA
+              }
+            })
+          }
+        },
+        error => console.log(error),
+        {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 1000
         }
-      },
-      error => console.log(error),
-      {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 1000
+      );
+    } else {
+      if (!this.evEmitter) {
+        // Register Listener Callback - has to be removed later
+        this.evEmitter = DeviceEventEmitter.addListener('updateLocation', this.onLocationChange.bind(this));
+        // Initialize RNGLocation
+        RNGLocation.getLocation();
       }
-    );
-
+    }
 
     // and update when a new profile comes into view
     this.ref.on('key_entered', (profileId, location, distance) => {
@@ -102,6 +111,21 @@ export default class MapMarkerDrop extends Component {
         };
       }
     });
+  }
+
+  onLocationChange (e: Event) {
+    if (this.mounted){
+      this.setState({
+        current: {
+          latitude: e.Latitude,
+          longitude: e.Longitude,
+          latitudeDelta: LAT_DELTA,
+          longitudeDelta: LNG_DELTA
+        }
+      })
+    }
+
+    this.evEmitter.remove();
   }
 
   select() {
@@ -158,6 +182,7 @@ export default class MapMarkerDrop extends Component {
   componentWillUnmount() {
     this.ref.cancel();
     this.mounted = false;
+    this.evEmitter.remove();
   }
 
   render() {

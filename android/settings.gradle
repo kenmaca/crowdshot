@@ -1,6 +1,8 @@
 rootProject.name = 'crowdshot'
 
 include ':app'
+include ':react-native-google-location'
+project(':react-native-google-location').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-location/android/app')
 include ':react-native-picker'
 project(':react-native-picker').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-picker/android')
 include ':react-native-photo-view'
