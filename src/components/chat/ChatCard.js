@@ -157,7 +157,10 @@ export default class ChatCard extends Component {
                 ]} />
             </View>
             <View style={styles.messageContainer}>
-              <Text style={styles.chatTitle}>
+              <Text style={[
+                styles.chatTitle,
+                this.props.unread > 0 && styles.bold
+              ]}>
                 {
                   this.formattedMessage(
                     this.state.lastAuthor || 'Unknown',
@@ -165,7 +168,10 @@ export default class ChatCard extends Component {
                   )
                 }
               </Text>
-              <Text style={styles.message}>
+              <Text style={[
+                styles.message,
+                this.props.unread > 0 && styles.bold
+              ]}>
                 {
                   this.formattedMessage(
                     this.state.last
@@ -286,11 +292,15 @@ const styles = StyleSheet.create({
   },
 
   message: {
-    fontSize: Sizes.H3,
+    fontSize: Sizes.Text,
     color: Colors.SubduedText,
     textAlign: 'left',
-    fontStyle:'italic',
     paddingTop: 5
+  },
+
+  bold: {
+    fontWeight: '700',
+    color: Colors.AlternateText
   },
 
   messageContainer: {
@@ -301,7 +311,7 @@ const styles = StyleSheet.create({
 
   date: {
     color: Colors.AlternateText,
-    fontSize: Sizes.Text
+    fontSize: Sizes.SmallText
   },
 
   unreadContainer: {
