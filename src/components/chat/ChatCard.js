@@ -57,6 +57,14 @@ export default class ChatCard extends Component {
 
       // only grab chats when we know last read
       }, () => {
+
+        // drop the outer listener
+        this.lastReadListener && this.lastReadRef.off(
+          'value',
+          this.lastReadListener
+        );
+
+        // setup new listener
         this.chatListener = this.chatRef.on(
           'value', data => {
             if (data.exists()) {
