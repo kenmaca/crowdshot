@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, Animated, PanResponder,
-  ListView, TouchableOpacity, Easing
+  ListView, TouchableOpacity, Easing, Platform
 } from 'react-native';
 import {
   Actions
@@ -242,7 +242,8 @@ export default class Main extends Component {
   }
 
   getListViewStyle() {
-    return {
+    return Platform.OS === 'ios' ?
+    {
       flex: 1,
       alignSelf: 'stretch',
       width: Sizes.Width,
@@ -262,6 +263,35 @@ export default class Main extends Component {
           })
         }
       ]
+    } : {
+      flex: 1,
+      alignSelf: 'stretch',
+      width: this.state.animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [Sizes.Width, Sizes.Width /0.8],
+          extrapolate: 'clamp'
+        }),
+      transform: [
+        {
+          scale: this.state.animation.interpolate({
+            inputRange: [0, 1],
+            outputRange: [1, 0.8],
+            extrapolate: 'clamp'
+          }),
+        }, {
+          translateY: this.state.animation.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, Sizes.Height / 2],
+            extrapolate: 'clamp'
+          })
+        }, {
+          translateX: this.state.animation.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, Sizes.Width / -6.4],
+            extrapolate: 'clamp'
+          })
+        }
+      ],
     };
   }
 
@@ -379,7 +409,7 @@ export default class Main extends Component {
         <AnimatedListView
           ref='cards'
           horizontal
-          pagingEnabled
+          pagingEnabled={Platform.OS === 'ios'}
           enableEmptySections
           scrollEnabled={this.state.scrollAllowed}
           removeClippedSubviews={false}
