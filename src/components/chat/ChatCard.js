@@ -24,8 +24,18 @@ export default class ChatCard extends Component {
     super(props);
     this.state = {
       contest: {},
-      messages: {}
+      messages: {},
+      lastRead: 0,
+      unread: 0,
     };
+
+    this.lastReadRef = Database.ref(
+      `profiles/${
+        Firebase.auth().currentUser.uid
+      }/activeChat/${
+        this.props.chatId
+      }`
+    );
 
     this.contestRef = Database.ref(
       `contests/${
@@ -44,6 +54,77 @@ export default class ChatCard extends Component {
   }
 
   componentDidMount() {
+    this.lastReadListener = this.lastReadRef.on('value', data => {
+      this.setState({
+        lastRead: data.val() || 0
+
+      // only grab chats when we know last read
+      }, () => {
+        this.chatListener = this.chatRef.on(
+          'value', data => {
+            if (data.exists()) {
+
+              // reset due to new data incoming
+              let blob = data.val() || {};
+              this.componentWillUnmount(true);
+              this.setState({
+                last: 0,
+                lastAuthor: null,
+                messages: blob
+              });
+
+              // and generate individual listeners for authors
+              // if their message is last (which likely will be
+              // every message since database is stored by decreasing
+              // date)
+              Object.keys(blob).map(date => {
+
+                // update unread counts synchronous
+                if (date > this.state.lastRead) {
+                  this.unread++;
+                  this.setState({
+                    unread: this.unread
+                  });
+                }
+
+                // check if last message
+                if (date > this.last) {
+
+                  // sync store last date, can't use state
+                  // since synchronous order not guaranteed
+                  // and will produce race conditions
+                  this.last = date;
+                  this.ref[date] = {};
+                  this.ref[date].ref = Database.ref(
+                    `profiles/${
+                      blob[date].createdBy
+                    }/displayName`
+                  );
+                  this.ref[date].listener = this.ref[date].ref.on(
+                    'value', author => {
+                      if (
+                        author.exists()
+
+                        // need to recompare again since last may have
+                        // lapsed and changed due to async on listener
+                        // timeframe
+                        && this.last === date
+                      ) {
+                        this.setState({
+                          last: date,
+                          lastAuthor: author.val()
+                        });
+                      }
+                    }
+                  );
+                }
+              });
+            }
+          }
+        );
+      });
+    });
+
     this.contestListener = this.contestRef.on('value', data => {
       if (data.exists()) {
         this.setState({
@@ -51,59 +132,6 @@ export default class ChatCard extends Component {
         });
       }
     });
-
-    this.chatListener = this.chatRef.on(
-      'value', data => {
-        if (data.exists()) {
-
-          // reset due to new data incoming
-          let blob = data.val() || {};
-          this.componentWillUnmount(true);
-          this.setState({
-            last: 0,
-            lastAuthor: null,
-            messages: blob
-          });
-
-          // and generate individual listeners for authors
-          // if their message is last (which likely will be
-          // every message since database is stored by decreasing
-          // date)
-          Object.keys(blob).map(date => {
-            if (date > this.last) {
-
-              // sync store last date, can't use state
-              // since synchronous order not guaranteed
-              // and will produce race conditions
-              this.last = date;
-              this.ref[date] = {};
-              this.ref[date].ref = Database.ref(
-                `profiles/${
-                  blob[date].createdBy
-                }/displayName`
-              );
-              this.ref[date].listener = this.ref[date].ref.on(
-                'value', author => {
-                  if (
-                    author.exists()
-
-                    // need to recompare again since last may have
-                    // lapsed and changed due to async on listener
-                    // timeframe
-                    && this.last === date
-                  ) {
-                    this.setState({
-                      last: date,
-                      lastAuthor: author.val()
-                    });
-                  }
-                }
-              );
-            }
-          });
-        }
-      }
-    );
   }
 
   componentWillUnmount(reset) {
@@ -115,9 +143,11 @@ export default class ChatCard extends Component {
     if (reset) {
       this.ref = {};
       this.last = 0;
+      this.unread = 0;
     } else {
-      this.contestlistener && this.contestRef.off('value', this.contestListener);
-      this.chatListener && this.chatRef.off('value', this.chatListenser);
+      this.contestListener && this.contestRef.off('value', this.contestListener);
+      this.chatListener && this.chatRef.off('value', this.chatListener);
+      this.lastReadListener && this.lastReadRef.off('value', this.lastReadListener);
     }
   }
 
@@ -159,7 +189,7 @@ export default class ChatCard extends Component {
             <View style={styles.messageContainer}>
               <Text style={[
                 styles.chatTitle,
-                this.props.unread > 0 && styles.bold
+                this.state.unread > 0 && styles.bold
               ]}>
                 {
                   this.formattedMessage(
@@ -170,7 +200,7 @@ export default class ChatCard extends Component {
               </Text>
               <Text style={[
                 styles.message,
-                this.props.unread > 0 && styles.bold
+                this.state.unread > 0 && styles.bold
               ]}>
                 {
                   this.formattedMessage(
@@ -187,11 +217,11 @@ export default class ChatCard extends Component {
               {this.formattedDate(this.state.last)}
             </Text>
             {
-              this.props.unread > 0
+              this.state.unread > 0
               && (
                 <View style={styles.unreadContainer}>
                   <Text style={styles.unread}>
-                    {this.props.unread}
+                    {this.state.unread}
                   </Text>
                 </View>
               )
