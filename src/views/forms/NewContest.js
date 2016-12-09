@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Modal, Alert
+  View, StyleSheet, Text, Modal, Alert, Platform
 } from 'react-native';
 import {
   Actions
@@ -50,7 +50,9 @@ export default class NewContest extends Component {
       lat: this.state.location[0],
       lng: this.state.location[1]
     };
+    console.log("coords, ", coords);
     Geocoder.geocodePosition(coords).then(location => {
+      console.log("location, ", location);
       Database.ref(
         `transactions/${this.state.prizeId}`
       ).once('value', data => {
@@ -73,9 +75,11 @@ export default class NewContest extends Component {
             },
             referencePhotoId: this.state.referencePhotoId,
             createdBy: Firebase.auth().currentUser.uid,
-            near: [
+            near: Platform.OS === 'ios' ? [
               location[0].feature, location[0].subLocality
             ].filter(l => l).join(' at ') || '...'
+            : [location[0].streetNumber + ' ' + location[0].streetName,
+            location[2                                                                  ].subLocality].filter(l => l).join(' at ') || '...'
           },
           '.priority': -(dateCreated + 3600000)
         }).key;
