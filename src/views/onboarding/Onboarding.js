@@ -97,10 +97,10 @@ export default class Onboarding extends Component {
       width: Sizes.Height * 4,
       height: Sizes.Height * 4,
       borderRadius: Sizes.Height * 2
-    });
+    }, 500, 'ease-in');
     this.refs.ballContainer.transitionTo({
       bottom: -Sizes.OuterFrame * 2
-    });
+    }, 500, 'ease-in');
 
     // now move to Login when animation ends
     // TODO: wait for callback from Animatable to
