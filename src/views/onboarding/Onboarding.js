@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
   image: {
     width: Sizes.Width * 2 * 0.97,
     height: Sizes.Width * 2,
-    tintColor: Colors.LightWhiteOverlay
+    tintColor: Colors.Primary
   },
 
   ballContainer: {

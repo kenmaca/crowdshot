@@ -17,136 +17,140 @@ import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
 
 // components
-import Photo from '../../components/common/Photo';
 import Button from '../../components/common/Button';
+import * as Animatable from 'react-native-animatable';
 
 export default class Login extends Component {
   render() {
     return (
-      <Photo
-        photoId='appLoginBackground'
-        style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.header}>
-          <View style={styles.headerContainer}>
-            <Text style={[styles.text]}>
-              Throw out that selfie stick
-            </Text>
-            <Text style={[styles.text, styles.title]}>
-              Your nicest photos are usually taken by other people
-            </Text>
-          </View>
+          <Animatable.View animation='bounceIn'>
+            <Image
+              source={require('../../../res/img/logo.png')}
+              style={styles.logo} />
+          </Animatable.View>
+          <Text style={[styles.text, styles.title]}>
+            Let's get started
+          </Text>
         </View>
         <View style={styles.footer}>
+          <Animatable.View animation='bounceIn'>
+            <Button
+              style={styles.button}
+              color={Colors.Facebook}
+              fontColor={Colors.Text}
+              fontAwesome
+              icon='facebook'
+              label='Login with Facebook'
+              onPress={() => {
+                LoginManager.logInWithReadPermissions([
+                  'public_profile',
+                  'email'
+                ]).then(result => {
+                  if (!result.isCancelled) {
+                    AccessToken.getCurrentAccessToken().then(
+                      data => {
+                        Firebase.auth().signInWithCredential(
+                          Firebase.auth.FacebookAuthProvider.credential(
+                            data.accessToken.toString()
+                          )
+                        ).then(user => {
+
+                          // grab latest data if exists
+                          Database.ref(
+                            `profiles/${user.uid}`
+                          ).once('value', profile => {
+                            profile = profile.val() || {};
+
+                            // update the profile
+                            Database.ref(
+                              `profiles/${user.uid}`
+                            ).update({
+                              displayName: user.displayName,
+                              email: user.email,
+                              dateCreated: profile.dateCreated || Date.now()
+                            }).then(result => {
+
+                              // now store the photo
+                              let photoId = Database.ref(`photos`).push().key;
+                              Database.ref().update({
+                                [`photos/${photoId}`]: {
+                                  createdBy: user.uid,
+                                  url: user.photoURL
+                                }, [`profiles/${user.uid}/photo`]: photoId
+                              });
+                            });
+
+                            // user logged in, ready for use
+                            Actions.loader();
+                          });
+                        }).catch(error => {});
+                      }
+                    );
+                  }
+                }, error => {
+                  console.log("login failed, ", error);
+                  Alert.alert("Login Failed");
+                });
+              }} />
+          </Animatable.View>
           <Text style={styles.footerText}>
             By signing in, you agree to our Terms of Service and Privacy Policy
           </Text>
         </View>
-        <Button
-          squareBorders
-          style={{
-            paddingTop: Sizes.InnerFrame,
-            paddingBottom: Sizes.InnerFrame
-          }}
-          color={Colors.Facebook}
-          fontColor={Colors.Text}
-          fontAwesome
-          icon='facebook'
-          label='Login with Facebook'
-          onPress={() => {
-            LoginManager.logInWithReadPermissions([
-              'public_profile',
-              'email'
-            ]).then(result => {
-              if (!result.isCancelled) {
-                AccessToken.getCurrentAccessToken().then(
-                  data => {
-                    Firebase.auth().signInWithCredential(
-                      Firebase.auth.FacebookAuthProvider.credential(
-                        data.accessToken.toString()
-                      )
-                    ).then(user => {
-
-                      // grab latest data if exists
-                      Database.ref(
-                        `profiles/${user.uid}`
-                      ).once('value', profile => {
-                        profile = profile.val() || {};
-
-                        // update the profile
-                        Database.ref(
-                          `profiles/${user.uid}`
-                        ).update({
-                          displayName: user.displayName,
-                          email: user.email,
-                          dateCreated: profile.dateCreated || Date.now()
-                        }).then(result => {
-
-                          // now store the photo
-                          let photoId = Database.ref(`photos`).push().key;
-                          Database.ref().update({
-                            [`photos/${photoId}`]: {
-                              createdBy: user.uid,
-                              url: user.photoURL
-                            }, [`profiles/${user.uid}/photo`]: photoId
-                          });
-                        });
-
-                        // user logged in, ready for use
-                        Actions.loader();
-                      });
-                    }).catch(error => {});
-                  }
-                );
-              }
-            }, error => {
-              console.log("login failed, ", error);
-              Alert.alert("Login Failed");
-            });
-          }} />
-      </Photo>
+      </View>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignSelf: 'stretch',
-    backgroundColor: Colors.Background
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.Primary
   },
 
   header: {
-    flex: 1,
-    padding: Sizes.InnerFrame,
-    paddingTop: Sizes.InnerFrame * 2,
-    backgroundColor: Colors.Overlay
+    margin: Sizes.OuterFrame,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 
-  headerContainer: {
-    alignSelf: 'stretch',
-    borderRadius: 10
+  logo: {
+    width: 50,
+    height: 50,
+    marginBottom: Sizes.InnerFrame / 2
   },
 
   text: {
-    fontSize: Sizes.H2 * 1.25,
+    textAlign: 'center',
+    fontSize: Sizes.H2,
     color: Colors.Text,
     backgroundColor: Colors.Transparent,
     fontWeight: '100'
   },
 
   title: {
-    fontSize: Sizes.H1 * 1.25,
+    fontSize: Sizes.H1,
     fontWeight: '200'
   },
 
   footer: {
     alignItems: 'center',
-    backgroundColor: Colors.Overlay,
-    padding: Sizes.InnerFrame / 2
+    marginTop: Sizes.InnerFrame
+  },
+
+  button: {
+    minWidth: Sizes.Width * 0.8
   },
 
   footerText: {
     textAlign: 'center',
-    padding: Sizes.InnerFrame / 3,
+    marginTop: Sizes.InnerFrame / 2,
+    marginBottom: Sizes.InnerFrame * 4,
+    paddingLeft: Sizes.InnerFrame * 5,
+    paddingRight: Sizes.InnerFrame * 5,
     fontSize: Sizes.SmallText,
     color: Colors.Text
   }
