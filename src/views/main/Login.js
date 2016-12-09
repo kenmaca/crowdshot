@@ -19,6 +19,7 @@ import Database from '../../utils/Database';
 // components
 import Button from '../../components/common/Button';
 import * as Animatable from 'react-native-animatable';
+import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 
 export default class Login extends Component {
   render() {
@@ -99,6 +100,9 @@ export default class Login extends Component {
             By signing in, you agree to our Terms of Service and Privacy Policy
           </Text>
         </View>
+        <CloseFullscreenButton
+          back
+          action={Actions.onboarding} />
       </View>
     );
   }

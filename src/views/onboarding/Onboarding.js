@@ -112,126 +112,130 @@ export default class Onboarding extends Component {
     return (
       <View style={styles.container}>
         <Animatable.View
-          ref='imageContainer'
-          style={styles.imageContainer}>
-          <AnimatableImage
-            ref='image'
-            source={require(
-              '../../../res/img/onboarding/1d.png'
-            )}
-            style={styles.image} />
-        </Animatable.View>
-        <Animatable.View
-          ref='video'
-          style={[
-            styles.video,
-            {
-              opacity: 0
-            }
-          ]}>
-          <Video
-            repeat
-            muted
-            resizeMode='cover'
-            style={styles.video}
-            source={require('../../../res/img/header.mp4')} />
-          <View style={styles.videoOverlay} />
-        </Animatable.View>
-        <AppIntro
-          onSlideChange={this.onSlideChange}
-          onSkipBtnClick={this.complete}
-          skipBtnLabel={(
-            <Text style={styles.button}>
-              Skip
-            </Text>
-          )}
-          nextBtnLabel={(
-            <Text style={styles.button}>
-              Next
-            </Text>
-          )}
-          doneBtnLabel={(
-            <Text style={styles.button}>
-              Done
-            </Text>
-          )}>
-          <View style={styles.page}>
-            <View level={-10}>
-              <Text style={styles.text}>
-                Welcome to Crowdshot
-              </Text>
-            </View>
-            <View level={-15}>
-              <Text style={[
-                styles.text,
-                styles.description
-              ]}>
-                Your nicest photos are taken by other people
-              </Text>
-            </View>
-          </View>
-          <View style={styles.page}>
-            <View level={-10}>
-              <Text style={styles.text}>
-                Introducing photo contests
-              </Text>
-            </View>
-            <View level={-15}>
-              <Text style={[
-                styles.text,
-                styles.description
-              ]}>
-                Set a bounty for the type of photo you want and
-                watch nearby photographers worry about framing
-                the perfect shot
-              </Text>
-            </View>
-            <View level={-5}>
-              <Text style={[
-                styles.text,
-                styles.description
-              ]}>
-                You do you — We'll handle the rest
-              </Text>
-            </View>
-          </View>
-          <View style={styles.page}>
-            <View level={5}>
-              <Text style={styles.text}>
-                Not interested in photos?
-              </Text>
-            </View>
-            <View level={15}>
-              <Text style={[
-                styles.text,
-                styles.description
-              ]}>
-                Participate in photo contests nearby
-              </Text>
-            </View>
-            <View level={10}>
-              <Text style={[
-                styles.text,
-                styles.description
-              ]}>
-                Make some serious money by using the camera
-                on your smartphone
-              </Text>
-            </View>
-          </View>
-          <View style={[
-            styles.page,
-            styles.last
-          ]}>
-            <View />
-          </View>
-        </AppIntro>
-        <Animatable.View
-          ref='ballContainer'
-          style={styles.ballContainer}>
+          animation='fadeIn'
+          style={styles.container}>
           <Animatable.View
-            ref='ball'
-            style={styles.ball} />
+            ref='imageContainer'
+            style={styles.imageContainer}>
+            <AnimatableImage
+              ref='image'
+              source={require(
+                '../../../res/img/onboarding/1d.png'
+              )}
+              style={styles.image} />
+          </Animatable.View>
+          <Animatable.View
+            ref='video'
+            style={[
+              styles.video,
+              {
+                opacity: 0
+              }
+            ]}>
+            <Video
+              repeat
+              muted
+              resizeMode='cover'
+              style={styles.video}
+              source={require('../../../res/img/header.mp4')} />
+            <View style={styles.videoOverlay} />
+          </Animatable.View>
+          <AppIntro
+            onSlideChange={this.onSlideChange}
+            onSkipBtnClick={this.complete}
+            skipBtnLabel={(
+              <Text style={styles.button}>
+                Skip
+              </Text>
+            )}
+            nextBtnLabel={(
+              <Text style={styles.button}>
+                Next
+              </Text>
+            )}
+            doneBtnLabel={(
+              <Text style={styles.button}>
+                Done
+              </Text>
+            )}>
+            <View style={styles.page}>
+              <View level={-10}>
+                <Text style={styles.text}>
+                  Welcome to Crowdshot
+                </Text>
+              </View>
+              <View level={-15}>
+                <Text style={[
+                  styles.text,
+                  styles.description
+                ]}>
+                  Your nicest photos are taken by other people
+                </Text>
+              </View>
+            </View>
+            <View style={styles.page}>
+              <View level={-10}>
+                <Text style={styles.text}>
+                  Introducing photo contests
+                </Text>
+              </View>
+              <View level={-15}>
+                <Text style={[
+                  styles.text,
+                  styles.description
+                ]}>
+                  Set a bounty for the type of photo you want and
+                  watch nearby photographers worry about framing
+                  the perfect shot
+                </Text>
+              </View>
+              <View level={-5}>
+                <Text style={[
+                  styles.text,
+                  styles.description
+                ]}>
+                  You do you — We'll handle the rest
+                </Text>
+              </View>
+            </View>
+            <View style={styles.page}>
+              <View level={5}>
+                <Text style={styles.text}>
+                  Not interested in photos?
+                </Text>
+              </View>
+              <View level={15}>
+                <Text style={[
+                  styles.text,
+                  styles.description
+                ]}>
+                  Participate in photo contests nearby
+                </Text>
+              </View>
+              <View level={10}>
+                <Text style={[
+                  styles.text,
+                  styles.description
+                ]}>
+                  Make some serious money by using the camera
+                  on your smartphone
+                </Text>
+              </View>
+            </View>
+            <View style={[
+              styles.page,
+              styles.last
+            ]}>
+              <View />
+            </View>
+          </AppIntro>
+          <Animatable.View
+            ref='ballContainer'
+            style={styles.ballContainer}>
+            <Animatable.View
+              ref='ball'
+              style={styles.ball} />
+          </Animatable.View>
         </Animatable.View>
       </View>
     );
