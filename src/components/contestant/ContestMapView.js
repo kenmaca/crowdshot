@@ -330,7 +330,9 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     position: 'absolute',
-    top: Sizes.Height - Sizes.OuterFrame * 5.5,
+    top: Sizes.Height - (Platform.OS === 'ios'
+      ? Sizes.OuterFrame * 5.5
+      : Sizes.OuterFrame * 6),
     left: 0,
     backgroundColor: Colors.Transparent,
     width: Sizes.Width,

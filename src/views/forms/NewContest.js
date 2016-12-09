@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Modal, Alert
+  View, StyleSheet, Text, Modal, Alert, Platform
 } from 'react-native';
 import {
   Actions
@@ -73,9 +73,12 @@ export default class NewContest extends Component {
             },
             referencePhotoId: this.state.referencePhotoId,
             createdBy: Firebase.auth().currentUser.uid,
-            near: [
-              location[0].feature, location[0].subLocality
-            ].filter(l => l).join(' at ') || ''
+            near: Platform.OS === 'ios' ? [
+              location[0].feature, location[0].subLocality]
+              .filter(l => l).join(' at ') || '...'
+              : [location[0].streetNumber + ' ' + location[0].streetName,
+              location[1].feature || location[1].locality]
+              .filter(l => l).join(' at ') || '...'
           },
           '.priority': -(dateCreated + 3600000)
         }).key;
