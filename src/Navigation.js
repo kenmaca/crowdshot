@@ -44,6 +44,7 @@ import ContestStatus from './views/contestant/ContestStatus';
 import Address from './views/forms/Address';
 import PaymentMethod from './views/main/PaymentMethod';
 import ProfileEdit from './views/profiles/ProfileEdit';
+import Onboarding from './views/onboarding/Onboarding';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -69,6 +70,10 @@ export default class Navigation extends Component {
             <Scene
               key='login'
               component={Login}
+              type='replace' />
+            <Scene
+              key='onboarding'
+              component={Onboarding}
               type='replace' />
             <Scene
               key='modal'

@@ -40,6 +40,14 @@ export const Colors = {
 
   // Location
   Location: '#3281E8',
+
+  // Gradient
+  Gradient1: '#222222',
+  Gradient2: 'rgba(34, 34, 34, 0.9)',
+  Gradient3: 'rgba(34, 34, 34, 0.7)',
+  Gradient4: 'rgba(34, 34, 34, 0.5)',
+  Gradient5: 'rgba(34, 34, 34, 0.3)',
+  Gradient6: 'rgba(34, 34, 34, 0.1)'
 };
 
 export default Colors;

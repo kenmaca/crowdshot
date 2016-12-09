@@ -38,7 +38,7 @@ export default class Loader extends Component {
 
         // handle currently logged in user
         Firebase.auth().onAuthStateChanged(user => {
-          if (user) Actions.main(); else Actions.login();
+          if (user) Actions.main(); else Actions.onboarding();
         });
       }
     });
