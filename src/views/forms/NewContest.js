@@ -75,7 +75,7 @@ export default class NewContest extends Component {
             createdBy: Firebase.auth().currentUser.uid,
             near: [
               location[0].feature, location[0].subLocality
-            ].filter(l => l).join(' at ') || ''
+            ].filter(l => l).join(' at ') || '...'
           },
           '.priority': -(dateCreated + 3600000)
         }).key;
