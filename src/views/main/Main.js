@@ -265,7 +265,7 @@ export default class Main extends Component {
       ]
     } : {
       flex: 1,
-      alignSelf: 'stretch',
+      alignSelf: 'center',
       width: this.state.animation.interpolate({
           inputRange: [0, 1],
           outputRange: [Sizes.Width, Sizes.Width /0.8],
@@ -282,12 +282,6 @@ export default class Main extends Component {
           translateY: this.state.animation.interpolate({
             inputRange: [0, 1],
             outputRange: [0, Sizes.Height / 2],
-            extrapolate: 'clamp'
-          })
-        }, {
-          translateX: this.state.animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, Sizes.Width / -6.4],
             extrapolate: 'clamp'
           })
         }
@@ -412,7 +406,7 @@ export default class Main extends Component {
           pagingEnabled={Platform.OS === 'ios'}
           enableEmptySections
           scrollEnabled={this.state.scrollAllowed}
-          removeClippedSubviews={false}
+          removeClippedSubviews={true}
           dataSource={this.state.data}
           onLayout={this.onLayout}
           onScroll={this.onScroll}
