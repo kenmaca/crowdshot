@@ -264,7 +264,9 @@ export default class MapMarkerDrop extends Component {
               size={48} />
           </View>
         </View>
-        <CloseFullscreenButton back />
+        <CloseFullscreenButton
+          back={!this.props.closeAction}
+          action={this.props.closeAction} />
       </View>
     );
   }

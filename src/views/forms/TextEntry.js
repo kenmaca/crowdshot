@@ -63,7 +63,9 @@ export default class TextEntry extends Component {
           }}
           color={Colors.Primary}
           label={this.props.buttonLabel || 'Submit'} />
-        <CloseFullscreenButton back />
+          <CloseFullscreenButton
+            back={!this.props.closeAction}
+            action={this.props.closeAction} />
       </View>
     );
   }

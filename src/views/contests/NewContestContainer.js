@@ -44,6 +44,9 @@ export default class NewContestContainer extends Component {
         onTaken: photoId => this.setState({
           referencePhotoId: photoId,
           halt: false
+        }),
+        closeAction: () => Actions.pop({
+          popNum: 2
         })
       });
     } else if (!this.state.instructions) {
@@ -56,13 +59,19 @@ export default class NewContestContainer extends Component {
         label: 'Instructions',
         subtitle: 'General rules for your contest',
         buttonLabel: 'Add Instructions',
-        value: DEFAULT_INSTRUCTIONS
+        value: DEFAULT_INSTRUCTIONS,
+        closeAction: () => Actions.pop({
+          popNum: 2
+        })
       });
     } else if (!this.state.location) {
       Actions.mapMarkerDrop({
         onSelected: location => this.setState({
           location: location,
           halt: false
+        }),
+        closeAction: () => Actions.pop({
+          popNum: 2
         })
       });
     } else if (!this.state.prizeId) {
@@ -71,7 +80,10 @@ export default class NewContestContainer extends Component {
           prizeId: transactionId,
           halt: false
         }),
-        description: 'Bounty for Photo Contest'
+        description: 'Bounty for Photo Contest',
+        closeAction: () => Actions.pop({
+          popNum: 2
+        })
       });
     } else {
       this.submit();

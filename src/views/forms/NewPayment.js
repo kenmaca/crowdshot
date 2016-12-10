@@ -104,9 +104,6 @@ export default class NewPayment extends Component {
 
                 // remove the charge
                 ref.remove();
-
-                // and back out
-                Actions.pop();
               }
             }
           ]
@@ -189,7 +186,9 @@ export default class NewPayment extends Component {
               || 'Add bounty to contest'
             } />
         </View>
-        <CloseFullscreenButton back />
+        <CloseFullscreenButton
+          back={!this.props.closeAction}
+          action={this.props.closeAction} />
       </View>
     );
   }

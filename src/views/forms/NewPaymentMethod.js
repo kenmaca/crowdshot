@@ -98,7 +98,7 @@ export default class NewPaymentMethod extends Component {
     }).then(json => {
       if (json.error) {
         Alert.alert(
-          'Deposit Failed',
+          'Card Declined',
           json.error.message,
           [{text: 'OK'}]
         );

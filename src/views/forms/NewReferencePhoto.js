@@ -42,7 +42,9 @@ export default class NewReferencePhoto extends Component {
               );
             }} />
         </View>
-        <CloseFullscreenButton back />
+        <CloseFullscreenButton
+          back={!this.props.closeAction}
+          action={this.props.closeAction} />
       </View>
     );
   }
