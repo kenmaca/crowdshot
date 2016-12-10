@@ -19,7 +19,7 @@ import {
 import * as Animatable from 'react-native-animatable';
 
 // const
-const DEFAULT_INSTRUCTIONS = 'Take a photo with the contents shown in the reference photo above.\n\n';
+const DEFAULT_INSTRUCTIONS = '';
 let AnimatedImage = Animatable.createAnimatableComponent(Image);
 
 export default class NewContestContainer extends Component {

@@ -18,7 +18,6 @@ import Loader from './views/main/Loader';
 import Login from './views/main/Login';
 import Main from './views/main/Main';
 import Contestant from './views/main/Contestant';
-// import NewContest from './views/forms/NewContest';
 import NewContest from './views/contests/NewContest';
 import NewContestContainer from './views/contests/NewContestContainer';
 import Modal from './Modal';
