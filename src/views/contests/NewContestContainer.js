@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Platform
+  View, StyleSheet, Text, Platform, Image, Alert
 } from 'react-native';
 import {
   Colors, Sizes
@@ -15,8 +15,12 @@ import {
   Actions
 } from 'react-native-router-flux';
 
+// components
+import * as Animatable from 'react-native-animatable';
+
 // const
 const DEFAULT_INSTRUCTIONS = 'Take a photo with the contents shown in the reference photo above.\n\n';
+let AnimatedImage = Animatable.createAnimatableComponent(Image);
 
 export default class NewContestContainer extends Component {
   constructor(props) {
@@ -26,16 +30,81 @@ export default class NewContestContainer extends Component {
       location: null,
       referencePhotoId: null,
       processing: false,
-      instructions: DEFAULT_INSTRUCTIONS
+      instructions: null
     };
 
     // methods
     this.submit = this.submit.bind(this);
+    this.routing = this.routing.bind(this);
+  }
+
+  routing() {
+    if (!this.state.referencePhotoId) {
+      Actions.newReferencePhoto({
+        onTaken: photoId => this.setState({
+          referencePhotoId: photoId,
+          halt: false
+        })
+      });
+    } else if (!this.state.instructions) {
+      Actions.textEntry({
+        onSubmit: text => this.setState({
+          instructions: text,
+          halt: false
+        }),
+        title: 'Contest Instructions',
+        label: 'Instructions',
+        subtitle: 'General rules for your contest',
+        buttonLabel: 'Add Instructions',
+        value: DEFAULT_INSTRUCTIONS
+      });
+    } else if (!this.state.location) {
+      Actions.mapMarkerDrop({
+        onSelected: location => this.setState({
+          location: location,
+          halt: false
+        })
+      });
+    } else if (!this.state.prizeId) {
+      Actions.newPayment({
+        onCharged: transactionId => this.setState({
+          prizeId: transactionId,
+          halt: false
+        }),
+        description: 'Bounty for Photo Contest'
+      });
+    } else {
+      this.submit();
+    }
+  }
+
+  componentDidMount() {
+    this.componentDidUpdate();
+  }
+
+  componentDidUpdate() {
+    if (!this.state.halt) {
+
+      // prevent other routing from opening more windows
+      this.state.halt = true;
+      this.delay = setTimeout(this.routing, 500);
+    }
+  }
+
+  componentWillUnmount() {
+    this.delay && clearTimeout(this.delay);
   }
 
   render() {
     return (
-      <View style={styles.container} />
+      <View style={styles.container}>
+        <AnimatedImage
+          ref='logo'
+          animation='rotate'
+          iterationCount='infinite'
+          source={require('../../../res/img/logo.png')}
+          style={styles.logo} />
+      </View>
     );
   }
 
@@ -111,7 +180,8 @@ export default class NewContestContainer extends Component {
         });
 
         Actions.contest({
-          contestId: contestId
+          contestId: contestId,
+          type: 'replace'
         });
       });
     });
@@ -121,6 +191,14 @@ export default class NewContestContainer extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.Primary
+    backgroundColor: Colors.Primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: Sizes.OuterFrame
+  },
+
+  logo: {
+    width: 30,
+    height: 30
   }
 });

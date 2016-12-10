@@ -130,6 +130,7 @@ export default class NewContest extends Component {
         <Modal
           transparent
           animationType='fade'
+          onRequestClose={() => {}}
           visible={this.state.visible}>
           <View style={styles.modal}>
             <Animatable.View
