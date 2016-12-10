@@ -83,8 +83,11 @@ export default class BillingCard extends Component {
                   })()}
                   size={24}
                   color={Colors.Text} />
-                <Text style={styles.textContainer}>
-                  <Text style={styles.bold}>
+                <View style={styles.textContainer}>
+                  <Text style={[
+                    styles.text,
+                    styles.bold
+                  ]}>
                     {(() => {
                       switch(this.state.type) {
                         case 1: return 'MasterCard';
@@ -93,13 +96,16 @@ export default class BillingCard extends Component {
                       }
                     })()}
                   </Text>
-                  <Text>
+                  <Text style={styles.text}>
                     {' ending in '}
                   </Text>
-                  <Text style={styles.bold}>
+                  <Text style={[
+                    styles.text,
+                    styles.bold
+                  ]}>
                     {this.state.lastFour}
                   </Text>
-                </Text>
+                </View>
                 <CircleIcon
                   size={18}
                   style={styles.button}
@@ -109,11 +115,14 @@ export default class BillingCard extends Component {
               </View>
             ): (
               <View style={styles.content}>
-              <Text style={styles.textContainer}>
-                <Text>
+              <View style={styles.textContainer}>
+                <Text style={styles.text}>
                   {'Account Credit — '}
                 </Text>
-                <Text style={styles.bold}>
+                <Text style={[
+                  styles.text,
+                  styles.bold
+                ]}>
                   {
                     `$${
                       -(
@@ -129,7 +138,7 @@ export default class BillingCard extends Component {
                     } available`
                   }
                 </Text>
-              </Text>
+              </View>
               <CircleIcon
                 size={18}
                 style={styles.button}
@@ -150,7 +159,8 @@ export default class BillingCard extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    alignSelf: 'stretch',
+    width: Sizes.Width,
+    height: Sizes.Height * 0.08,
     backgroundColor: Colors.Background
   },
 
@@ -158,9 +168,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     padding: Sizes.OuterFrame,
-    paddingTop: Sizes.InnerFrame,
-    paddingBottom: Sizes.InnerFrame,
     backgroundColor: Colors.Foreground
   },
 
@@ -170,8 +179,13 @@ const styles = StyleSheet.create({
 
   textContainer: {
     flex: 1,
+    flexDirection: 'row',
     backgroundColor: Colors.Transparent,
-    color: Colors.Text
+  },
+
+  text: {
+    color: Colors.Text,
+    fontSize: Sizes.Text
   },
 
   bold: {
