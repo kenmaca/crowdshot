@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
 
   image: {
     position: 'absolute',
-    top: -Sizes.Width / 1.9,
+    top: -Sizes.Width / 1.75,
     right: -Sizes.Width / 2,
     width: Sizes.Width * 1.77,
     height: Sizes.Width,
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
 
   header: {
     marginBottom: Sizes.InnerFrame * 2,
-    paddingRight: Sizes.Width / 4
+    paddingRight: Sizes.Width / 5
   },
 
   text: {
