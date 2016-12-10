@@ -11,6 +11,7 @@ import {
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database'
 import Swipeout from 'react-native-swipeout';
+import SwipeoutButton from '../../components/common/SwipeoutButton';
 import ChatCard from '../../components/chat/ChatCard';
 import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
@@ -68,6 +69,10 @@ export default class ChatRoom extends Component {
               text: 'Unsubscribe',
               color: Colors.Text,
               backgroundColor: Colors.Cancel,
+              component: (
+                <SwipeoutButton
+                  text='Unsubscribe' />
+              ),
               onPress: () => {
                 Alert.alert(
                   'Unsubscribe from this message?',

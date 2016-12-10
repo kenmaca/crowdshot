@@ -18,6 +18,7 @@ import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import EntryCard from '../../components/lists/EntryCard';
 import Swipeout from 'react-native-swipeout';
+import SwipeoutButton from '../../components/common/SwipeoutButton';
 
 export default class Settings extends Component {
   constructor(props) {
@@ -76,6 +77,10 @@ export default class Settings extends Component {
               text: 'Remove',
               color: Colors.Text,
               backgroundColor: Colors.Cancel,
+              component: (
+                <SwipeoutButton
+                  text='Remove' />
+              ),
               onPress: () => {
                 Alert.alert(
                   'Remove this Contest Entry?',
