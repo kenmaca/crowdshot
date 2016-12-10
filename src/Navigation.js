@@ -18,7 +18,8 @@ import Loader from './views/main/Loader';
 import Login from './views/main/Login';
 import Main from './views/main/Main';
 import Contestant from './views/main/Contestant';
-import NewContest from './views/forms/NewContest';
+// import NewContest from './views/forms/NewContest';
+import NewContest from './views/contests/NewContest';
 import Modal from './Modal';
 import Profile from './views/profiles/Profile';
 import Voting from './views/contests/Voting';
@@ -179,10 +180,19 @@ export default class Navigation extends Component {
               <Scene
                 hideNavBar
                 key='mainBroadcast'
-                component={NewContest}
                 title='Start a Contest'
                 iconName='assistant-photo'
-                icon={TabButton} />
+                onPress={() => Actions.mainBroadcastView({
+                  launch: true
+                })}
+                icon={TabButton}>
+                <Scene
+                  initial
+                  hideNavBar
+                  key='mainBroadcastView'
+                  component={NewContest}
+                  type='refresh' />
+              </Scene>
               <Scene
                 hideNavBar
                 key='mainContestant'
