@@ -95,7 +95,15 @@ export default class NewContestContainer extends Component {
   }
 
   componentDidMount() {
-    BackAndroid.addEventListener('hardwareBackPress', () => true);
+
+    // allow full exit
+    this.back = () => {
+      Actions.pop({
+        popNum: 2
+      });
+      return true;
+    };
+    BackAndroid.addEventListener('hardwareBackPress', this.back);
     this.componentDidUpdate();
   }
 
@@ -109,6 +117,9 @@ export default class NewContestContainer extends Component {
   }
 
   componentWillUnmount() {
+
+    // reset back to normal
+    this.back && BackAndroid.removeEventListener('hardwareBackPress', this.back);
     this.delay && clearTimeout(this.delay);
   }
 
