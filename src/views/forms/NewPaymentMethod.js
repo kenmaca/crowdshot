@@ -153,8 +153,10 @@ export default class NewPaymentMethod extends Component {
                       `billing/${data.key}`
                     ).remove();
 
-                    // and back out
-                    Actions.pop();
+                    // clear processing and allow retry
+                    this.setState({
+                      processing: false
+                    });
                   }
                 }
               ]
