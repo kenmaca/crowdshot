@@ -104,6 +104,11 @@ export default class NewPayment extends Component {
 
                 // remove the charge
                 ref.remove();
+
+                // and drop processing modal
+                this.setState({
+                  processing: false
+                });
               }
             }
           ]
