@@ -137,7 +137,7 @@ export default class Onboarding extends Component {
               muted
               resizeMode='cover'
               style={styles.video}
-              source={require('../../../res/img/header.mp4')} />
+              source={require('../../../res/img/onboarding/onboarding.mp4')} />
             <View style={styles.videoOverlay} />
           </Animatable.View>
           <AppIntro
