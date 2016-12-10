@@ -65,6 +65,7 @@ export default class MapMarkerDrop extends Component {
     });
 
     this.onRegionChange = this.onRegionChange.bind(this);
+    this.onLocationChange = this.onLocationChange.bind(this);
     this.select = this.select.bind(this);
     this.stopMotion = this.stopMotion.bind(this);
   }
@@ -93,8 +94,13 @@ export default class MapMarkerDrop extends Component {
       );
     } else {
       if (!this.evEmitter) {
+
         // Register Listener Callback - has to be removed later
-        this.evEmitter = DeviceEventEmitter.addListener('updateLocation', this.onLocationChange.bind(this));
+        this.evEmitter = DeviceEventEmitter.addListener(
+          'updateLocation',
+          this.onLocationChange
+        );
+
         // Initialize RNGLocation
         RNGLocation.getLocation();
       }
@@ -125,7 +131,7 @@ export default class MapMarkerDrop extends Component {
       })
     }
 
-    this.evEmitter.remove();
+    this.evEmitter && this.evEmitter.remove();
   }
 
   select() {
@@ -137,6 +143,7 @@ export default class MapMarkerDrop extends Component {
         this.state.current.longitude
       ]
     );
+
     // out
     Actions.pop();
   }
@@ -182,7 +189,7 @@ export default class MapMarkerDrop extends Component {
   componentWillUnmount() {
     this.ref.cancel();
     this.mounted = false;
-    this.evEmitter.remove();
+    this.evEmitter && this.evEmitter.remove();
   }
 
   render() {
@@ -257,7 +264,10 @@ export default class MapMarkerDrop extends Component {
               size={48} />
           </View>
         </View>
-        <CloseFullscreenButton back />
+        <CloseFullscreenButton
+          hide={Platform.OS !== 'ios'}
+          back={!this.props.closeAction}
+          action={this.props.closeAction} />
       </View>
     );
   }

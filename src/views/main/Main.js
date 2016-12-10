@@ -36,7 +36,6 @@ import ChatRoomHeaderButton from '../../components/chat/ChatRoomHeaderButton';
 export default class Main extends Component {
   constructor(props) {
     super(props);
-
     let pan = new Animated.Value(0);
     let rawData = [false];
     this.state = {
@@ -62,20 +61,7 @@ export default class Main extends Component {
     this.bottom = this.bottom.bind(this);
     this.onLayout = this.onLayout.bind(this);
     this.onScroll = this.onScroll.bind(this);
-
-    // determine which header and greeting to display based
-    // on time
-    let isEvening = DateFormat(Date.now(), 'TT') == 'PM';
-    this.state.headerVideo = (
-      isEvening ?
-      require('../../../res/img/evening2.mp4')
-      : require('../../../res/img/header.mp4')
-    );
-    this.state.headerGreeting = (
-      isEvening
-      ? 'Good evening, '
-      : 'Good afternoon, '
-    );
+    this.updateBackground = this.updateBackground.bind(this);
 
     // PanResponder setup
     this._panResponder = PanResponder.create({
@@ -160,6 +146,40 @@ export default class Main extends Component {
     );
   }
 
+  updateBackground() {
+
+    // determine the hour
+    switch(+DateFormat(Date.now(), 'HH')) {
+      case 0: case 1: case 2: case 3: case 4: case 5:
+        this.setState({
+          headerGreeting: 'Party time, ',
+          headerVideo: require('../../../res/img/late.mp4')
+        });
+        break;
+      case 6: case 7: case 8: case 9: case 10: case 11:
+        this.setState({
+          headerGreeting: 'Good morning, ',
+          headerVideo: require('../../../res/img/morning.mp4')
+        });
+        break;
+      case 12: case 13: case 14: case 15: case 16: case 17:
+        this.setState({
+          headerGreeting: 'Good afternoon, ',
+          headerVideo: require('../../../res/img/afternoon.mp4')
+        });
+        break;
+      case 18: case 19: case 20: case 21: case 22: case 23:
+        this.setState({
+          headerGreeting: 'Good evening, ',
+          headerVideo: require('../../../res/img/evening.mp4')
+        });
+        break;
+    }
+
+    // trigger future update in a hour
+    this.update = setTimeout(this.updateBackground, 3600000);
+  }
+
   componentWillReceiveProps(props) {
     props.toggle && this.bottom();
   }
@@ -207,6 +227,9 @@ export default class Main extends Component {
     ).once('value', data => data.exists() && this.setState({
       displayName: data.val()
     }));
+
+    // update background greeting
+    this.updateBackground();
   }
 
   notificationResponder(notification, initial) {
@@ -239,6 +262,7 @@ export default class Main extends Component {
     this.token();
     this.notification();
     this.listener && this.ref.off('value', this.listener);
+    this.update && clearTimeout(this.update);
   }
 
   getListViewStyle() {
@@ -354,12 +378,16 @@ export default class Main extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Video
-            repeat
-            muted
-            resizeMode='cover'
-            source={this.state.headerVideo}
-            style={styles.cover} />
+          {
+            this.state.headerVideo && (
+              <Video
+                repeat
+                muted
+                resizeMode='cover'
+                source={this.state.headerVideo}
+                style={styles.cover} />
+            )
+          }
           <LinearGradient
             colors={[
               Colors.Transparent,
@@ -375,10 +403,12 @@ export default class Main extends Component {
               uid={Firebase.auth().currentUser.uid} />
             <Text style={styles.welcomeTitle}>
               {
-                this.state.headerGreeting
-              }{
-                this.state.displayName.split(' ')[0]
-              }.
+                `${
+                  this.state.headerGreeting || 'Welcome back, '
+                } ${
+                  this.state.displayName.split(' ')[0]
+                }.`
+              }
             </Text>
             <OutlineText
               style={styles.location}
@@ -388,17 +418,6 @@ export default class Main extends Component {
                 } Active Contests`
               } />
           </LinearGradient>
-          <View style={styles.arrowContainer}>
-            <CircleIcon
-              style={styles.arrow}
-              size={Sizes.H1 * 2}
-              icon='keyboard-arrow-up'
-              checkColor={Colors.LightWhiteOverlay}
-              color={Colors.Transparent} />
-            <Text style={styles.arrowText}>
-              SLIDE UP
-            </Text>
-          </View>
         </View>
         <AnimatedListView
           ref='cards'
@@ -469,7 +488,7 @@ const styles = StyleSheet.create({
   },
 
   cover: {
-    minHeight: Sizes.Height * 0.6,
+    minHeight: Sizes.Height * 0.7,
     alignSelf: 'stretch'
   },
 
@@ -487,29 +506,12 @@ const styles = StyleSheet.create({
   },
 
   headerContent: {
-    marginTop: -Sizes.Height * 0.6,
-    height: Sizes.Height * 0.6,
+    marginTop: -Sizes.Height * 0.75,
+    height: Sizes.Height * 0.75,
     alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: Sizes.InnerFrame
-  },
-
-  arrowContainer: {
-    marginTop: -Sizes.InnerFrame * 10,
-    alignItems: 'center',
-  },
-
-  arrow: {
-
-  },
-
-  arrowText: {
-    marginTop: -Sizes.InnerFrame * 0.5,
-    textAlign: 'center',
-    fontSize: Sizes.SmallText,
-    color: Colors.LightWhiteOverlay,
-    backgroundColor: Colors.Transparent
   },
 
   cardShadow: {
@@ -538,7 +540,7 @@ export function updateFCMToken(token) {
 
   // only update when logged in
   let user = Firebase.auth().currentUser;
-  if (user) {
+  if (user && token) {
     Database.ref(
       `profiles/${
         user.uid

@@ -16,6 +16,7 @@ import AppIntro from 'react-native-app-intro';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
 import Video from 'react-native-video';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // consts
 let gradient = [
@@ -137,26 +138,32 @@ export default class Onboarding extends Component {
               muted
               resizeMode='cover'
               style={styles.video}
-              source={require('../../../res/img/header.mp4')} />
+              source={require('../../../res/img/onboarding/onboarding.mp4')} />
             <View style={styles.videoOverlay} />
           </Animatable.View>
           <AppIntro
             onSlideChange={this.onSlideChange}
-            onSkipBtnClick={this.complete}
+            onSkipBtnClick={() => {}}
+            customStyles={{
+              dotStyle: {
+                width: 5,
+                height: 5,
+                borderRadius: 3,
+                margin: 3,
+                backgroundColor: Colors.Overlay
+              }
+            }}
             skipBtnLabel={(
-              <Text style={styles.button}>
-                Skip
-              </Text>
+              <Text />
             )}
             nextBtnLabel={(
-              <Text style={styles.button}>
-                Next
-              </Text>
+              <Icon
+                name='arrow-forward'
+                size={Sizes.H1}
+                color={Colors.Text} />
             )}
             doneBtnLabel={(
-              <Text style={styles.button}>
-                Done
-              </Text>
+              <Text />
             )}>
             <View style={styles.page}>
               <View level={-10}>
@@ -185,7 +192,7 @@ export default class Onboarding extends Component {
                   styles.description
                 ]}>
                   Set a bounty for the type of photo you want and
-                  watch nearby photographers worry about framing
+                  let nearby photographers worry about framing
                   the perfect shot
                 </Text>
               </View>
@@ -217,7 +224,7 @@ export default class Onboarding extends Component {
                   styles.text,
                   styles.description
                 ]}>
-                  Make some serious money by using the camera
+                  Make serious money by using the camera
                   on your smartphone
                 </Text>
               </View>

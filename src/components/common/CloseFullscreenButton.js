@@ -30,7 +30,7 @@ export default class CloseFullscreenButton extends Component {
           (
             Platform.OS === 'ios'
             || !this.props.back
-          ) && (
+          ) && !this.props.hide && (
             <TouchableOpacity
               onPress={this.props.action || Actions.pop}>
               <Animatable.View

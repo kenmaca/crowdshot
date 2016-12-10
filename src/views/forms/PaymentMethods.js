@@ -17,6 +17,7 @@ import {
 // components
 import TitleBar from '../../components/common/TitleBar';
 import Swipeout from 'react-native-swipeout';
+import SwipeoutButton from '../../components/common/SwipeoutButton';
 import BillingCard from '../../components/payment/BillingCard';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import CircleIcon from '../../components/common/CircleIcon';
@@ -73,6 +74,10 @@ export default class PaymentMethods extends Component {
             text: 'Remove',
             color: Colors.Text,
             backgroundColor: Colors.Cancel,
+            component: (
+              <SwipeoutButton
+                text='Remove' />
+            ),
             onPress: () => {
               Alert.alert(
                 'Remove this Card?',

@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Modal, Alert, Action
+  View, StyleSheet, Text, Modal, Alert, Action, Platform
 } from 'react-native';
 import {
   Colors, Sizes
@@ -105,8 +105,10 @@ export default class NewPayment extends Component {
                 // remove the charge
                 ref.remove();
 
-                // and back out
-                Actions.pop();
+                // and drop processing modal
+                this.setState({
+                  processing: false
+                });
               }
             }
           ]
@@ -189,7 +191,10 @@ export default class NewPayment extends Component {
               || 'Add bounty to contest'
             } />
         </View>
-        <CloseFullscreenButton back />
+        <CloseFullscreenButton
+          hide={Platform.OS !== 'ios'}
+          back={!this.props.closeAction}
+          action={this.props.closeAction} />
       </View>
     );
   }

@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, TextInput
+  View, StyleSheet, Text, TextInput, Platform
 } from 'react-native';
 import {
   Colors, Sizes
@@ -63,7 +63,10 @@ export default class TextEntry extends Component {
           }}
           color={Colors.Primary}
           label={this.props.buttonLabel || 'Submit'} />
-        <CloseFullscreenButton back />
+          <CloseFullscreenButton
+            hide={Platform.OS !== 'ios'}
+            back={!this.props.closeAction}
+            action={this.props.closeAction} />
       </View>
     );
   }

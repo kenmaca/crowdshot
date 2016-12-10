@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, Platform
 } from 'react-native';
 import {
   Colors, Sizes
@@ -42,7 +42,10 @@ export default class NewReferencePhoto extends Component {
               );
             }} />
         </View>
-        <CloseFullscreenButton back />
+        <CloseFullscreenButton
+          hide={Platform.OS !== 'ios'}
+          back={!this.props.closeAction}
+          action={this.props.closeAction} />
       </View>
     );
   }
