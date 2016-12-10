@@ -45,6 +45,7 @@ export default class NewContestContainer extends Component {
           referencePhotoId: photoId,
           halt: false
         }),
+        panHandlers: null,
         closeAction: () => Actions.pop({
           popNum: 2
         })
@@ -60,6 +61,7 @@ export default class NewContestContainer extends Component {
         subtitle: 'General rules for your contest',
         buttonLabel: 'Add Instructions',
         value: DEFAULT_INSTRUCTIONS,
+        panHandlers: null,
         closeAction: () => Actions.pop({
           popNum: 2
         })
@@ -70,6 +72,7 @@ export default class NewContestContainer extends Component {
           location: location,
           halt: false
         }),
+        panHandlers: null,
         closeAction: () => Actions.pop({
           popNum: 2
         })
@@ -80,6 +83,7 @@ export default class NewContestContainer extends Component {
           prizeId: transactionId,
           halt: false
         }),
+        panHandlers: null,
         description: 'Bounty for Photo Contest',
         closeAction: () => Actions.pop({
           popNum: 2

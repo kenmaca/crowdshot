@@ -159,7 +159,8 @@ export default class Navigation extends Component {
               component={ProfileEdit} />
             <Scene
               key='newContest'
-              component={NewContestContainer} />
+              component={NewContestContainer}
+              panHandlers={null} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}
