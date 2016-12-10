@@ -160,7 +160,8 @@ export default class Navigation extends Component {
             <Scene
               key='newContest'
               component={NewContestContainer}
-              panHandlers={null} />
+              panHandlers={null}
+              onBack={() => {}} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}

@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Modal, Alert, Action
+  View, StyleSheet, Text, Modal, Alert, Action, Platform
 } from 'react-native';
 import {
   Colors, Sizes
@@ -192,6 +192,7 @@ export default class NewPayment extends Component {
             } />
         </View>
         <CloseFullscreenButton
+          hide={Platform.OS !== 'ios'}
           back={!this.props.closeAction}
           action={this.props.closeAction} />
       </View>

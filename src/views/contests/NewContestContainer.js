@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Platform, Image, Alert
+  View, StyleSheet, Text, Platform, Image, Alert, BackAndroid
 } from 'react-native';
 import {
   Colors, Sizes
@@ -95,6 +95,7 @@ export default class NewContestContainer extends Component {
   }
 
   componentDidMount() {
+    BackAndroid.addEventListener('hardwareBackPress', () => true);
     this.componentDidUpdate();
   }
 
