@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
 
   textContainer: {
     flex: 1,
+    backgroundColor: Colors.Transparent,
     color: Colors.Text
   },
 
