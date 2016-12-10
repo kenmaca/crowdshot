@@ -134,11 +134,12 @@ export default class NewContest extends Component {
           <View style={styles.modal}>
             <Animatable.View
               animation='zoomInUp'
-              duration={800}
+              duration={500}
               delay={100}
               onAnimationEnd={() => {
-                Actions.newPayment({
-                  animation: 'fade'
+                Actions.newContest({
+                  animation: 'fade',
+                  duration: 0
                 });
                 this.setState({
                   visible: false
@@ -172,9 +173,9 @@ const styles = StyleSheet.create({
 
   modal: {
     flex: 1,
+    backgroundColor: Colors.Transparent,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: Sizes.OuterFrame * 50
+    justifyContent: 'center'
   },
 
   overlay: {

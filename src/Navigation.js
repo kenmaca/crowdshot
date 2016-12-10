@@ -20,6 +20,7 @@ import Main from './views/main/Main';
 import Contestant from './views/main/Contestant';
 // import NewContest from './views/forms/NewContest';
 import NewContest from './views/contests/NewContest';
+import NewContestContainer from './views/contests/NewContestContainer';
 import Modal from './Modal';
 import Profile from './views/profiles/Profile';
 import Voting from './views/contests/Voting';
@@ -156,6 +157,9 @@ export default class Navigation extends Component {
             <Scene
               key='profileEdit'
               component={ProfileEdit} />
+            <Scene
+              key='newContest'
+              component={NewContestContainer} />
             <Scene
               tabs
               tabBarStyle={styles.tabs}
