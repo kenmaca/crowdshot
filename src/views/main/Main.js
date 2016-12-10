@@ -544,7 +544,7 @@ export function updateFCMToken(token) {
 
   // only update when logged in
   let user = Firebase.auth().currentUser;
-  if (user) {
+  if (user && token) {
     Database.ref(
       `profiles/${
         user.uid
