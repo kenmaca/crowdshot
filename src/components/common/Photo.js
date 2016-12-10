@@ -95,6 +95,7 @@ export default class Photo extends Component {
           styles.container,
           this.props.style,
         ]}
+        resizeMethod={'resize'}
         source={{uri: this.state.source}}
         onLoadEnd={this.props.onLoadEnd} />
     ): (
