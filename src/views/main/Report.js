@@ -73,7 +73,8 @@ export default class Report extends Component {
       '.value': Object.assign(
         {
           createdBy: Firebase.auth().currentUser.uid,
-          dateCreated: now
+          dateCreated: now,
+          reason: reason
         },
         values
       ),
