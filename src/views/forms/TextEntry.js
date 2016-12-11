@@ -56,6 +56,15 @@ export default class TextEntry extends Component {
               ]} />
           </Field>
         </View>
+        {
+          this.props.disclaimer && (
+            <View style={styles.disclaimerContainer}>
+              <Text style={styles.disclaimer}>
+                {this.props.disclaimer}
+              </Text>
+            </View>
+          )
+        }
         <Button
           onPress={() => {
             Actions.pop();
@@ -93,5 +102,18 @@ const styles = StyleSheet.create({
     marginLeft: Sizes.InnerFrame,
     color: Colors.Text,
     fontSize: Sizes.Text
+  },
+
+  disclaimerContainer: {
+    padding: Sizes.InnerFrame,
+    paddingTop: 0,
+    paddingLeft: Sizes.OuterFrame,
+    paddingRight: Sizes.OuterFrame
+  },
+
+  disclaimer: {
+    textAlign: 'center',
+    fontSize: Sizes.SmallText,
+    color: Colors.AlternateText
   }
 });

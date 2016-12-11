@@ -451,9 +451,6 @@ export default class Main extends Component {
             }
           } />
         <HeaderButtons>
-          <HeaderButton
-            icon='report'
-            onPress={Actions.report} />
           <ChatRoomHeaderButton
             icon='chat-bubble'
             onPress={Actions.chatroom} />
