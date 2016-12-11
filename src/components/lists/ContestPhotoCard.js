@@ -52,9 +52,7 @@ export default class ContestPhotoCard extends Component {
 
               // launch report screen
               Actions.report({
-                contestId: this.props.contestId,
-                entryId: this.props.entryId,
-                photoId: this.state.photoId
+                contestId: this.props.contestId
               });
 
               // shutdown the modal
@@ -65,10 +63,10 @@ export default class ContestPhotoCard extends Component {
             style={styles.reportContainer}>
             <Icon
               name='report-problem'
-              size={14}
+              size={12}
               color={Colors.Text} />
             <Text style={styles.report}>
-              Report
+              Report as Inappropriate
             </Text>
           </TouchableOpacity>
           <OutlineText
