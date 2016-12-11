@@ -77,7 +77,7 @@ export default class GroupAvatar extends Component {
                   marginRight: this.props.size / 8 * -1
                 }
               ]}
-              key={uid}>
+              key={Math.random()}>
               <Avatar
                 outline
                 showRank={this.props.showRank}
