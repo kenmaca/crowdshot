@@ -27,6 +27,7 @@ import CloseFullscreenButton from '../../components/common/CloseFullscreenButton
 import CameraView from '../../components/common/CameraView';
 import ContestProgressBar from '../../components/contests/ContestProgressBar';
 import HostInfo from '../../components/profiles/HostInfo';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class ContestDetail extends Component {
   constructor(props) {
@@ -86,6 +87,25 @@ export default class ContestDetail extends Component {
         <Photo
           photoId={this.state.referencePhotoId}
           style={styles.header}>
+          <TouchableOpacity
+            onPress={() => {
+
+              // launch report screen
+              Actions.report({
+                contestId: this.props.contestId,
+                entryId: this.props.entryId,
+                photoId: this.state.photoId
+              });
+            }}
+            style={styles.reportContainer}>
+            <Icon
+              name='report-problem'
+              size={12}
+              color={Colors.Text} />
+            <Text style={styles.report}>
+              Report as Inappropriate
+            </Text>
+          </TouchableOpacity>
           <TrophyCase
             bounty={this.state.bounty}
             prizes={this.state.prizes} />
@@ -308,9 +328,9 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    height: Sizes.Height*0.4,
+    height: Sizes.Height * 0.4,
     alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignSelf: 'stretch',
     padding: Sizes.InnerFrame,
   },
@@ -424,5 +444,19 @@ const styles = StyleSheet.create({
   bottomPadding: {
     paddingBottom: Sizes.OuterFrame,
     backgroundColor: Colors.ModalForeground
+  },
+
+  reportContainer: {
+    flexDirection: 'row',
+    padding: Sizes.InnerFrame / 2,
+    alignItems: 'center',
+    backgroundColor: Colors.Transparent
+  },
+
+  report: {
+    marginLeft: Sizes.InnerFrame / 3,
+    fontSize: Sizes.SmallText,
+    color: Colors.Text,
+    backgroundColor: Colors.Transparent
   }
 });

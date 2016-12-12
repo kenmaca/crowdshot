@@ -66,7 +66,7 @@ export default class GroupAvatar extends Component {
         }
       ]}>
         {
-          this.state.visible.map(uid => (
+          this.state.visible.map((uid, i) => (
             <View
               style={[
                 styles.outline,
@@ -77,7 +77,7 @@ export default class GroupAvatar extends Component {
                   marginRight: this.props.size / 8 * -1
                 }
               ]}
-              key={uid}>
+              key={i}>
               <Avatar
                 outline
                 showRank={this.props.showRank}

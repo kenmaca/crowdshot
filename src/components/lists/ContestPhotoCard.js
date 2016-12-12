@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Alert
+  View, StyleSheet, Text, TouchableOpacity
 } from 'react-native';
 import {
   Colors, Sizes
@@ -17,7 +17,7 @@ import Photo from '../common/Photo';
 import Button from '../common/Button';
 import UserSummary from '../profiles/UserSummary';
 import OutlineText from '../common/OutlineText';
-import CircleIcon from '../common/CircleIcon';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class ContestPhotoCard extends Component {
   constructor(props) {
@@ -47,6 +47,28 @@ export default class ContestPhotoCard extends Component {
         photoId={this.state.photoId}
         style={styles.container}>
         <View style={styles.statusContainer}>
+          <TouchableOpacity
+            onPress={() => {
+
+              // launch report screen
+              Actions.report({
+                contestId: this.props.contestId
+              });
+
+              // shutdown the modal
+              this.props.parent && this.props.parent.setState({
+                visible: false
+              });
+            }}
+            style={styles.reportContainer}>
+            <Icon
+              name='report-problem'
+              size={12}
+              color={Colors.Text} />
+            <Text style={styles.report}>
+              Report as Inappropriate
+            </Text>
+          </TouchableOpacity>
           <OutlineText
             text={`${
               this.props.i || 1
@@ -79,11 +101,15 @@ const styles = StyleSheet.create({
   },
 
   reportContainer: {
-    marginTop: Sizes.InnerFrame / 8
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.Transparent
   },
 
-  reportButton: {
+  report: {
+    marginLeft: Sizes.InnerFrame / 3,
+    fontSize: Sizes.SmallText,
+    color: Colors.Text,
     backgroundColor: Colors.Transparent
   }
-
 });

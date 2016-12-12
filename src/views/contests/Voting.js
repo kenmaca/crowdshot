@@ -117,6 +117,7 @@ export default class Voting extends Component {
         activeOpacity={1}>
         <ContestPhotoCard
           key={entryId}
+          parent={this}
           contestId={this.props.contestId}
           entryId={entryId}
           i={this.state.cards.indexOf(entryId) + 1}
