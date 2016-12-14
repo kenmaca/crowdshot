@@ -128,7 +128,7 @@ export default class NewContestContainer extends Component {
       <View style={styles.container}>
         <AnimatedImage
           ref='logo'
-          animation='rotate'
+          animation='bounce'
           iterationCount='infinite'
           source={require('../../../res/img/logo.png')}
           style={styles.logo} />
