@@ -56,6 +56,10 @@ export default class CameraView extends Component {
 
   }
 
+  handleZoomChanged(){
+
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -97,7 +101,8 @@ export default class CameraView extends Component {
           type={Camera.constants.Type.back}
           defaultOnFocusComponent={true}
           flashMode={this.state.flashMode}
-          onFocusChanged={() => this.handleFocusChanged}>
+          onFocusChanged={() => this.handleFocusChanged}
+          onZoomChanged={() => this.handleZoomChanged}>
 
         </Camera>
         <View style={styles.lowerContainer}>

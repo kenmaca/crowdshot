@@ -123,9 +123,9 @@ export default class Settings extends Component {
           title='Your Contest Entries' />
         <View style={styles.content}>
           <ListView
-            key={Math.random()}
             enableEmptySections
             scrollEnabled
+            removeClippedSubviews
             dataSource={this.state.entries}
             style={styles.entries}
             renderRow={this.renderRow.bind(this)} />

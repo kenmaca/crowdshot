@@ -174,7 +174,8 @@ export default class NewContestContainer extends Component {
             near: Platform.OS === 'ios' ? [
               location[0].feature, location[0].subLocality]
               .filter(l => l).join(' at ') || '...'
-              : [location[0].streetNumber + ' ' + location[0].streetName,
+              : [location[0].streetNumber ? location[0].streetNumber + ' ' : ''
+              + location[0].streetName,
               location[1].feature || location[1].locality]
               .filter(l => l).join(' at ') || '...'
           },
