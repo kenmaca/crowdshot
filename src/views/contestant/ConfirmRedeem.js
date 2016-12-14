@@ -18,7 +18,7 @@ import Button from '../../components/common/Button';
 import TitleBar from '../../components/common/TitleBar';
 import InputSectionHeader from '../../components/common/InputSectionHeader';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
-import AwardCard from '../../components/lists/AwardCard';
+import RewardCard from '../../components/contestant/RewardCard';
 import Swipeout from 'react-native-swipeout';
 
 export default class ConfirmRedeem extends Component {

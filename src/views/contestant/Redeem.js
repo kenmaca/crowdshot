@@ -14,77 +14,68 @@ import {
 } from 'react-native-router-flux';
 
 // components
-import Button from '../../components/common/Button';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import TitleBar from '../../components/common/TitleBar';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
-import AwardCard from '../../components/lists/AwardCard';
-import Swipeout from 'react-native-swipeout';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import RewardList from '../../components/contestant/RewardList';
+import {
+  TabViewAnimated, TabBarTop
+} from 'react-native-tab-view';
 
 export default class Redeem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profile: {},
-      wallet: 0,
-      rawAwards: {},
-      awards: new ListView.DataSource({
-        rowHasChanged: (r1, r2) => r1 !== r2
-      }),
-      cartAmt: 0,
-      cart: {}
+      balance: 0,
+      cart: {},
+      blob: {},
+      index: 0,
+      routes: []
     };
 
-    this.ref = Database.ref(
-      `awards/`
-    );
+    // listing of reward categories
+    this.ref = Database.ref('rewardCategories');
 
-    this.profileRef = Database.ref(
-      `profiles/${
-        Firebase.auth().currentUser.uid
-      }`
-    );
-
+    // obtain current balance
     this.billingRef = Database.ref(
       `billing/${
         Firebase.auth().currentUser.uid
       }`
     );
 
-    this.addToCart = this.addToCart.bind(this);
-    this.showAwardDetail = this.showAwardDetail.bind(this);
+    // methods
+    this.add = this.add.bind(this);
+    this.getCartTotal = this.getCartTotal.bind(this);
+    this.checkout = this.checkout.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+    this.renderHeader = this.renderHeader.bind(this);
+    this.handleChangeTab = this.handleChangeTab.bind(this);
   }
 
   componentDidMount() {
+
+    // build tabs
     this.listener = this.ref.on('value', data => {
-
-      // dont check exists due to empty entries allowed
-      let blob = data.val() || {};
-      this.setState({
-        rawAwards: blob,
-        awards: new ListView.DataSource({
-          rowHasChanged: (r1, r2) => r1 !== r2
-        }).cloneWithRows(
-          Object.keys(blob)
-        )
-      });
-
-      // and clear loader
-      this.refs.title.clearLoader();
-    });
-
-    this.profileListener = this.profileRef.on('value', data => {
       if (data.exists()) {
+        let blob = data.val();
         this.setState({
-          profile: data.val()
+          blob: blob,
+          routes: Object.keys(blob).map((categoryId, i) => ({
+            key: `${categoryId}`,
+            title: blob[categoryId].name
+          }))
         });
+
+        // clear loader
+        this.refs.title.clearLoader();
       }
     });
 
+    // sum up user balance
     this.billingListener = this.billingRef.on('value', data => {
       if (data.exists()) {
         this.setState({
-          wallet: -1/100 * Object.values(
+          balance: -0.01 * Object.values(
             data.val().transactions || {}
           ).reduce((a, b) => a + b, 0)
         });
@@ -93,104 +84,93 @@ export default class Redeem extends Component {
   }
 
   componentWillUnmount() {
-    this.listener && this.ref.off('value', this.listener);
-    this.profileListener && this.profileRef.off('value', this.profileListener);
-    this.billingListener && this.billingRef.off('value', this.billingListener);
-  }
+    this.listener && this.ref.off(
+      'value', this.listener
+    );
 
-  renderRow(awardId) {
-    return (
-      <View style={styles.entryContainer}>
-        <Swipeout
-          right={[
-            {
-              text: 'Remove',
-              color: Colors.Text,
-              backgroundColor: Colors.Cancel,
-              onPress: () => {
-                let { cart, cartAmt, rawAwards} = this.state;
-                if (cart[awardId] && cart[awardId] > 0) {
-                  cart[awardId]--;
-                  cartAmt -= rawAwards[awardId].cost;
-                  this.setState({
-                    cart,
-                    cartAmt
-                  });
-                }
-              }
-            }
-          ]}>
-          <AwardCard
-            awardId={awardId}
-            balance={this.state.wallet - this.state.cartAmt}
-            addToCart={this.addToCart}
-            showAwardDetail={this.showAwardDetail}
-            inCart={this.state.cart[awardId]} />
-        </Swipeout>
-      </View>
+    this.billingListener && this.billingRef.off(
+      'value', this.billingListener
     );
   }
 
-  addToCart(awardId){
-    let { cart, cartAmt, rawAwards} = this.state;
-    if (cart[awardId]) {
-      cart[awardId]++;
-    } else {
-      cart[awardId] = 1;
+  getCartTotal() {
+    return Object.values(
+      this.state.cart || {}
+    ).map(reward =>
+
+      // calculate bare product total cost
+      (
+        reward.quantity
+        * reward.blob.value
+
+      // and now calculate shipping/handling (with collapsable
+      // items, allowing a single shipping/handling charge
+      // for multiple items)
+      ) + (
+        (
+          reward.blob.shipping
+          + reward.blob.handling
+        ) * (
+          reward.blob.collapsable
+          ? 1: reward.quantity
+        )
+      )
+    ).reduce((a, b) => a + b, 0);
+  }
+
+  add(rewardId, rewardBlob, amount){
+
+    // init if fresh object
+    if (this.state.cart[rewardId]) {
+      this.state.cart[rewardId] = {
+        blob: rewardBlob
+      };
     }
-    cartAmt += rawAwards[awardId].cost;
+
+    // don't allow negative amounts
+    this.state.cart[rewardId].quantity = (
+      this.state.cart[rewardId].quantity || 0
+    ) + (
+      amount || 1
+    );
+
+    // clear from cart if less than 1 quantity
+    if (this.state.cart[rewardId].quantity < 1) {
+      delete this.state.cart[rewardId];
+    }
+
+    // trigger update
     this.setState({
-      cart,
-      cartAmt
+      cart: this.state.cart
     });
   }
 
-  showAwardDetail(awardId){
+  checkout() {
 
+    // validate and push
   }
 
-  checkOut(){
-    let { profile } = this.state;
-    if (!profile.address || !profile.city || !profile.country) {
-      Actions.address({
-        afterSubmit: Actions.confirmRedeem({
-          cart: this.state.cart,
-          rawAwards: this.state.rawAwards
-        })
-      });
-    } else {
-      let longAddress = profile.address + ', ' + profile.city + ', '
-        + (profile.region ? profile.region + ', ' : '')
-        + profile.country
-        + (profile.postal ? ', ' + profile.postal : '');
-      Alert.alert(
-        'Verify Your Shipping Address',
-        longAddress,
-        [
-          {text: 'Update', onPress: () => {
-            Actions.address({
-              afterSubmit: Actions.confirmRedeem({
-                cart: this.state.cart,
-                rawAwards: this.state.rawAwards
-              })
-            })
-          }},
-          {text: 'Confirm', onPress: () => Actions.confirmRedeem({
-            cart: this.state.cart,
-            rawAwards: this.state.rawAwards,
-          })}
-        ]
-      )
-    }
+  handleChangeTab(i) {
+    this.setState({
+      index: i
+    });
   }
 
-  getCartCount(){
-    let {cart, rawAwards} = this.state;
-    let cartCount = 0;
-    for (award in rawAwards){
-      cartCount += cart[award] || 0;
-    }
-    return cartCount;
+  renderScene({route}) {
+    return (
+      <RewardList
+        category={this.state.blob[route.key]} />
+    );
+  }
+
+  renderHeader(props) {
+    return (
+      <TabBarTop
+        {...props}
+        style={styles.tabStyle}
+        labelStyle={styles.labelStyle}
+        indicatorStyle={styles.indicatorStyle} />
+    );
   }
 
   render() {
@@ -199,42 +179,41 @@ export default class Redeem extends Component {
         <TitleBar
           clearLoader
           ref='title'
-          title='Redeem Your Prizes'>
-          <FontAwesomeIcon
-            name='trophy'
-            color={Colors.Text}
-            size={Sizes.H1} />
-          <Text style={styles.wallet}>
-            {
-              `$${
-                (
-                  (
-                    this.state.wallet || 0
-                  ) - this.state.cartAmt
-                ).toFixed(0)
-              }`
-            }
-          </Text>
+          title='Prize Redemption'>
+          <View style={styles.balance}>
+            <View style={styles.cartAmount}>
+              <Text style={styles.cartAmountText}>
+                {
+                  `$${
+                    this.getCartTotal().toFixed(2)
+                  }`
+                }
+              </Text>
+              <Icon
+                name='shopping-cart'
+                color={Colors.Primary}
+                size={Sizes.H2} />
+            </View>
+            <Text style={styles.balanceAmount}>
+              {
+                `$${
+                  this.state.balance.toFixed(2)
+                } available`
+              }
+            </Text>
+          </View>
         </TitleBar>
-        <View style={styles.content}>
-          <ListView
-            scrollEnabled
-            enableEmptySections
-            dataSource={this.state.awards}
-            style={styles.entries}
-            renderRow={this.renderRow.bind(this)} />
-        </View>
-        <Button
-          squareBorders
-          color={Colors.Primary}
-          onPress={() => this.checkOut()}
-          label={"Check Out"}
-          isDisabled={this.getCartCount() <= 0}
-          onPressDisabled={() => Alert.alert(
-            'Empty Cart',
-            'You don\'t have anything in your cart'
-          )}
-          disabledColor={Colors.MediumDarkOverlay} />
+        {
+          this.state.routes.length > 0
+          && (
+            <TabViewAnimated
+              style={styles.content}
+              navigationState={this.state}
+              onRequestChangeTab={this.handleChangeTab}
+              renderHeader={this.renderHeader}
+              renderScene={this.renderScene} />
+          )
+        }
         <CloseFullscreenButton back />
       </View>
     );
@@ -251,19 +230,44 @@ const styles = StyleSheet.create({
     flex: 1
   },
 
-  entries: {
-    flex: 1
-  },
-
   entryContainer: {
     margin: Sizes.InnerFrame / 2,
     marginBottom: 0,
   },
 
-  wallet: {
-    color: Colors.Text,
-    fontSize: Sizes.H1,
-    fontWeight: '300',
-    marginLeft: Sizes.InnerFrame / 2
+  balance: {
+    alignItems: 'flex-end'
+  },
+
+  cartAmount: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Sizes.InnerFrame / 4
+  },
+
+  cartAmountText: {
+    marginRight: Sizes.InnerFrame / 2,
+    fontSize: Sizes.H2,
+    fontWeight: '500',
+    color: Colors.Primary
+  },
+
+  balanceAmount: {
+    fontSize: Sizes.SmallText,
+    fontWeight: '100',
+    color: Colors.Text
+  },
+
+  tabStyle: {
+    backgroundColor: Colors.Foreground
+  },
+
+  labelStyle: {
+    fontSize: Sizes.Text
+  },
+
+  indicatorStyle: {
+    backgroundColor: Colors.Primary,
+    height: Sizes.InnerFrame / 4
   }
 });
