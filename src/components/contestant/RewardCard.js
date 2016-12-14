@@ -44,7 +44,12 @@ export default class RewardCard extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() => this.props.add(
+          this.props.rewardId,
+          this.state
+        )}
+        style={styles.container}>
         <Photo
           photoId={this.state.photo}
           style={styles.cover} />
@@ -61,7 +66,7 @@ export default class RewardCard extends Component {
             </Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

@@ -50,6 +50,7 @@ export default class Redeem extends Component {
     this.renderScene = this.renderScene.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
     this.handleChangeTab = this.handleChangeTab.bind(this);
+    this.isSufficient = this.isSufficient.bind(this);
   }
 
   componentDidMount() {
@@ -75,7 +76,7 @@ export default class Redeem extends Component {
     this.billingListener = this.billingRef.on('value', data => {
       if (data.exists()) {
         this.setState({
-          balance: -0.01 * Object.values(
+          balance: -Object.values(
             data.val().transactions || {}
           ).reduce((a, b) => a + b, 0)
         });
@@ -118,31 +119,76 @@ export default class Redeem extends Component {
     ).reduce((a, b) => a + b, 0);
   }
 
-  add(rewardId, rewardBlob, amount){
+  isSufficient(rewardBlob, amount) {
+    amount = amount || 1;
+    return (
+      (
+        this.state.balance
+        - (
 
-    // init if fresh object
-    if (this.state.cart[rewardId]) {
-      this.state.cart[rewardId] = {
-        blob: rewardBlob
-      };
+          // model effect of add operation on cart
+          this.getCartTotal()
+          + (
+
+            // bare product
+            (
+              rewardBlob.value * amount
+
+            // shipping handling collapsed
+            ) + (
+              (
+                (rewardBlob.shipping || 0)
+                + (rewardBlob.handling || 0)
+              ) * (
+                rewardBlob.collapsable
+                ? 1: amount
+              )
+            )
+          )
+        )
+
+      // balance - modelled cart total needs to be positive
+      ) >= 0
+    )
+  }
+
+  add(rewardId, rewardBlob, amount) {
+
+    // prevent overadding
+    if (this.isSufficient(rewardBlob, amount)) {
+
+      // init if fresh object
+      if (!this.state.cart[rewardId]) {
+        this.state.cart[rewardId] = {
+          blob: rewardBlob,
+          quantity: 0
+        };
+      }
+
+      // don't allow negative amounts
+      this.state.cart[rewardId].quantity = (
+        this.state.cart[rewardId].quantity
+      ) + (
+        amount || 1
+      );
+
+      // clear from cart if less than 1 quantity
+      if (this.state.cart[rewardId].quantity < 1) {
+        delete this.state.cart[rewardId];
+      }
+
+      // trigger update
+      this.setState({
+        cart: this.state.cart
+      });
+
+    } else {
+      Alert.alert(
+        'Insufficient balance',
+        'This reward can\'t be redeemed due to insufficient funds '
+          + 'in your account balance'
+      );
     }
-
-    // don't allow negative amounts
-    this.state.cart[rewardId].quantity = (
-      this.state.cart[rewardId].quantity || 0
-    ) + (
-      amount || 1
-    );
-
-    // clear from cart if less than 1 quantity
-    if (this.state.cart[rewardId].quantity < 1) {
-      delete this.state.cart[rewardId];
-    }
-
-    // trigger update
-    this.setState({
-      cart: this.state.cart
-    });
   }
 
   checkout() {
@@ -163,6 +209,7 @@ export default class Redeem extends Component {
       ) > 2 ? null: (
         <RewardList
           categoryId={route.key}
+          add={this.add}
           category={this.state.blob[route.key]} />
       )
     );
@@ -191,7 +238,10 @@ export default class Redeem extends Component {
               <Text style={styles.cartAmountText}>
                 {
                   `$${
-                    this.getCartTotal().toFixed(2)
+                    (
+                      this.getCartTotal()
+                      * 0.01
+                    ).toFixed(2)
                   }`
                 }
               </Text>
@@ -203,7 +253,12 @@ export default class Redeem extends Component {
             <Text style={styles.balanceAmount}>
               {
                 `$${
-                  this.state.balance.toFixed(2)
+                  (
+                    (
+                      this.state.balance
+                      - this.getCartTotal()
+                    ) * 0.01
+                  ).toFixed(2)
                 } available`
               }
             </Text>

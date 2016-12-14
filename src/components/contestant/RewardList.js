@@ -30,7 +30,9 @@ export default class RewardList extends Component {
 
   renderRow(rewardId) {
     return (
-      <RewardCard rewardId={rewardId} />
+      <RewardCard
+        add={this.props.add}
+        rewardId={rewardId} />
     );
   }
 
