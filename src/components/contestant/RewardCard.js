@@ -45,9 +45,22 @@ export default class RewardCard extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>
-          {this.props.rewardId}
-        </Text>
+        <Photo
+          photoId={this.state.photo}
+          style={styles.cover} />
+        <View style={styles.content}>
+          <Photo
+            photoId={this.state.thumbnail}
+            style={styles.thumbnail} />
+          <View style={styles.details}>
+            <Text style={styles.title}>
+              {this.state.name}
+            </Text>
+            <Text style={styles.description}>
+              {this.state.description}
+            </Text>
+          </View>
+        </View>
       </View>
     );
   }
@@ -55,8 +68,42 @@ export default class RewardCard extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    padding: Sizes.InnerFrame,
     backgroundColor: Colors.ModalForeground,
-    marginBottom: 2
+    margin: Sizes.InnerFrame,
+    marginBottom: 0
+  },
+
+  cover: {
+    height: Sizes.InnerFrame * 10,
+    alignSelf: 'stretch'
+  },
+
+  content: {
+    flexDirection: 'row',
+    padding: Sizes.InnerFrame
+  },
+
+  thumbnail: {
+    height: 30,
+    width: 30,
+    borderRadius: 15,
+    backgroundColor: Colors.Transparent
+  },
+
+  details: {
+    marginLeft: Sizes.InnerFrame
+  },
+
+  title: {
+    fontSize: Sizes.H4,
+    fontWeight: '500',
+    color: Colors.AlternateText
+  },
+
+  description: {
+    marginTop: Sizes.InnerFrame / 6,
+    fontSize: Sizes.Text,
+    fontWeight: '100',
+    color: Colors.SubduedText
   }
 });

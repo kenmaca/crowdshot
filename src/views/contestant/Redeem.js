@@ -167,6 +167,7 @@ export default class Redeem extends Component {
     return (
       <TabBarTop
         {...props}
+        scrollEnabled
         style={styles.tabStyle}
         labelStyle={styles.labelStyle}
         indicatorStyle={styles.indicatorStyle} />
@@ -179,7 +180,7 @@ export default class Redeem extends Component {
         <TitleBar
           clearLoader
           ref='title'
-          title='Prize Redemption'>
+          title='Rewards'>
           <View style={styles.balance}>
             <View style={styles.cartAmount}>
               <Text style={styles.cartAmountText}>
