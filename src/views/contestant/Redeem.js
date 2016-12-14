@@ -158,8 +158,13 @@ export default class Redeem extends Component {
 
   renderScene({route}) {
     return (
-      <RewardList
-        category={this.state.blob[route.key]} />
+      Math.abs(
+        this.state.index - this.state.routes.indexOf(route)
+      ) > 2 ? null: (
+        <RewardList
+          categoryId={route.key}
+          category={this.state.blob[route.key]} />
+      )
     );
   }
 

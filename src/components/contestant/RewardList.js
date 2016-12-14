@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, ListView
+  View, StyleSheet, ListView, Text
 } from 'react-native';
 import {
   Colors, Sizes
@@ -39,6 +39,8 @@ export default class RewardList extends Component {
       <ListView
         enableEmptySections
         scrollEnabled
+        removeClippedSubviews={false}
+        key={this.props.categoryId}
         style={styles.container}
         dataSource={this.state.rewards}
         renderRow={this.renderRow} />
