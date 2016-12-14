@@ -108,8 +108,8 @@ export default class Redeem extends Component {
       // for multiple items)
       ) + (
         (
-          reward.blob.shipping
-          + reward.blob.handling
+          (reward.blob.shipping || 0)
+          + (reward.blob.handling || 0)
         ) * (
           reward.blob.collapsable
           ? 1: reward.quantity
