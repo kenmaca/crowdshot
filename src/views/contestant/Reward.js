@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, TouchableOpacity
 } from 'react-native';
 import {
   Colors, Sizes
@@ -21,6 +21,7 @@ import Photo from '../../components/common/Photo';
 import Button from '../../components/common/Button';
 import RadioButton from 'react-native-radio-button';
 import InputSectionHeader from '../../components/common/InputSectionHeader';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class Reward extends Component {
   render() {
@@ -58,19 +59,35 @@ export default class Reward extends Component {
                   isSelected
                   animation='bounceIn' />
                 <View style={styles.optionDetail}>
-                  <Text style={styles.optionDetailText}>
-                    {
-                      `$${
-                        (this.props.value * 0.01).toFixed(2)
-                      }${
-                        this.props.valueDescriptor
-                          ? ` ${this.props.valueDescriptor}`
-                          : ''
-                      } (${
-                        cart.quantity
-                      })`
-                    }
-                  </Text>
+                  <View style={styles.optionDetailContainer}>
+                    <Text style={styles.optionDetailText}>
+                      {
+                        `$${
+                          (this.props.value * 0.01).toFixed(2)
+                        }${
+                          this.props.valueDescriptor
+                            ? ` ${this.props.valueDescriptor}`
+                            : ''
+                        } (${
+                          cart.quantity
+                        })`
+                      }
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => this.props.add(
+                        this.props.rewardId,
+                        this.props,
+                        -1,
+                        this.setState({
+                          updated: true
+                        })
+                      )}>
+                      <Icon
+                        name='cancel'
+                        color={Colors.Cancel}
+                        size={Sizes.InnerFrame} />
+                    </TouchableOpacity>
+                  </View>
                   <Text style={styles.quantity}>
                     {
                       `$${
@@ -215,7 +232,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
 
+  optionDetailContainer: {
+    flexDirection: 'row'
+  },
+
   optionDetailText: {
+    marginRight: Sizes.InnerFrame / 2,
     fontSize: Sizes.Text,
     fontWeight: '500',
     color: Colors.AlternateText
