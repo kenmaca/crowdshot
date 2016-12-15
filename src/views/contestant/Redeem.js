@@ -96,10 +96,13 @@ export default class Redeem extends Component {
     );
   }
 
-  getItemTotal(rewardId, blob) {
+  getItemTotal(rewardId, blob, cart) {
+
+    // allow simulated carts
+    cart = cart || this.state.cart || {};
 
     // default single item if never added
-    let reward = this.state.cart[rewardId] || {
+    let reward = cart[rewardId] || {
       blob: blob,
       quantity: 0,
 
@@ -132,68 +135,56 @@ export default class Redeem extends Component {
     };
   }
 
-  getCartTotal() {
-    return Object.values(
-      this.state.cart || {}
-    ).map(reward =>
+  getCartTotal(cart) {
+    cart = cart || this.state.cart || {};
+    return Object.keys(
+      cart
 
-      // calculate bare product total cost
-      (
-        reward.quantity
-        * reward.blob.value
+    // calculate item subtotals first
+    ).map(rewardId => this.getItemTotal(
+      rewardId,
+      cart[rewardId].blob,
+      cart
 
-      // and now calculate shipping/handling (with collapsable
-      // items, allowing a single shipping/handling charge
-      // for multiple items)
-      ) + (
-        (
-          (reward.blob.shipping || 0)
-          + (reward.blob.handling || 0)
-        ) * (
-          reward.blob.collapsable
-          ? 1: reward.quantity
-        )
-      )
-    ).reduce((a, b) => a + b, 0);
+    // and now total everything
+    ).total).reduce((a, b) => a + b, 0);
   }
 
-  isSufficient(rewardBlob, amount) {
-    amount = amount || 1;
+  isSufficient(rewardId, rewardBlob, amount) {
+    console.log(this.state.balance);
+    console.log(this.state.cart);
+    console.log(this.getCartTotal());
+    let simulatedCart = Object.assign(
+      {},
+      this.state.cart,
+      {
+        [rewardId]: {
+          quantity: (
+            this.state.cart[rewardId]
+              ? this.state.cart[rewardId].quantity
+              : 0
+          ) + amount,
+          blob: rewardBlob
+        }
+      }
+    );
+    console.log(simulatedCart);
+    console.log(this.getCartTotal(simulatedCart));
+
     return (
       (
-        this.state.balance
-        - (
-
-          // model effect of add operation on cart
-          this.getCartTotal()
-          + (
-
-            // bare product
-            (
-              rewardBlob.value * amount
-
-            // shipping handling collapsed
-            ) + (
-              (
-                (rewardBlob.shipping || 0)
-                + (rewardBlob.handling || 0)
-              ) * (
-                rewardBlob.collapsable
-                ? 1: amount
-              )
-            )
-          )
-        )
-
-      // balance - modelled cart total needs to be positive
+        this.state.balance - this.getCartTotal(simulatedCart)
       ) >= 0
-    )
+    );
   }
 
   add(rewardId, rewardBlob, amount, onAdded) {
 
+    // default amount
+    amount = amount || 1;
+
     // prevent overadding
-    if (this.isSufficient(rewardBlob, amount)) {
+    if (this.isSufficient(rewardId, rewardBlob, amount)) {
 
       // init if fresh object
       if (!this.state.cart[rewardId]) {
@@ -206,9 +197,7 @@ export default class Redeem extends Component {
       // don't allow negative amounts
       this.state.cart[rewardId].quantity = (
         this.state.cart[rewardId].quantity
-      ) + (
-        amount || 1
-      );
+      ) + amount;
 
       // clear from cart if less than 1 quantity
       if (this.state.cart[rewardId].quantity < 1) {
