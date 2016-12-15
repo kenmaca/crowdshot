@@ -52,6 +52,7 @@ export default class Redeem extends Component {
     this.renderHeader = this.renderHeader.bind(this);
     this.handleChangeTab = this.handleChangeTab.bind(this);
     this.isSufficient = this.isSufficient.bind(this);
+    this.close = this.close.bind(this);
   }
 
   componentDidMount() {
@@ -233,6 +234,31 @@ export default class Redeem extends Component {
     // validate and push
   }
 
+  close() {
+    if (Object.keys(this.state.cart).length > 0) {
+      Alert.alert(
+        'You have rewards in your cart',
+        'Closing this screen will empty your cart',
+        [
+          {
+            text: 'Checkout',
+            onPress: this.checkout
+          },
+          {
+            text: 'Cancel',
+            style: 'cancel'
+          },
+          {
+            text: 'Close',
+            onPress: Actions.pop
+          }
+        ]
+      )
+    } else {
+      Actions.pop();
+    }
+  }
+
   handleChangeTab(i) {
     this.setState({
       index: i
@@ -313,7 +339,9 @@ export default class Redeem extends Component {
               renderScene={this.renderScene} />
           )
         }
-        <CloseFullscreenButton back />
+        <CloseFullscreenButton
+          back
+          action={this.close} />
       </View>
     );
   }

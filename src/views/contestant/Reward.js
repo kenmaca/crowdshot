@@ -73,20 +73,24 @@ export default class Reward extends Component {
                         })`
                       }
                     </Text>
-                    <TouchableOpacity
-                      onPress={() => this.props.add(
-                        this.props.rewardId,
-                        this.props,
-                        -1,
-                        this.setState({
-                          updated: true
-                        })
-                      )}>
-                      <Icon
-                        name='cancel'
-                        color={Colors.Cancel}
-                        size={Sizes.InnerFrame} />
-                    </TouchableOpacity>
+                    {
+                      cart.quantity > 0 && (
+                        <TouchableOpacity
+                          onPress={() => this.props.add(
+                            this.props.rewardId,
+                            this.props,
+                            -1,
+                            this.setState({
+                              updated: true
+                            })
+                          )}>
+                          <Icon
+                            name='cancel'
+                            color={Colors.Cancel}
+                            size={Sizes.InnerFrame} />
+                        </TouchableOpacity>
+                      )
+                    }
                   </View>
                   <Text style={styles.quantity}>
                     {
