@@ -151,9 +151,6 @@ export default class Redeem extends Component {
   }
 
   isSufficient(rewardId, rewardBlob, amount) {
-    console.log(this.state.balance);
-    console.log(this.state.cart);
-    console.log(this.getCartTotal());
     let simulatedCart = Object.assign(
       {},
       this.state.cart,
@@ -168,8 +165,6 @@ export default class Redeem extends Component {
         }
       }
     );
-    console.log(simulatedCart);
-    console.log(this.getCartTotal(simulatedCart));
 
     return (
       (
