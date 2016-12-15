@@ -32,6 +32,7 @@
     "react-native-photo-view": "^1.2.0",
     "react-native-picker": "^4.0.10",
     "react-native-progress": "^3.1.0",
+    "react-native-radio-button": "^1.0.2",
     "react-native-router-flux": "^3.36.0",
     "react-native-share": "^1.0.17",
     "react-native-simple-store": "^1.1.0",

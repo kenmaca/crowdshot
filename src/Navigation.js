@@ -46,6 +46,7 @@ import Address from './views/forms/Address';
 import PaymentMethod from './views/main/PaymentMethod';
 import ProfileEdit from './views/profiles/ProfileEdit';
 import Onboarding from './views/onboarding/Onboarding';
+import Reward from './views/contestant/Reward';
 
 // components
 import TabButton from './components/common/TabButton';
@@ -130,6 +131,9 @@ export default class Navigation extends Component {
             <Scene
               key='confirmRedeem'
               component={ConfirmRedeem} />
+            <Scene
+              key='reward'
+              component={Reward} />
             <Scene
               key='newContestPhoto'
               component={NewContestPhoto} />

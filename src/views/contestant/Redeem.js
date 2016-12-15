@@ -46,6 +46,7 @@ export default class Redeem extends Component {
     // methods
     this.add = this.add.bind(this);
     this.getCartTotal = this.getCartTotal.bind(this);
+    this.getItemTotal = this.getItemTotal.bind(this);
     this.checkout = this.checkout.bind(this);
     this.renderScene = this.renderScene.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
@@ -92,6 +93,42 @@ export default class Redeem extends Component {
     this.billingListener && this.billingRef.off(
       'value', this.billingListener
     );
+  }
+
+  getItemTotal(rewardId, blob) {
+
+    // default single item if never added
+    let reward = this.state.cart[rewardId] || {
+      blob: blob,
+      quantity: 0,
+
+      // to indicate not actually added
+      simulated: true
+    };
+
+    let shipping = (reward.blob.shipping || 0) * (
+      reward.blob.collapsable
+      ? 1: reward.simulated ? 1: reward.quantity
+    );
+
+    let handling = (reward.blob.handling || 0) * (
+      reward.blob.collapsable
+      ? 1: reward.simulated ? 1: reward.quantity
+    );
+
+    let subtotal = reward.quantity * reward.blob.value;
+    let total = (
+      reward.simulated
+      ? subtotal: subtotal + handling + shipping
+    );
+
+    return {
+      total: total,
+      subtotal: subtotal,
+      handling: handling,
+      shipping: shipping,
+      quantity: reward.quantity
+    };
   }
 
   getCartTotal() {
@@ -152,7 +189,7 @@ export default class Redeem extends Component {
     )
   }
 
-  add(rewardId, rewardBlob, amount) {
+  add(rewardId, rewardBlob, amount, onAdded) {
 
     // prevent overadding
     if (this.isSufficient(rewardBlob, amount)) {
@@ -180,7 +217,7 @@ export default class Redeem extends Component {
       // trigger update
       this.setState({
         cart: this.state.cart
-      });
+      }, onAdded);
 
     } else {
       Alert.alert(
@@ -210,6 +247,7 @@ export default class Redeem extends Component {
         <RewardList
           categoryId={route.key}
           add={this.add}
+          getItemTotal={this.getItemTotal}
           category={this.state.blob[route.key]} />
       )
     );

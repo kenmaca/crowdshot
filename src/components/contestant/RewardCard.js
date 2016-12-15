@@ -45,10 +45,10 @@ export default class RewardCard extends Component {
   render() {
     return (
       <TouchableOpacity
-        onPress={() => this.props.add(
-          this.props.rewardId,
-          this.state
-        )}
+        onPress={() => Actions.reward({
+          ...this.state,
+          ...this.props
+        })}
         style={styles.container}>
         <Photo
           photoId={this.state.photo}

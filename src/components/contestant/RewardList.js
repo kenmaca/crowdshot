@@ -32,6 +32,7 @@ export default class RewardList extends Component {
     return (
       <RewardCard
         add={this.props.add}
+        getItemTotal={this.props.getItemTotal}
         rewardId={rewardId} />
     );
   }
