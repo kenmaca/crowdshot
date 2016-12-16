@@ -2,7 +2,8 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, ListView, Alert, Modal, Image
+  View, StyleSheet, Text, ListView, Alert, Image,
+  Modal, TouchableOpacity
 } from 'react-native';
 import {
   Colors, Sizes
@@ -18,121 +19,114 @@ import Button from '../../components/common/Button';
 import TitleBar from '../../components/common/TitleBar';
 import InputSectionHeader from '../../components/common/InputSectionHeader';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
-import RewardCard from '../../components/contestant/RewardCard';
 import Swipeout from 'react-native-swipeout';
+import Photo from '../../components/common/Photo';
+import CircleIcon from '../../components/common/CircleIcon';
+import ProgressBlocker from '../../components/common/ProgressBlocker';
 
 export default class ConfirmRedeem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profile: {},
-      cartList: [],
-      cartAmt: 0,
-      wallet: 0,
-      finalizedVisible: false
+      processing: false
     };
-
-    this.profileRef = Database.ref(
+    this.ref = Database.ref(
       `profiles/${
         Firebase.auth().currentUser.uid
       }`
     );
 
-    this.billingRef = Database.ref(
-      `billing/${
-        Firebase.auth().currentUser.uid
-      }`
-    );
-
-    this.ordersRef = Database.ref(
-      `orders/`
-    );
-
+    // methods
+    this.renderRow = this.renderRow.bind(this);
+    this.getAddress = this.getAddress.bind(this);
+    this.confirm = this.confirm.bind(this);
   }
 
   componentDidMount() {
-    this.profileListener = this.profileRef.on('value', data => {
+    this.listener = this.ref.on('value', data => {
       if (data.exists()) {
         this.setState({
-          profile: data.val(),
+          ...data.val()
         });
       }
     });
-
-    this.billingListener = this.billingRef.on('value', data => {
-      if (data.exists()) {
-        this.setState({
-          wallet: -1/100 * Object.values(data.val().transactions).reduce((a, b) => a + b)
-        });
-      }
-    });
-
-    let {cart, rawAwards} = this.props;
-    let cartList = [];
-    let cartAmt = 0;
-    for (award in rawAwards){
-      if (cart[award]){
-        let cartItem = {};
-        cartItem.id = award;
-        cartItem.name = rawAwards[award].name;
-        cartItem.cost = rawAwards[award].cost;
-        cartItem.quantity = cart[award];
-        cartList.push(cartItem);
-        cartAmt += cartItem.cost * cartItem.quantity;
-      }
-    }
-    this.setState({
-      cartList,
-      cartAmt
-    });
-
   }
 
   componentWillUnmount() {
-    this.profileListener && this.profileRef.off('value', this.profileListener);
-    this.billingListener && this.billingRef.off('value', this.billingListener);
+    this.listener && this.ref.off('value', this.listener);
   }
 
-  confirm(){
-    if (this.state.wallet > this.state.cartAmt){
-      //TODO: add transaction stuff to deduct wallet
+  confirm() {
+
+    // validate order
+    if (Object.keys(this.props.cart).length <= 0) {
+      Alert.alert(
+        'Your selection is empty',
+        'You have no rewards selected'
+      );
+    } else if (this.getAddress().length < 5) {
+      Alert.alert(
+        'Incomplete shipping address',
+        'Please fill in your entire shipping address'
+      );
+    } else if (this.props.balance < this.props.getCartTotal()) {
+      Alert.alert(
+        'Insufficient balance',
+        'Your order could not be processed due to a lack of funds '
+          + 'in your account balance'
+      );
+    } else {
+
+      // process order and block view while processing
+      this.setState({
+        processing: true
+      });
+
+      // attempt credit account process before we create the
+      // order
+      let dateCreated = Date.now();
       let transactionId = Database.ref('transactions').push({
         '.value': {
           createdBy: Firebase.auth().currentUser.uid,
-          value: this.state.cartAmt * 100,
-          description: "Award Redemption",
+          value: this.props.getCartTotal(),
+          description: 'Rewards Redemption',
           billingId: Firebase.auth().currentUser.uid,
           internal: true,
-          dateCreated: Date.now()
+          dateCreated: dateCreated
         },
-        '.priority': -Date.now()
+        '.priority': -dateCreated
       }).key;
-      let ref = Database.ref(
+
+      // wait for approval on transaction before order creation
+      this.transactionRef = Database.ref(
         `transactions/${transactionId}`
       );
+      this.transactionListener = this.transactionRef.on('value', data => {
+        if (data.exists() && data.val().approved) {
 
-      let listener = ref.on('value', data => {
-        if (data.exists() && data.val().approved && data.val().processed) {
-          let { cartList } = this.state;
-          let awards = {};
-          for (var cartItem in cartList){
-            awards[cartList[cartItem].id] = {
-              quantity: cartList[cartItem].quantity
-            }
-          }
-          //create order in db
-          let orderId = this.ordersRef.push({
+          // looks good, create the order
+          let orderId = Database.ref('orders').push({
             '.value': {
               createdBy: Firebase.auth().currentUser.uid,
-              dateCreated: Date.now(),
-              awards: awards,
+              dateCreated: dateCreated,
+              address: this.state.address,
+              city: this.state.city,
+              region: this.state.region,
+              postal: this.state.postal,
+              country: this.state.country,
+              items: Object.assign(
+                {},
+                ...Object.keys(this.props.cart).map(rewardId => ({
+                  [rewardId]: this.props.cart[rewardId].quantity
+                }))
+              ),
               transactionId: transactionId,
-              status: 'Submitted'
+              totalCost: this.props.getCartTotal()
             },
-            '.priority': -Date.now()
-          }).key
+            '.priority': -dateCreated
+          }).key;
 
-          //add order reference in profile to db
+          // and push to profile list of orders
           Database.ref(
             `profiles/${
               Firebase.auth().currentUser.uid
@@ -141,172 +135,209 @@ export default class ConfirmRedeem extends Component {
             }`
           ).set({
             '.value': true,
-            '.priority': -Date.now()
+            '.priority': -dateCreated
           });
 
-          this.setState({
-            finalizedVisible: true
-          })
-        } else if (data.exists() && !data.val().approved && data.val().processed){
-          Alert.alert(
-            'Error!',
-            data.val().error && data.val().error.message,
-            [
-              {text: 'OK', onPress: () => Actions.pop()}
-            ]
-          )
+          // TODO: success modal should be here
+          Actions.pop({
+            popNum: 2
+          });
         }
       });
-    } else {
-      Alert.alert(
-        'Insufficient Balance',
-        'You don\'t have enough balance to cover the awards you have chosen!',
-        [
-          {text: 'OK', onPress: () => Actions.pop()}
-        ]
+    }
+  }
+
+  getAddress() {
+    return [
+      this.state.address,
+      this.state.city,
+      this.state.region,
+      this.state.postal,
+      this.state.country,
+    ].filter(part => part);
+  }
+
+  renderRow(rewardId) {
+    let rewardCost = this.props.getItemTotal(
+      rewardId,
+      this.props.cart[rewardId].blob,
+      this.props.cart
+    );
+
+    return (
+      <View style={styles.cartItemContainer}>
+        <Photo
+          photoId={this.props.cart[rewardId].blob.thumbnail}
+          style={styles.rewardThumbnail} />
+        <Text style={styles.rewardTitle}>
+          {this.props.cart[rewardId].blob.name}
+        </Text>
+        <Text style={styles.rewardCost}>
+          {
+            `$${
+              (rewardCost.subtotal * 0.01).toFixed(2)
+            }`
+          }
+        </Text>
+      </View>
+    )
+  }
+
+  render() {
+    let costs = Object.keys(this.props.cart).map(
+      rewardId => this.props.getItemTotal(
+        rewardId,
+        this.props.cart[rewardId].blob,
+        this.props.cart
       )
-    }
-  }
-
-  renderCart(){
-    let { cartList } = this.state;
-    let cartView = [];
-    if (this.state.cartList){
-      for (var cartItem in cartList){
-        cartView.push(
-          <View
-            key={cartList[cartItem].id}
-            style={styles.cartItem}>
-            <View>
-              <Text style={styles.cartText}>
-                {cartList[cartItem].name
-                  + '   x ' + cartList[cartItem].quantity}
-              </Text>
-            </View>
-            <View>
-              <Text style={styles.cartText}>
-                {'$' + cartList[cartItem].quantity * cartList[cartItem].cost}
-              </Text>
-            </View>
-          </View>
-        )
-      }
-    }
-    return cartView;
-  }
-
-  render(){
-    let { profile } = this.state
+    ).reduce((a, b) => ({
+      handling: a.handling + b.handling,
+      shipping: a.shipping + b.shipping,
+      quantity: a.quantity + b.quantity,
+      total: a.total + b.total
+    }), {
+      handling: 0, shipping: 0, quantity: 0, total: 0
+    });
 
     return (
       <View style={styles.container}>
+        <Modal
+          transparent
+          visible={this.state.processing}
+          onRequestClose={() => true}
+          animationType='fade'>
+          <ProgressBlocker
+            message='Processing order..' />
+        </Modal>
         <TitleBar
           ref='title'
           title='Confirmation' />
         <View style={styles.content}>
+          <TouchableOpacity
+            onPress={Actions.address}>
+            <InputSectionHeader
+              label='Shipping to' />
+            <View style={styles.addressContainer}>
+              <Text style={styles.address}>
+                {
+                  `${
+                    this.getAddress().join(', ')
+
+                    || 'Add a shipping address'
+                  }`
+                }
+              </Text>
+              <CircleIcon
+                icon='arrow-forward'
+                size={Sizes.InnerFrame}
+                color={Colors.AlternateText} />
+            </View>
+          </TouchableOpacity>
           <InputSectionHeader
-            offset={Sizes.InnerFrame}
-            label='Your shipping address' />
-          <Text style={styles.address}>
-            {profile.address + '\n' + profile.city
-              + (profile.region ? ', ' + profile.region + '\n' : '\n')
-              + profile.country
-              + (profile.postal ? ', ' + profile.postal : '')}
-          </Text>
+            label='Rewards' />
+          <ListView
+            enableEmptySections
+            scrollEnabled
+            style={styles.cart}
+            renderRow={this.renderRow}
+            dataSource={
+              new ListView.DataSource({
+                rowHasChanged: (r1, r2) => r1 != r2
+              }).cloneWithRows(
+                Object.keys(this.props.cart || {})
+              )
+            } />
+          {
+            costs.shipping || costs.handling
+            ? (
+              <InputSectionHeader
+                label='Other Charges' />
+            ): (
+              <View />
+            )
+          }
+          {
+            costs.shipping > 0 && (
+              <View style={[
+                styles.cartItemContainer,
+                styles.totalLine
+              ]}>
+                <Text style={styles.rewardTitle}>
+                  Shipping
+                </Text>
+                <Text style={styles.rewardCost}>
+                  {
+                    `$${
+                      (costs.shipping * 0.01).toFixed(2)
+                    }`
+                  }
+                </Text>
+              </View>
+            )
+          }
+          {
+            costs.handling > 0 && (
+              <View style={[
+                styles.cartItemContainer,
+                styles.totalLine
+              ]}>
+                <Text style={styles.rewardTitle}>
+                  Handling
+                </Text>
+                <Text style={styles.rewardCost}>
+                  {
+                    `$${
+                      (costs.handling * 0.01).toFixed(2)
+                    }`
+                  }
+                </Text>
+              </View>
+            )
+          }
           <InputSectionHeader
-            offset={Sizes.InnerFrame}
-            label='Your cart' />
-          <View style={styles.cartContainer}>
-            {this.renderCart()}
-            <View style={[styles.cartItem, styles.cartSummary]}>
-              <View>
-                <Text style={styles.cartSummaryText}>
-                  Total Redemption
-                </Text>
-              </View>
-              <View>
-                <Text style={styles.cartSummaryText}>
-                  {'$' + this.state.cartAmt}
-                </Text>
-              </View>
-            </View>
-            <View style={[styles.cartItem, styles.balanceSummary]}>
-              <View>
-                <Text style={styles.cartSummaryText}>
-                  Your Current Balance
-                </Text>
-              </View>
-              <View>
-                <Text style={styles.cartSummaryText}>
-                  {'$' + this.state.wallet.toFixed(0)}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.cartItem}>
-              <View>
-                <Text style={styles.cartSummaryText}>
-                  Your Balance After Redemption
-                </Text>
-              </View>
-              <View>
-                <Text style={styles.cartSummaryText}>
-                  {'$' + (this.state.wallet - this.state.cartAmt).toFixed(0)}
-                </Text>
-              </View>
-            </View>
+            label='Totals' />
+          <View style={[
+            styles.cartItemContainer,
+            styles.totalLine
+          ]}>
+            <Text style={styles.rewardTitle}>
+              Total
+            </Text>
+            <Text style={[
+              styles.rewardCost,
+              styles.rewardTitle
+            ]}>
+              {
+                `$${
+                  (costs.total * 0.01).toFixed(2)
+                }`
+              }
+            </Text>
+          </View>
+          <View style={[
+            styles.cartItemContainer,
+            styles.totalLine
+          ]}>
+            <Text style={styles.rewardTitle}>
+              Credits Remaining
+            </Text>
+            <Text style={styles.rewardCost}>
+              {
+                `$${
+                  ((
+                    this.props.balance - costs.total
+                  ) * 0.01).toFixed(2)
+                }`
+              }
+            </Text>
           </View>
         </View>
         <Button
           squareBorders
           color={Colors.Primary}
-          onPress={() => this.confirm()}
-          label={"Confirm"} />
+          onPress={this.confirm}
+          label='Confirm Reward Redemption' />
         <CloseFullscreenButton back />
-        <Modal
-          visible={this.state.finalizedVisible}
-          onRequestClose={() => {
-            this.setState({
-              finalizedVisible: false
-            });
-            Actions.pop({
-              popNum: 2
-            });
-          }}          animationType='slide'>
-          <View style={styles.finalizedContainer}>
-            <View style={styles.textContainer}>
-              <Text style={[
-                styles.text,
-                styles.title
-              ]}>
-                Yussss!
-              </Text>
-              <Text style={[
-                styles.text,
-                styles.description
-              ]}>
-                You've selected the awards you deserved for your awesome photos.
-                We will ship out your awards very soon!
-              </Text>
-              <Button
-                onPress={() => {
-                  // remove overlay
-                  this.setState({
-                    finalizedVisible: false
-                  });
-
-                  // completed contest view
-                  Actions.pop({
-                    popNum: 2
-                  });
-                }}
-                label='Done'
-                color={Colors.Background} />
-            </View>
-            <Image
-              source={require('../../../res/img/finalized.png')}
-              style={styles.finalizedPhoto} />
-          </View>
-        </Modal>
       </View>
     );
   }
@@ -320,79 +351,59 @@ const styles = StyleSheet.create({
 
   content: {
     flex: 1,
-    marginTop: Sizes.OuterFrame
+    margin: Sizes.OuterFrame
+  },
+
+  addressContainer: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    marginBottom: Sizes.InnerFrame
   },
 
   address: {
-    color: Colors.AlternateText,
-    fontWeight: '100',
-    marginHorizontal: Sizes.InnerFrame,
-    marginBottom: Sizes.OuterFrame
-  },
-
-  cartContainer: {
-    marginVertical: Sizes.InnerFrame/2,
-    marginHorizontal: Sizes.InnerFrame*2,
-  },
-
-  cartItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-
-  cartSummary: {
-    marginTop: Sizes.InnerFrame/2,
-    paddingTop: Sizes.InnerFrame/2,
-    borderTopWidth: 1,
-    borderColor: Colors.AlternateText
-  },
-
-  balanceSummary: {
-    marginTop: Sizes.InnerFrame/2,
-    paddingTop: Sizes.InnerFrame/2,
-  },
-
-  cartText: {
-    color: Colors.AlternateText,
-    fontWeight: '100',
-  },
-
-  cartSummaryText: {
-    color: Colors.AlternateText,
-    fontWeight: '500',
-  },
-
-  finalizedContainer: {
     flex: 1,
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: Colors.Primary
-  },
-
-  finalizedPhoto: {
-    width: 350,
-    height: 350
-  },
-
-  textContainer: {
-    padding: Sizes.OuterFrame,
-    alignItems: 'center'
-  },
-
-  title: {
-    marginTop: Sizes.InnerFrame * 3,
-    fontSize: Sizes.H1,
-    fontWeight: '600'
-  },
-
-  text: {
+    fontSize: Sizes.Text,
+    fontWeight: '100',
     color: Colors.AlternateText
   },
 
-  description: {
-    padding: Sizes.InnerFrame,
-    textAlign: 'center',
-    fontSize: Sizes.H4
+  cart: {
+    marginBottom: Sizes.InnerFrame
   },
+
+  cartItemContainer: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    padding: Sizes.InnerFrame,
+    marginBottom: 2,
+    backgroundColor: Colors.ModalForeground
+  },
+
+  rewardThumbnail: {
+    width: Sizes.OuterFrame,
+    height: Sizes.OuterFrame,
+    borderRadius: Sizes.OuterFrame / 2,
+    marginRight: Sizes.InnerFrame
+  },
+
+  rewardTitle: {
+    fontSize: Sizes.Text,
+    fontWeight: '500',
+    color: Colors.AlternateText
+  },
+
+  rewardCost: {
+    flex: 1,
+    textAlign: 'right',
+    fontSize: Sizes.Text,
+    fontWeight: '100',
+    color: Colors.SubduedText
+  },
+
+  totalLine: {
+    backgroundColor: Colors.Transparent,
+    paddingTop: 0
+  }
 });

@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
 
   content: {
     flexDirection: 'row',
+    alignItems: 'center',
     padding: Sizes.InnerFrame
   },
 

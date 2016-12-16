@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, ListView, Alert
+  View, StyleSheet, Text, ListView, Alert, TouchableOpacity
 } from 'react-native';
 import {
   Colors, Sizes
@@ -215,7 +215,13 @@ export default class Redeem extends Component {
 
   checkout() {
 
-    // validate and push
+    // push cart out to checkout
+    Actions.confirmRedeem({
+      cart: this.state.cart,
+      getCartTotal: this.getCartTotal,
+      getItemTotal: this.getItemTotal,
+      balance: this.state.balance
+    });
   }
 
   close() {
@@ -281,7 +287,9 @@ export default class Redeem extends Component {
           clearLoader
           ref='title'
           title='Rewards'>
-          <View style={styles.balance}>
+          <TouchableOpacity
+            onPress={this.checkout}
+            style={styles.balance}>
             <View style={styles.cartAmount}>
               <Text style={styles.cartAmountText}>
                 {
@@ -310,7 +318,7 @@ export default class Redeem extends Component {
                 } available`
               }
             </Text>
-          </View>
+          </TouchableOpacity>
         </TitleBar>
         {
           this.state.routes.length > 0
