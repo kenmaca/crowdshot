@@ -20,6 +20,7 @@ import Database from '../../utils/Database';
 import Button from '../../components/common/Button';
 import * as Animatable from 'react-native-animatable';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
+import Divider from '../../components/common/Divider';
 
 export default class Login extends Component {
   render() {
@@ -38,10 +39,10 @@ export default class Login extends Component {
         <View style={styles.footer}>
           <Animatable.View animation='bounceIn'>
             <Button
+              fontAwesome
               style={styles.button}
               color={Colors.Facebook}
               fontColor={Colors.Text}
-              fontAwesome
               icon='facebook'
               label='Login with Facebook'
               onPress={() => {
@@ -91,15 +92,26 @@ export default class Login extends Component {
                     );
                   }
                 }, error => {
-                  console.log("login failed, ", error);
-                  Alert.alert("Login Failed");
+                  Alert.alert(
+                    'Login failed',
+                    'There was an issue signing in via Facebook. '
+                     + 'Please try again later'
+                  );
                 });
               }} />
           </Animatable.View>
-          <Text style={styles.footerText}>
-            By signing in, you agree to our Terms of Service and Privacy Policy
-          </Text>
         </View>
+        <Text style={styles.footerText}>
+          By signing in, you agree to our Terms of Service and Privacy Policy
+        </Text>
+        <Divider
+          style={styles.divider} />
+        <Button
+          squareBorders
+          label='Sign in with email instead'
+          onPress={Actions.emailLogin}
+          color={Colors.LightOverlay}
+          style={styles.signIn} />
         <CloseFullscreenButton
           back
           action={Actions.onboarding} />
@@ -116,6 +128,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
+    flex: 1,
     margin: Sizes.OuterFrame,
     alignItems: 'center',
     justifyContent: 'center'
@@ -141,8 +154,7 @@ const styles = StyleSheet.create({
   },
 
   footer: {
-    alignItems: 'center',
-    marginTop: Sizes.InnerFrame
+    alignItems: 'center'
   },
 
   button: {
@@ -151,11 +163,20 @@ const styles = StyleSheet.create({
 
   footerText: {
     textAlign: 'center',
-    marginTop: Sizes.InnerFrame / 2,
-    marginBottom: Sizes.InnerFrame * 4,
-    paddingLeft: Sizes.InnerFrame * 5,
-    paddingRight: Sizes.InnerFrame * 5,
+    marginTop: Sizes.InnerFrame * 3,
+    marginBottom: Sizes.InnerFrame / 2,
+    paddingLeft: Sizes.OuterFrame,
+    paddingRight: Sizes.OuterFrame,
     fontSize: Sizes.SmallText,
-    color: Colors.Text
+    fontWeight: '100',
+    color: Colors.Overlay
+  },
+
+  signIn: {
+    width: Sizes.Width
+  },
+
+  divider: {
+    backgroundColor: Colors.LightWhiteOverlay
   }
 });

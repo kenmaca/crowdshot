@@ -16,6 +16,7 @@ import Database from './utils/Database';
 // views
 import Loader from './views/main/Loader';
 import Login from './views/main/Login';
+import EmailLogin from './views/main/EmailLogin';
 import Main from './views/main/Main';
 import Contestant from './views/main/Contestant';
 import NewContest from './views/contests/NewContest';
@@ -73,6 +74,11 @@ export default class Navigation extends Component {
               key='login'
               component={Login}
               type='replace' />
+            <Scene
+              key='emailLogin'
+              panHandlers={null}
+              direction='vertical'
+              component={EmailLogin} />
             <Scene
               key='onboarding'
               component={Onboarding}

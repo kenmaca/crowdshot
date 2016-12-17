@@ -176,7 +176,7 @@ export default class Onboarding extends Component {
                   styles.text,
                   styles.description
                 ]}>
-                  Your nicest photos are taken by other people
+                  Let others do the storytelling
                 </Text>
               </View>
             </View>
