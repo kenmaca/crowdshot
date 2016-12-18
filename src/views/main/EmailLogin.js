@@ -24,7 +24,9 @@ export default class EmailLogin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      processing: false
+      processing: false,
+      email: '',
+      password: ''
     };
 
     // methods
@@ -34,7 +36,7 @@ export default class EmailLogin extends Component {
 
   login() {
 
-    if (this.state.email && this.state.password) {
+    if (this.state.email) {
 
       // block view
       this.setState({
@@ -59,21 +61,6 @@ export default class EmailLogin extends Component {
                   onPress: () => this.setState({
                     processing: false
                   })
-                }
-              ]
-            );
-            break;
-          case 'auth/account-exists-with-different-credential':
-
-            // enable view again
-            Alert.alert(
-              'Please sign-in via Facebook',
-              'Your account was created via Facebook login. '
-                + 'Please sign-in with your Facebook account instead',
-              [
-                {
-                  text: 'OK',
-                  onPress: Actions.pop
                 }
               ]
             );

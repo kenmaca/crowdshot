@@ -18,6 +18,10 @@ import Database from '../../utils/Database';
  * either on app launch or after a login/registration was processed.
  */
 export default class Loader extends Component {
+  componentWillUnmount() {
+    this.listener && this.ref.off('value', this.listener);
+  }
+
   componentDidMount() {
 
     // globally remove
@@ -38,7 +42,38 @@ export default class Loader extends Component {
 
         // handle currently logged in user
         Firebase.auth().onAuthStateChanged(user => {
-          if (user) Actions.main(); else Actions.onboarding();
+          if (user) {
+
+            // wait until profile loads
+            this.ref = Database.ref(
+              `profiles/${
+                user.uid
+              }`
+            );
+            this.listener = this.ref.on('value', data => {
+              if (data.exists()) {
+                let profile = data.val();
+
+                // determine route based on profile status
+                if (!profile.displayName) {
+                  Actions.profileEdit();
+                } else {
+
+                  // proceed to main
+                  Actions.main();
+                }
+              } else {
+
+                // profile non-existent, so register it
+                Database.ref(
+                  `profiles/${user.uid}`
+                ).set({
+                  email: user.email,
+                  dateCreated: Date.now()
+                });
+              }
+            });
+          } else Actions.onboarding();
         });
       }
     });
