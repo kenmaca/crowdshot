@@ -81,7 +81,7 @@ export default class Avatar extends Component {
               }
             ]}>
             <Photo
-              animation='bounceIn'
+              animation={this.props.animation}
               delay={this.props.delay}
               style={[
                 styles.avatar,
