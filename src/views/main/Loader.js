@@ -51,12 +51,32 @@ export default class Loader extends Component {
               }`
             );
             this.listener = this.ref.on('value', data => {
-              if (data.exists()) {
-                let profile = data.val();
+              let profile = data.val();
+              if (profile && profile.dateCreated) {
 
                 // determine route based on profile status
                 if (!profile.displayName) {
-                  Actions.profileEdit();
+                  Actions.profileEdit({
+                    panHandlers: null,
+                    onExit: () => Actions.loader({
+                      type: 'replace'
+                    })
+                  });
+                } else if (!profile.photo) {
+                  Actions.newReferencePhoto({
+                    panHandlers: null,
+                    onTaken: photoId => {
+                      Database.ref(
+                        `profiles/${
+                          user.uid
+                        }/photo`
+                      ).set(photoId);
+                    },
+                    closeAction: () => Actions.loader({
+                      type: 'replace'
+                    }),
+                    title: 'Take a new display picture'
+                  });
                 } else {
 
                   // proceed to main
@@ -68,6 +88,7 @@ export default class Loader extends Component {
                 Database.ref(
                   `profiles/${user.uid}`
                 ).set({
+                  displayName: user.displayName,
                   email: user.email,
                   dateCreated: Date.now()
                 });

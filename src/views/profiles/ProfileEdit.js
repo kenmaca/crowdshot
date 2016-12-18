@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, Alert
 } from 'react-native';
 import {
   Colors, Sizes
@@ -31,6 +31,7 @@ export default class ProfileEdit extends Component {
     // methods
     this.onDisplayNameChange = this.onDisplayNameChange.bind(this);
     this.submit = this.submit.bind(this);
+    this.exit = this.exit.bind(this);
   }
 
   componentDidMount() {
@@ -60,11 +61,21 @@ export default class ProfileEdit extends Component {
   }
 
   submit() {
-    this.ref.update({
-      displayName: this.state.displayName
-    }).then(result => {
-      Actions.pop();
-    });
+    if (this.state.displayName) {
+      this.ref.update({
+        displayName: this.state.displayName
+      }).then(this.exit);
+    } else {
+      Alert.alert(
+        'Incomplete fields',
+        'Please fill in all fields'
+      );
+    }
+  }
+
+  exit() {
+    this.props.onExit
+      ? this.props.onExit(): Actions.pop();
   }
 
   render() {
@@ -74,6 +85,7 @@ export default class ProfileEdit extends Component {
         <View style={styles.content}>
           <SingleLineInput
             isBottom
+            autoFocus
             autoCapitalize='words'
             onChangeText={this.onDisplayNameChange}
             value={this.state.displayName}
@@ -83,7 +95,8 @@ export default class ProfileEdit extends Component {
             label='Update Profile'
             color={Colors.Primary} />
         </View>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton
+          action={this.exit} />
       </View>
     );
   }

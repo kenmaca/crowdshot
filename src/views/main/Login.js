@@ -59,34 +59,17 @@ export default class Login extends Component {
                           )
                         ).then(user => {
 
-                          // grab latest data if exists
-                          Database.ref(
-                            `profiles/${user.uid}`
-                          ).once('value', profile => {
-                            profile = profile.val() || {};
-
-                            // update the profile
-                            Database.ref(
-                              `profiles/${user.uid}`
-                            ).update({
-                              displayName: user.displayName,
-                              email: user.email,
-                              dateCreated: profile.dateCreated || Date.now()
-                            }).then(result => {
-
-                              // now store the photo
-                              let photoId = Database.ref(`photos`).push().key;
-                              Database.ref().update({
-                                [`photos/${photoId}`]: {
-                                  createdBy: user.uid,
-                                  url: user.photoURL
-                                }, [`profiles/${user.uid}/photo`]: photoId
-                              });
-                            });
-
-                            // user logged in, ready for use
-                            Actions.loader();
+                          // update the profile photo
+                          let photoId = Database.ref('photos').push().key;
+                          Database.ref().update({
+                            [`photos/${photoId}`]: {
+                              createdBy: user.uid,
+                              url: user.photoURL
+                            }, [`profiles/${user.uid}/photo`]: photoId
                           });
+
+                          // user logged in, ready for use
+                          Actions.loader();
                         }).catch(error => {});
                       }
                     );
@@ -169,7 +152,7 @@ const styles = StyleSheet.create({
     paddingRight: Sizes.OuterFrame,
     fontSize: Sizes.SmallText,
     fontWeight: '100',
-    color: Colors.Overlay
+    color: Colors.MediumWhiteOverlay
   },
 
   signIn: {

@@ -175,6 +175,7 @@ export default class Navigation extends Component {
               tabs
               tabBarStyle={styles.tabs}
               key='main'
+              panHandlers={null}
               type='replace'>
               <Scene
                 initial

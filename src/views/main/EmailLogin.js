@@ -127,14 +127,17 @@ export default class EmailLogin extends Component {
         <TitleBar title='Sign-in with an email' />
         <View style={styles.content}>
           <SingleLineInput
+            autoFocus
             onChangeText={email => this.setState({
               email: email
             })}
+            onEndEditing={() => this.refs.password.focus()}
             keyboardType='email-address'
             label='Email' />
           <SingleLineInput
             isBottom
             secureTextEntry
+            ref='password'
             onChangeText={password => this.setState({
               password: password
             })}
