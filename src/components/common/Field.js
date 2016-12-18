@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, TouchableOpacity
 } from 'react-native';
 import {
   Colors, Sizes
@@ -28,7 +28,9 @@ export default class Field extends Component {
 
   render() {
     return (
-      <View
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={this.props.onPress}
         ref='c'
         style={[
           styles.container,
@@ -59,7 +61,7 @@ export default class Field extends Component {
             !this.props.isBottom && styles.middle,
             this.props.noLine && {height: 0}
           ]} />
-      </View>
+      </TouchableOpacity>
     );
   }
 }

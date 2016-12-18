@@ -27,16 +27,22 @@ export default class SingleLineInput extends Component {
 
     // bind methods
     this.val = this.val.bind(this);
+    this.focus = this.focus.bind(this);
   }
 
   val() {
     return this.state.value;
   }
 
+  focus() {
+    this.refs.field.focus();
+  }
+
   render() {
     return (
       <Field
-        {...this.props}>
+        {...this.props}
+        onPress={this.focus}>
         <TextInput
           ref='field'
           placeholderTextColor={Colors.SubduedText}
