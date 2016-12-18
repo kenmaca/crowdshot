@@ -80,6 +80,7 @@ export default class GroupAvatar extends Component {
               key={i}>
               <Avatar
                 outline
+                delay={i * 100}
                 showRank={this.props.showRank}
                 outlineColor={this.props.outlineColor}
                 onPress={() => Actions.profile({uid: uid})}

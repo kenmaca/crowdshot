@@ -81,6 +81,8 @@ export default class Avatar extends Component {
               }
             ]}>
             <Photo
+              animation='bounceIn'
+              delay={this.props.delay}
               style={[
                 styles.avatar,
                 this.props.style,
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
   },
 
   avatar: {
-    backgroundColor: Colors.Transparent,
+    backgroundColor: Colors.Foreground,
     borderRadius: 10,
     width: 20,
     height: 20

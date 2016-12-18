@@ -9,6 +9,9 @@ import {
   Colors
 } from '../../Const';
 
+// components
+import * as Animatable from 'react-native-animatable';
+
 /**
  * Displays a Photo from either a Photo item in Firebase or a direct URI.
  */
@@ -86,26 +89,35 @@ export default class Photo extends Component {
   }
 
   render() {
-    return this.state.source
-    ? (
-      <Image
-        ref={c => this.c = c}
-        {...this.props}
-        style={[
-          styles.container,
-          this.props.style,
-        ]}
-        resizeMethod={'resize'}
-        source={{uri: this.state.source}}
-        onLoadEnd={this.props.onLoadEnd} />
-    ): (
-      <View
-        ref={c => this.c = c}
-        {...this.props}
-        style={[
-          styles.emptyContainer,
-          this.props.style
-        ]} />
+    return (
+      <Animatable.View
+        animation={this.props.animation}
+        duration={this.props.duration}
+        delay={this.props.delay}>
+        {
+          this.state.source
+          ? (
+            <Image
+              ref={c => this.c = c}
+              {...this.props}
+              style={[
+                styles.container,
+                this.props.style,
+              ]}
+              resizeMethod={'resize'}
+              source={{uri: this.state.source}}
+              onLoadEnd={this.props.onLoadEnd} />
+          ): (
+            <View
+              ref={c => this.c = c}
+              {...this.props}
+              style={[
+                styles.emptyContainer,
+                this.props.style
+              ]} />
+          )
+        }
+      </Animatable.View>
     );
   }
 }
