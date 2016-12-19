@@ -383,6 +383,7 @@ export default class Main extends Component {
               <Video
                 repeat
                 muted
+                playWhenInactive
                 resizeMode='cover'
                 source={this.state.headerVideo}
                 style={styles.cover} />
