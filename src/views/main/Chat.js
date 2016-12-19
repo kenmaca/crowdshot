@@ -80,6 +80,7 @@ export default class Chat extends Component {
   componentWillUnmount() {
     this.listener && this.ref.off('child_added', this.listener);
     this.contestListener && this.contestRef.off('value', this.contestListener);
+    this.subListener && this.subRef.off('value', this.subListener);
     this.delay && clearTimeout(this.delay);
   }
 
@@ -115,15 +116,25 @@ export default class Chat extends Component {
   }
 
   subscribe() {
-    Database.ref(
+    this.subRef = Database.ref(
       `profiles/${
         Firebase.auth().currentUser.uid
       }/activeChat/${
         this.props.chatId
       }`
-    ).set({
-      '.priority': -Date.now(),
-      '.value': Date.now()
+    );
+
+    this.subListener = this.subRef.on('value', data => {
+
+      // kill listener first, then only add as active if not
+      // subbed before
+      this.subRef.off('value', this.subListener);
+      if (!data.exists()) {
+        this.subRef.set({
+          '.priority': -Date.now(),
+          '.value': Date.now()
+        });
+      }
     });
   }
 

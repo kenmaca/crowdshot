@@ -98,7 +98,8 @@ export default class ChatRoom extends Component {
               }
             }
           ]}>
-          <ChatCard chatId={chatId} />
+          <ChatCard
+            chatId={chatId} />
         </Swipeout>
       </View>
     );
