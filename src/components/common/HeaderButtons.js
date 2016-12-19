@@ -1,5 +1,5 @@
 import React, {
-  Component
+  Component, Children
 } from 'react';
 import {
   View, StyleSheet
@@ -13,7 +13,7 @@ export default class HeaderButtons extends Component {
     return (
       <View style={styles.container}>
         {
-          this.props.children.map(child => (
+          Children.map(this.props.children, child => (
             <View
               key={Math.random()}
               style={styles.shadow}>
