@@ -22,7 +22,10 @@ export default class CloseFullscreenButton extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[
+        styles.container,
+        this.props.styles
+      ]}>
         {
 
           // only show if iOS or if this is a close
