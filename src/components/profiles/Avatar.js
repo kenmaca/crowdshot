@@ -86,12 +86,12 @@ export default class Avatar extends Component {
               delay={this.props.delay}
               style={[
                 styles.avatar,
-                this.props.style,
                 this.props.size && {
                   width: innerSize,
                   height: innerSize,
                   borderRadius: innerSize / 2
-                }
+                },
+                this.props.style
               ]}
               photoId={this.state.photo} />
           </View>

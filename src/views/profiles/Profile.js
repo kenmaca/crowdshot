@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import Database from '../../utils/Database';
 import {
-  Sizes, Colors
+  Sizes, Colors, Styles
 } from '../../Const';
 import DateFormat from 'dateformat';
 
@@ -16,14 +16,28 @@ import OutlineText from '../../components/common/OutlineText';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import Rank from '../../components/profiles/Rank';
 import Divider from '../../components/common/Divider';
+import MapView from 'react-native-maps';
 import {
   BlurView
 } from 'react-native-blur';
 
+// consts
+const LAT_DELTA = 0.01;
+const LNG_DELTA = 0.01;
+
 export default class Profile extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      location: {
+
+        // default location is Toronto
+        latitude: 43.6525,
+        longitude: -79.381667,
+        latitudeDelta: LAT_DELTA,
+        longitudeDelta: LNG_DELTA,
+      }
+    };
 
     this.ref = Database.ref(`profiles/${this.props.uid}`);
   }
@@ -88,6 +102,10 @@ export default class Profile extends Component {
                 <Text style={styles.subtitle}>
                   Founder at Crowdshot
                 </Text>
+                <OutlineText
+                  text={this.state.currentRegion}
+                  style={styles.region}
+                  color={Colors.MediumWhiteOverlay} />
               </View>
             </View>
           </View>
@@ -99,10 +117,10 @@ export default class Profile extends Component {
               styles.statsLeft
             ]}>
               <Text style={styles.stat}>
-                239
+                {Object.keys(contests).length}
               </Text>
               <Text style={styles.statName}>
-                Contests Won
+                Contests Started
               </Text>
             </View>
             <View style={[
@@ -110,10 +128,14 @@ export default class Profile extends Component {
               styles.statsRight
             ]}>
               <Text style={styles.stat}>
-                49
+                {
+                  `${(
+                    ((1 - cancelledRate) * 100).toFixed(0)
+                  )}%`
+                }
               </Text>
               <Text style={styles.statName}>
-                Contests Started
+                Completion Rate
               </Text>
             </View>
           </View>
@@ -124,17 +146,79 @@ export default class Profile extends Component {
               styles.statsContainer,
               styles.statsLeft
             ]}>
-              <Text style={styles.stat}>
-                Hi, my name is Kenneth and I've got lots to say, so listen up. This is a really long line. And I have even more to say, so please don't stop listening to me. Okay, bye.
+              <Text style={[
+                styles.stat,
+                styles.blurb
+              ]}>
+                This user's auto-biography will be displayed here.
               </Text>
             </View>
           </View>
         </View>
         <View style={styles.boxes}>
           <View style={styles.box}>
-
+            <View style={styles.boxHorizontal}>
+              <Photo
+                photoId='-KY7Q56Aah4OkmG8zs-S'
+                style={styles.boxVertical}>
+                <View style={styles.photoOverlay} />
+              </Photo>
+              <Photo
+                photoId='-KYXAN6XPt65eztQdV9C'
+                style={styles.boxVertical}>
+                <View style={styles.photoOverlay} />
+              </Photo>
+            </View>
+            <View style={styles.boxHorizontal}>
+              <Photo
+                photoId='-KYB2Hrjbmtsss0YHJIF'
+                style={styles.boxVertical}>
+                <View style={styles.photoOverlay} />
+              </Photo>
+            </View>
           </View>
-          <View style={styles.box} />
+          <MapView
+            ref='map'
+            showsUserLocation
+            showsMyLocationButton={false}
+            rotateEnabled={false}
+            pitchEnabled={false}
+            zoomEnabled={false}
+            scrollEnabled={false}
+            region={this.state.location}
+            provider={MapView.PROVIDER_GOOGLE}
+            customMapStyle={Styles.MapStyle}
+            style={styles.box} />
+        </View>
+        <View style={styles.boxOverlay}>
+          <View style={styles.boxHorizontal}>
+            <View style={[
+              styles.boxVertical,
+              {
+                backgroundColor: Colors.Foreground
+              }
+            ]}>
+              <Text style={styles.name}>
+                {this.state.countAttempts || 0}
+              </Text>
+              <Text style={styles.statName}>
+                JOINED
+              </Text>
+            </View>
+            <View style={[
+              styles.boxVertical,
+              {
+                backgroundColor: Colors.Primary
+              }
+            ]}>
+              <Text style={styles.name}>
+                {this.state.countWon || 0}
+              </Text>
+              <Text style={styles.statName}>
+                WON
+              </Text>
+            </View>
+          </View>
         </View>
         <CloseFullscreenButton
           back
@@ -190,7 +274,8 @@ const styles = StyleSheet.create({
   },
 
   summary: {
-    marginLeft: Sizes.InnerFrame
+    marginLeft: Sizes.InnerFrame,
+    alignItems: 'flex-start',
   },
 
   name: {
@@ -205,11 +290,15 @@ const styles = StyleSheet.create({
     color: Colors.MediumWhiteOverlay
   },
 
+  region: {
+    marginTop: Sizes.OuterFrame
+  },
+
   stats: {
     flex: 1,
     alignSelf: 'stretch',
     justifyContent: 'center',
-    backgroundColor: Colors.Primary
+    backgroundColor: Colors.Tertiary
   },
 
   statsBox: {
@@ -245,6 +334,10 @@ const styles = StyleSheet.create({
     color: Colors.MediumWhiteOverlay
   },
 
+  blurb: {
+    fontSize: Sizes.SmallText
+  },
+
   boxes: {
     flexDirection: 'row',
     alignSelf: 'stretch',
@@ -255,6 +348,45 @@ const styles = StyleSheet.create({
   box: {
     width: Sizes.Width / 2,
     height: Sizes.Width / 2
+  },
+
+  boxHorizontal: {
+    width: Sizes.Width / 2,
+    height: Sizes.Width / 4,
+    flexDirection: 'row'
+  },
+
+  boxVertical: {
+    width: Sizes.Width / 4,
+    height: Sizes.Width / 4,
+    borderRadius: 0,
+    margin: 0,
+    padding: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  boxOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: Sizes.Width,
+    alignItems: 'center',
+    backgroundColor: Colors.Transparent,
+    shadowColor: Colors.Black,
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    shadowOffset: {
+      height: 0,
+      width: 0
+    }
+  },
+
+  photoOverlay: {
+    flex: 1,
+    height: Sizes.Width / 4,
+    width: Sizes.Width / 4,
+    backgroundColor: Colors.MediumWhiteOverlay
   },
 
   closeButton: {
