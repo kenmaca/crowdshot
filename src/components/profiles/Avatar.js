@@ -78,7 +78,8 @@ export default class Avatar extends Component {
               },
               this.props.outlineColor && {
                 backgroundColor: this.props.outlineColor
-              }
+              },
+              this.props.style
             ]}>
             <Photo
               animation={this.props.animation}

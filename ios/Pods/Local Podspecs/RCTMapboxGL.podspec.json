@@ -1,0 +1,25 @@
+{
+  "name": "RCTMapboxGL",
+  "version": "5.1.0",
+  "summary": "A Mapbox GL react native module for creating custom maps.",
+  "homepage": "https://github.com/mapbox/react-native-mapbox-gl#readme",
+  "license": "BSD",
+  "authors": "Bobby Sudekum",
+  "screenshots": "https://cldup.com/A8S_7rLg1L.png",
+  "social_media_url": "https://twitter.com/mapbox",
+  "documentation_url": "https://github.com/mapbox/react-native-mapbox-gl/blob/master/API.md",
+  "source": {
+    "git": "https://github.com/mapbox/react-native-mapbox-gl.git",
+    "tag": "5.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "vendored_frameworks": "Mapbox.framework",
+  "module_name": "Mapbox",
+  "source_files": [
+    "RCTMapboxGL/RCTMapboxGL.{h,m}",
+    "RCTMapboxGL/RCTMapboxGLManager.{h,m}",
+    "RCTMapboxGL/RCTMapboxGLConversions.{h,m}"
+  ]
+}

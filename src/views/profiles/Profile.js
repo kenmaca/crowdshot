@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  StyleSheet, View, Text, Image, findNodeHandle
+  StyleSheet, View, Text
 } from 'react-native';
 import Database from '../../utils/Database';
 import {
@@ -11,14 +11,11 @@ import {
 import DateFormat from 'dateformat';
 
 // components
-import InformationField from '../../components/common/InformationField';
-import LinearGradient from 'react-native-linear-gradient';
-import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import Photo from '../../components/common/Photo';
-import Avatar from '../../components/profiles/Avatar';
 import OutlineText from '../../components/common/OutlineText';
 import CloseFullscreenButton from '../../components/common/CloseFullscreenButton';
 import Rank from '../../components/profiles/Rank';
+import Divider from '../../components/common/Divider';
 import {
   BlurView
 } from 'react-native-blur';
@@ -26,8 +23,7 @@ import {
 export default class Profile extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
 
     this.ref = Database.ref(`profiles/${this.props.uid}`);
   }
@@ -41,11 +37,7 @@ export default class Profile extends Component {
   }
 
   componentWillUnmount() {
-    this.ref.off('value', this.profileListener);
-  }
-
-  imageLoaded() {
-    this.setState({viewRef: findNodeHandle(this.refs.backgroundImage)})
+    this.profileListener && this.ref.off('value', this.profileListener);
   }
 
   render() {
@@ -72,70 +64,82 @@ export default class Profile extends Component {
 
     return (
       <View style={styles.container}>
-        <ParallaxScrollView
-          parallaxHeaderHeight={Sizes.Height * 0.3}
-          contentBackgroundColor={Colors.Background}
-          fadeOutForeground={false}
-          renderBackground={() => (
-            <Photo
-              photoId={this.state.photo}
-              style={styles.cover}
-              ref={'backgroundImage'}
-              onLoadEnd={this.imageLoaded.bind(this)}>
-                <BlurView
-                  blurType='light'
-                  viewRef={this.state.viewRef}
-                  style={[styles.blur, styles.blurTint]}/>
-            </Photo>
-          )}
-          renderForeground={() => (
-            <View style={styles.foreground}>
-              <Rank
-                size={Sizes.Text}
-                contestsWon={this.state.countWon} />
+        <Photo
+          photoId={this.state.photo}
+          style={styles.cover}>
+          <View style={styles.coverContent}>
+            <View style={styles.verticalBorder} />
+            <View style={styles.headerContainer}>
+              <View style={styles.rank}>
+                <Rank
+                  onlyLast
+                  contestsWon={this.state.countWon}
+                  size={12}
+                  style={styles.rankText} />
+              </View>
+              <View style={styles.summary}>
+                <Text style={styles.name}>
+                  {
+                    this.state.displayName
+                    ? this.state.displayName.split(' ')[0]
+                    : 'Unknown'
+                  }
+                </Text>
+                <Text style={styles.subtitle}>
+                  Founder at Crowdshot
+                </Text>
+              </View>
             </View>
-          )}>
-          <View style={styles.body}>
-            <View style={styles.topContainer}>
-              <Text style={styles.name}>
-                {this.state.displayName || 'Somebody'}
-              </Text>
-              <Avatar
-                outline
-                size={100}
-                uid={this.props.uid} />
-            </View>
-            <InformationField
-              isTop
-              label='Region'
-              info={this.state.currentRegion || 'Unknown'} />
-            <InformationField
-              isBottom
-              label='Join Date'
-              info={
-                this.state.dateCreated
-                ? DateFormat(this.state.dateCreated, 'mmmm dS, yyyy')
-                : 'Unknown'
-              } />
-            <InformationField
-              isTop
-              label='Contests Won'
-              info={this.state.countWon || 0} />
-            <InformationField
-              isBottom
-              label='Contests Entered'
-              info={this.state.countAttempts || 0} />
-            <InformationField
-              isTop
-              label='Contests Hosted'
-              info={Object.keys(contests).length || 0} />
-            <InformationField
-              isBottom
-              label='Contest Completion Rate'
-              info={`${Math.round((1 - cancelledRate) * 100)}%`} />
           </View>
-        </ParallaxScrollView>
-        <CloseFullscreenButton back />
+        </Photo>
+        <View style={styles.stats}>
+          <View style={styles.statsBox}>
+            <View style={[
+              styles.statsContainer,
+              styles.statsLeft
+            ]}>
+              <Text style={styles.stat}>
+                239
+              </Text>
+              <Text style={styles.statName}>
+                Contests Won
+              </Text>
+            </View>
+            <View style={[
+              styles.statsContainer,
+              styles.statsRight
+            ]}>
+              <Text style={styles.stat}>
+                49
+              </Text>
+              <Text style={styles.statName}>
+                Contests Started
+              </Text>
+            </View>
+          </View>
+          <Divider
+            color={Colors.LightWhiteOverlay} />
+          <View style={styles.statsBox}>
+            <View style={[
+              styles.statsContainer,
+              styles.statsLeft
+            ]}>
+              <Text style={styles.stat}>
+                Hi, my name is Kenneth and I've got lots to say, so listen up. This is a really long line. And I have even more to say, so please don't stop listening to me. Okay, bye.
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.boxes}>
+          <View style={styles.box}>
+
+          </View>
+          <View style={styles.box} />
+        </View>
+        <CloseFullscreenButton
+          back
+          color={Colors.MediumWhiteOverlay}
+          style={styles.closeButton} />
       </View>
     );
   }
@@ -144,66 +148,116 @@ export default class Profile extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.Background
-  },
-
-  headerContainer: {
-    flex: 1,
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-
-  blur: {
-    flex: 1,
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-
-  blurTint: {
-    backgroundColor: Colors.PrimaryOverlay
+    backgroundColor: Colors.ModalBackground
   },
 
   cover: {
-    flex: 1,
     alignSelf: 'stretch',
-    minHeight: Sizes.Height * 0.3
+    height: Sizes.Height * 0.45
   },
 
-  foreground: {
+  coverContent: {
     flex: 1,
-    alignSelf: 'stretch',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-end',
-    paddingLeft: Sizes.OuterFrame,
-    paddingBottom: Sizes.InnerFrame
+    backgroundColor: Colors.MediumDarkOverlay,
+    justifyContent: 'space-between'
   },
 
-  topContainer: {
+  verticalBorder: {
+    marginLeft: Sizes.OuterFrame * 5,
+    height: Sizes.OuterFrame * 7,
+    borderLeftColor: Colors.LightWhiteOverlay,
+    borderLeftWidth: 1
+  },
+
+  headerContainer: {
     flexDirection: 'row',
-    alignSelf: 'stretch',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    marginRight: Sizes.OuterFrame,
-    marginLeft: Sizes.OuterFrame,
-    marginBottom: Sizes.InnerFrame
+    marginBottom: Sizes.OuterFrame
   },
 
-  body: {
-    top: -Sizes.InnerFrame * 4,
-    marginTop: Sizes.InnerFrame
+  rank: {
+    marginLeft: Sizes.OuterFrame * 2.75,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: Colors.LightWhiteOverlay
+  },
+
+  rankText: {
+    top: -3,
+    left: 1
+  },
+
+  summary: {
+    marginLeft: Sizes.InnerFrame
   },
 
   name: {
-    marginBottom: Sizes.InnerFrame / 2,
-    fontSize: 28,
-    fontWeight: '600',
+    fontSize: Sizes.H2 * 1.2,
+    fontWeight: '300',
+    color: Colors.WhiteOverlay
+  },
+
+  subtitle: {
+    fontSize: Sizes.Text,
+    fontWeight: '400',
+    color: Colors.MediumWhiteOverlay
+  },
+
+  stats: {
+    flex: 1,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    backgroundColor: Colors.Primary
+  },
+
+  statsBox: {
+    flex: 1,
+    flexDirection: 'row',
+    marginLeft: Sizes.OuterFrame * 5,
+    alignItems: 'center'
+  },
+
+  statsContainer: {
+    alignSelf: 'stretch',
+    alignItems: 'flex-start',
+    justifyContent: 'center'
+  },
+
+  statsLeft: {
+    marginRight: Sizes.InnerFrame * 2
+  },
+
+  statsRight: {
+    paddingLeft: Sizes.OuterFrame,
+    borderLeftWidth: 1,
+    borderLeftColor: Colors.LightWhiteOverlay
+  },
+
+  stat: {
+    fontSize: Sizes.Text,
     color: Colors.Text
   },
 
-  since: {
-    textAlign: 'center',
-    marginBottom: Sizes.OuterFrame
+  statName: {
+    fontSize: Sizes.SmallText,
+    color: Colors.MediumWhiteOverlay
+  },
+
+  boxes: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    height: Sizes.Width / 2,
+    backgroundColor: Colors.Foreground
+  },
+
+  box: {
+    width: Sizes.Width / 2,
+    height: Sizes.Width / 2
+  },
+
+  closeButton: {
+    left: Sizes.OuterFrame * 2
   }
 });

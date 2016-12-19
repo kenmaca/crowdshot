@@ -5,7 +5,7 @@ import {
   View, StyleSheet, Text, TouchableOpacity, DeviceEventEmitter, Platform
 } from 'react-native';
 import {
-  Colors, Sizes
+  Colors, Sizes, Styles
 } from '../../Const';
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
@@ -202,6 +202,8 @@ export default class MapMarkerDrop extends Component {
             showsMyLocationButton={false}
             rotateEnabled={false}
             pitchEnabled={false}
+            provider={MapView.PROVIDER_GOOGLE}
+            customMapStyle={Styles.MapStyle}
             style={styles.map}
             region={this.state.current}
             onRegionChange={region => this.onRegionChange(
@@ -260,7 +262,7 @@ export default class MapMarkerDrop extends Component {
           <View style={styles.pinContainer}>
             <Icon
               name='flag'
-              color={Colors.AlternateText}
+              color={Colors.Primary}
               size={48} />
           </View>
         </View>

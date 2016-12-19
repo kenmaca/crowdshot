@@ -23,6 +23,7 @@ export const Colors = {
   Foreground: '#252525',
   ModalBackground: '#FCFCFC',
   ModalForeground: '#FFFFFF',
+  Black: '#000000',
 
   // lines
   Divider: 'rgba(100, 100, 100, 0.05)',

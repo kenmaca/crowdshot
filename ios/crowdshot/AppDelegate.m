@@ -12,6 +12,7 @@
 #import "RNFIRMessaging.h"
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
+#import <GoogleMaps/GoogleMaps.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @implementation AppDelegate
@@ -42,6 +43,9 @@
   #if defined(__IPHONE_10_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
   [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
   #endif
+  
+  // Google Maps
+  [GMSServices provideAPIKey:@"AIzaSyAT2dqPw3qWh1XYZXLneXHHyxkG7WEl7GM"];
   return YES;
 }
 

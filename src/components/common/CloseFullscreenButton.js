@@ -24,7 +24,7 @@ export default class CloseFullscreenButton extends Component {
     return (
       <View style={[
         styles.container,
-        this.props.styles
+        this.props.style
       ]}>
         {
 
@@ -43,7 +43,7 @@ export default class CloseFullscreenButton extends Component {
                 <CircleIcon
                   icon={this.props.back ? 'arrow-back': 'close'}
                   color={Colors.Transparent}
-                  checkColor={Colors.Text}
+                  checkColor={this.props.color || Colors.Text}
                   size={50} />
               </Animatable.View>
             </TouchableOpacity>

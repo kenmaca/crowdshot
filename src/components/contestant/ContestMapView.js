@@ -6,7 +6,7 @@ import {
   TouchableOpacity, Alert, DeviceEventEmitter, Platform
 } from 'react-native';
 import {
-  Sizes, Colors
+  Sizes, Colors, Styles
 } from '../../Const';
 import * as Firebase from 'firebase';
 import GeoFire from 'geofire';
@@ -250,6 +250,8 @@ export default class ContestMapView extends Component {
             showsMyLocationButton={false}
             rotateEnabled={false}
             pitchEnabled={false}
+            provider={MapView.PROVIDER_GOOGLE}
+            customMapStyle={Styles.MapStyle}
             style={styles.map}
             region={this.state.region}
             onRegionChangeComplete={this.onRegionChange}>
@@ -330,9 +332,7 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     position: 'absolute',
-    top: Sizes.Height - (Platform.OS === 'ios'
-      ? Sizes.OuterFrame * 5.5
-      : Sizes.OuterFrame * 6),
+    bottom: 0,
     left: 0,
     backgroundColor: Colors.Transparent,
     width: Sizes.Width,
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
     padding: Sizes.InnerFrame * 2,
     paddingTop: Sizes.InnerFrame / 2,
     paddingBottom: Sizes.InnerFrame / 2,
-    backgroundColor: Colors.Foreground,
+    backgroundColor: Colors.Black,
     borderRadius: 18
   },
 
