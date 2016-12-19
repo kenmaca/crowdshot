@@ -19,6 +19,8 @@ import CloseFullscreenButton from '../../components/common/CloseFullscreenButton
 import InformationField from '../../components/common/InformationField';
 import ProfileSettings from '../../components/profiles/ProfileSettings';
 import Toggle from '../../components/common/Toggle';
+import HeaderButtons from '../../components/common/HeaderButtons';
+import HeaderButton from '../../components/common/HeaderButton';
 
 export default class Settings extends Component {
   constructor(props) {
@@ -27,6 +29,26 @@ export default class Settings extends Component {
 
     this.ref = Database.ref(
       `profiles/${Firebase.auth().currentUser.uid}`
+    );
+
+    // methods
+    this.logout = this.logout.bind(this);
+  }
+
+  logout() {
+    Alert.alert(
+      'Sign out your account',
+      'You will need to sign in again with your account password or with '
+        + 'Facebook login',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        }, {
+          text: 'OK',
+          onPress: () => Firebase.auth().signOut()
+        }
+      ]
     );
   }
 
@@ -107,6 +129,11 @@ export default class Settings extends Component {
             </Text>
           </View>
         </View>
+        <HeaderButtons>
+          <HeaderButton
+            icon='exit-to-app'
+            onPress={this.logout} />
+        </HeaderButtons>
         <CloseFullscreenButton back />
       </View>
     );
