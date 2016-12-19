@@ -15,7 +15,7 @@ export const Colors = {
   // accents
   Primary: '#66C75C',
   Secondary: '#F5F5F5',
-  Tertiary: '#6369D1',
+  Tertiary: '#111111',
   Trophy: '#EEC584',
 
   // backgrounds
