@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-@interface PodsDummy_Pods_crowdshotTests : NSObject
+@interface PodsDummy_Pods_CrowdshotTests : NSObject
 @end
-@implementation PodsDummy_Pods_crowdshotTests
+@implementation PodsDummy_Pods_CrowdshotTests
 @end

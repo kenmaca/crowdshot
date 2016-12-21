@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0620"
+   LastUpgradeVersion = "0820"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -17,7 +17,7 @@
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
                BuildableName = "Crowdshot.app"
                BlueprintName = "Crowdshot"
-               ReferencedContainer = "container:crowdshot.xcodeproj">
+               ReferencedContainer = "container:Crowdshot.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "crowdshotTests.xctest"
-               BlueprintName = "crowdshotTests"
-               ReferencedContainer = "container:crowdshot.xcodeproj">
+               BuildableName = "CrowdshotTests.xctest"
+               BlueprintName = "CrowdshotTests"
+               ReferencedContainer = "container:Crowdshot.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,9 +47,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "crowdshotTests.xctest"
-               BlueprintName = "crowdshotTests"
-               ReferencedContainer = "container:crowdshot.xcodeproj">
+               BuildableName = "CrowdshotTests.xctest"
+               BlueprintName = "CrowdshotTests"
+               ReferencedContainer = "container:Crowdshot.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -59,7 +59,7 @@
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "Crowdshot.app"
             BlueprintName = "Crowdshot"
-            ReferencedContainer = "container:crowdshot.xcodeproj">
+            ReferencedContainer = "container:Crowdshot.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -82,7 +82,7 @@
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "Crowdshot.app"
             BlueprintName = "Crowdshot"
-            ReferencedContainer = "container:crowdshot.xcodeproj">
+            ReferencedContainer = "container:Crowdshot.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -101,7 +101,7 @@
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "Crowdshot.app"
             BlueprintName = "Crowdshot"
-            ReferencedContainer = "container:crowdshot.xcodeproj">
+            ReferencedContainer = "container:Crowdshot.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
