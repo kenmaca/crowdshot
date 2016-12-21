@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, ActivityIndicator, StyleSheet, StatusBar, Alert
+  View, StyleSheet, StatusBar, Alert, Image
 } from 'react-native';
 import {
   Actions
@@ -12,6 +12,12 @@ import {
 } from '../../Const';
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
+
+// components
+import * as Animatable from 'react-native-animatable';
+
+// const
+let AnimatedImage = Animatable.createAnimatableComponent(Image);
 
 /**
  * Handles logging in and redirection to an appropriate View
@@ -103,10 +109,12 @@ export default class Loader extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ActivityIndicator
-          animating
-          size='large'
-          color={Colors.Text} />
+        <AnimatedImage
+          ref='logo'
+          animation='bounce'
+          iterationCount='infinite'
+          source={require('../../../res/img/logo.png')}
+          style={styles.logo} />
       </View>
     );
   }
@@ -118,5 +126,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.Primary
+  },
+
+  logo: {
+    width: 30,
+    height: 30
   }
 });

@@ -1,5 +1,5 @@
-framework module Pods_crowdshot {
-  umbrella header "Pods-crowdshot-umbrella.h"
+framework module Pods_Crowdshot {
+  umbrella header "Pods-Crowdshot-umbrella.h"
 
   export *
   module * { export * }

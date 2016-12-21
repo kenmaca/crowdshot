@@ -3,6 +3,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_crowdshotVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_crowdshotVersionString[];
+FOUNDATION_EXPORT double Pods_CrowdshotVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_CrowdshotVersionString[];
 
