@@ -21,4 +21,4 @@ export default class Crowdshot extends Component {
   }
 }
 
-AppRegistry.registerComponent('crowdshot', () => Crowdshot);
+AppRegistry.registerComponent('Crowdshot', () => Crowdshot);

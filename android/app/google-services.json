@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "580889623356",
-    "firebase_url": "https://crowdshot-11ce3.firebaseio.com",
-    "project_id": "crowdshot-11ce3",
-    "storage_bucket": "crowdshot-11ce3.appspot.com"
+    "project_number": "129647293054",
+    "firebase_url": "https://crowdshot-production.firebaseio.com",
+    "project_id": "crowdshot-production",
+    "storage_bucket": "crowdshot-production.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:580889623356:android:613b0490beb81c00",
+        "mobilesdk_app_id": "1:129647293054:android:bcae8ba1cb521e45",
         "android_client_info": {
-          "package_name": "com.crowdshot"
+          "package_name": "co.crowdshot"
         }
       },
       "oauth_client": [
         {
-          "client_id": "580889623356-rvbgu78ofpvm8rcudbncg0tr4btj1uu5.apps.googleusercontent.com",
+          "client_id": "129647293054-9iq0fajioo420bd2sivvjji4ouk1fv3o.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC8pbc4xgk5S1nIA8bbcZ4QtOc-kd-obr0"
+          "current_key": "AIzaSyAP2iDdzk_46931o3EC8LTXct8yFBofuAA"
         }
       ],
       "services": {

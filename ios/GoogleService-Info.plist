@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>580889623356-iprqs0om6up0fa3tl45n3vkqko2s8d12.apps.googleusercontent.com</string>
+	<string>129647293054-oejufs210d4qit8rm6atjlpje0of5api.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.580889623356-iprqs0om6up0fa3tl45n3vkqko2s8d12</string>
+	<string>com.googleusercontent.apps.129647293054-oejufs210d4qit8rm6atjlpje0of5api</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCHXWsORZFR5R-oZpP5P2XQihfoC7QZ8EM</string>
+	<string>AIzaSyCYB11ptNDj6_jJReVmJJYWVUsxRgjsRGc</string>
 	<key>GCM_SENDER_ID</key>
-	<string>580889623356</string>
+	<string>129647293054</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.crowdshot</string>
+	<string>co.crowdshot</string>
 	<key>PROJECT_ID</key>
-	<string>crowdshot-11ce3</string>
+	<string>crowdshot-production</string>
 	<key>STORAGE_BUCKET</key>
-	<string>crowdshot-11ce3.appspot.com</string>
+	<string>crowdshot-production.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:580889623356:ios:613b0490beb81c00</string>
+	<string>1:129647293054:ios:bcae8ba1cb521e45</string>
 	<key>DATABASE_URL</key>
-	<string>https://crowdshot-11ce3.firebaseio.com</string>
+	<string>https://crowdshot-production.firebaseio.com</string>
 </dict>
 </plist>

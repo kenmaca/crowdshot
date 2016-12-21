@@ -1,4 +1,4 @@
-package com.crowdshot;
+package co.crowdshot;
 
 import android.app.Application;
 import android.util.Log;

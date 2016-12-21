@@ -1,4 +1,4 @@
-rootProject.name = 'crowdshot'
+rootProject.name = 'Crowdshot'
 
 include ':app'
 include ':react-native-google-location'
