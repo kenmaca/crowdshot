@@ -75,36 +75,32 @@ export default class Settings extends Component {
         <View style={styles.content}>
           <ProfileSettings
             color={Colors.Foreground} />
-          <TouchableOpacity
-            onPress={Actions.address}>
-            <InformationField
-              pressable
-              color={Colors.Background}
-              label='Shipping Address'
-              info={
-                this.state.address && (
-                  `${
-                    this.state.address
-                  }, ${
-                    this.state.city
-                  } ${
-                    this.state.postal
-                  }`
-                )
-              } />
-          </TouchableOpacity>
-          <TouchableOpacity
+          <InformationField
+            pressable
+            onPress={Actions.address}
+            color={Colors.Background}
+            label='Shipping Address'
+            info={
+              this.state.address && (
+                `${
+                  this.state.address
+                }, ${
+                  this.state.city
+                } ${
+                  this.state.postal
+                }`
+              )
+            } />
+          <InformationField
+            pressable
             onPress={() => Actions.paymentMethods({
               title: 'Payment Methods',
               onSelected: billing => Actions.paymentMethod({
                 billingId: billing.billingId
               })
-            })}>
-            <InformationField
-              pressable
-              color={Colors.Background}
-              label='Transaction History' />
-          </TouchableOpacity>
+            })}
+            color={Colors.Background}
+            label='Transaction History' />
           <Toggle
             isBottom
             onChange={value => this.ref.update({
