@@ -4,6 +4,7 @@ import React, {
 import {
   AppRegistry, View
 } from 'react-native';
+import codePush from 'react-native-code-push';
 
 // components
 import Navigation from './src/Navigation';
@@ -20,5 +21,8 @@ export default class Crowdshot extends Component {
     );
   }
 }
+
+// code push
+Crowdshot = codePush(Crowdshot);
 
 AppRegistry.registerComponent('Crowdshot', () => Crowdshot);

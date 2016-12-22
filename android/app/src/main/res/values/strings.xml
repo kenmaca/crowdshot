@@ -1,4 +1,5 @@
 <resources>
+    <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">rw2ODzI3OUwupDXvLev0siXX3Th7V1yuwzHEz</string>
     <string name="app_name">Crowdshot</string>
     <string name="facebook_app_id">330410660665844</string>
     <string name="GOOGLE_MAPS_API_KEY">AIzaSyCfs7dGLmxNQhy6cMUrCBFMOmmGfB1DjAQ</string>
