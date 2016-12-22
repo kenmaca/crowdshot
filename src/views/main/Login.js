@@ -61,15 +61,17 @@ export default class Login extends Component {
 
                           // update the profile photo
                           let photoId = Database.ref('photos').push().key;
-                          Database.ref().update({
-                            [`photos/${photoId}`]: {
-                              createdBy: user.uid,
-                              url: user.photoURL
-                            }, [`profiles/${user.uid}/photo`]: photoId
-                          });
+                          Database.ref().update(
+                            {
+                              [`photos/${photoId}`]: {
+                                createdBy: user.uid,
+                                url: user.photoURL
+                              }, [`profiles/${user.uid}/photo`]: photoId
+                            },
 
-                          // user logged in, ready for use
-                          Actions.loader();
+                            // ready for logon
+                            () => Actions.loader()
+                          );
                         }).catch(error => {});
                       }
                     );

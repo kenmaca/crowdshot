@@ -46,7 +46,9 @@ export default class Settings extends Component {
           style: 'cancel'
         }, {
           text: 'OK',
-          onPress: () => Firebase.auth().signOut()
+          onPress: () => Firebase.auth().signOut().then(
+            Actions.loader
+          )
         }
       ]
     );

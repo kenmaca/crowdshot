@@ -26,6 +26,7 @@ let AnimatedImage = Animatable.createAnimatableComponent(Image);
 export default class Loader extends Component {
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
+    this.authListener && this.authListener();
   }
 
   componentDidMount() {
@@ -47,7 +48,7 @@ export default class Loader extends Component {
       } else {
 
         // handle currently logged in user
-        Firebase.auth().onAuthStateChanged(user => {
+        this.authListener = Firebase.auth().onAuthStateChanged(user => {
           if (user) {
 
             // wait until profile loads
@@ -56,6 +57,9 @@ export default class Loader extends Component {
                 user.uid
               }`
             );
+
+            // unlisten old listener just in case
+            this.listener && this.ref.off('value', this.listener);
             this.listener = this.ref.on('value', data => {
               let profile = data.val();
               if (profile && profile.dateCreated) {
@@ -66,7 +70,8 @@ export default class Loader extends Component {
                     panHandlers: null,
                     onExit: () => Actions.loader({
                       type: 'replace'
-                    })
+                    }),
+                    type: 'replace'
                   });
                 } else if (!profile.photo) {
                   Actions.newReferencePhoto({
@@ -76,11 +81,14 @@ export default class Loader extends Component {
                         `profiles/${
                           user.uid
                         }/photo`
-                      ).set(photoId);
+                      ).set(photoId, () => Actions.loader({
+                        type: 'replace'
+                      }));
                     },
                     closeAction: () => Actions.loader({
                       type: 'replace'
                     }),
+                    type: 'replace',
                     title: 'Take a new display picture'
                   });
                 } else {
@@ -93,7 +101,7 @@ export default class Loader extends Component {
                 // profile non-existent, so register it
                 Database.ref(
                   `profiles/${user.uid}`
-                ).set({
+                ).update({
                   displayName: user.displayName,
                   email: user.email,
                   dateCreated: Date.now()
