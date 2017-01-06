@@ -100,7 +100,13 @@ export default class Profile extends Component {
                   }
                 </Text>
                 <Text style={styles.subtitle}>
-                  Founder at Crowdshot
+                  {
+                    `Since ${
+                      this.state.dateCreated
+                      ? DateFormat(this.state.dateCreated, 'mmmm dS, yyyy')
+                      : 'Unknown'
+                    }`
+                  }
                 </Text>
                 <OutlineText
                   text={this.state.currentRegion}
@@ -150,7 +156,7 @@ export default class Profile extends Component {
                 styles.stat,
                 styles.blurb
               ]}>
-                This user's auto-biography will be displayed here.
+                
               </Text>
             </View>
           </View>

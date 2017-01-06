@@ -5,7 +5,7 @@ import {
   View, StyleSheet, Text, TouchableOpacity
 } from 'react-native';
 import {
-  Colors, Sizes
+  Colors, Sizes, Strings
 } from '../../Const';
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
@@ -147,6 +147,9 @@ export default class Reward extends Component {
                   }
                 </Text>
               </View>
+              <Text style={styles.disclaimer}>
+                {Strings.ContestDisclaimer}
+              </Text>
             </View>
           </View>
         </ParallaxScrollView>
@@ -262,5 +265,11 @@ const styles = StyleSheet.create({
 
   sectionHeader: {
     marginTop: Sizes.OuterFrame
+  },
+
+  disclaimer: {
+    marginTop: Sizes.InnerFrame,
+    color: Colors.SubduedText,
+    fontSize: Sizes.SmallText
   }
 });

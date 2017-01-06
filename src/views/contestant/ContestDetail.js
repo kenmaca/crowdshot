@@ -6,7 +6,7 @@ import {
   TouchableOpacity, Alert, Modal, StatusBar
 } from 'react-native';
 import {
-  Colors, Sizes
+  Colors, Sizes, Strings
 } from '../../Const';
 import {
   Actions
@@ -203,7 +203,12 @@ export default class ContestDetail extends Component {
             }
             {
               this.state.createdBy && (
-                <HostInfo profileId={this.state.createdBy} />
+                <View style={styles.host}>
+                  <HostInfo profileId={this.state.createdBy} />
+                  <Text style={styles.disclaimer}>
+                    {Strings.ContestDisclaimer}
+                  </Text>
+                </View>
               )
             }
             <View style={styles.bottomPadding}/>
@@ -458,5 +463,17 @@ const styles = StyleSheet.create({
     fontSize: Sizes.SmallText,
     color: Colors.Text,
     backgroundColor: Colors.Transparent
+  },
+
+  host: {
+    marginTop: Sizes.InnerFrame
+  },
+
+  disclaimer: {
+    paddingLeft: Sizes.InnerFrame,
+    paddingRight: Sizes.InnerFrame,
+    backgroundColor: Colors.ModalForeground,
+    color: Colors.SubduedText,
+    fontSize: Sizes.SmallText
   }
 });

@@ -6,7 +6,7 @@ import {
   Modal, TouchableOpacity
 } from 'react-native';
 import {
-  Colors, Sizes
+  Colors, Sizes, Strings
 } from '../../Const';
 import * as Firebase from 'firebase';
 import Database from '../../utils/Database';
@@ -331,6 +331,9 @@ export default class ConfirmRedeem extends Component {
               }
             </Text>
           </View>
+          <Text style={styles.disclaimer}>
+            {Strings.ContestDisclaimer}
+          </Text>
         </View>
         <Button
           squareBorders
@@ -405,5 +408,10 @@ const styles = StyleSheet.create({
   totalLine: {
     backgroundColor: Colors.Transparent,
     paddingTop: 0
+  },
+
+  disclaimer: {
+    color: Colors.SubduedText,
+    fontSize: Sizes.SmallText
   }
 });
