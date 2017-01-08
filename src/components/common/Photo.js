@@ -101,8 +101,8 @@ export default class Photo extends Component {
               ref={c => this.c = c}
               {...this.props}
               style={[
-                styles.container,
                 this.props.style,
+                styles.container,
               ]}
               resizeMethod={'resize'}
               source={{uri: this.state.source}}
@@ -128,6 +128,8 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    backgroundColor: Colors.Foreground
+    //Workaround until facebook fixes the problem of borderRadius not applying
+    // to backgroundColor...
+    backgroundColor: Colors.Transparent
   }
 });
