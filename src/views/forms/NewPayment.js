@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Modal, Alert, Action, Platform
+  View, StyleSheet, Text, Modal, Alert, Action, Platform, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes
@@ -37,6 +37,8 @@ export default class NewPayment extends Component {
   }
 
   componentDidMount() {
+    Platform.OS !== 'ios'
+      && StatusBar.setBackgroundColor(Colors.Background, false);
     this.componentWillReceiveProps(this.props);
   }
 

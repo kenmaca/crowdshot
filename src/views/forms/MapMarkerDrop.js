@@ -2,7 +2,8 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, TouchableOpacity, DeviceEventEmitter, Platform
+  View, StyleSheet, Text, TouchableOpacity, DeviceEventEmitter,
+  Platform, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes, Styles
@@ -93,6 +94,7 @@ export default class MapMarkerDrop extends Component {
         }
       );
     } else {
+      StatusBar.setBackgroundColor(Colors.Background, false);
       if (!this.evEmitter) {
 
         // Register Listener Callback - has to be removed later

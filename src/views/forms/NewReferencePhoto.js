@@ -24,10 +24,11 @@ export default class NewReferencePhoto extends Component {
   }
 
   componentDidMount() {
+    Platform.OS !== 'ios'
+      && StatusBar.setBackgroundColor(Colors.Background, false);
     StatusBar.setHidden(true, 'slide');
     this.back = () => {
-      StatusBar.setHidden(false, 'slide');
-      Actions.pop();
+      this.props.closeAction();
       return true;
     };
     BackAndroid.addEventListener('hardwareBackPress', this.back);

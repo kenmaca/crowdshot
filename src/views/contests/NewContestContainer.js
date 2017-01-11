@@ -41,8 +41,8 @@ export default class NewContestContainer extends Component {
   }
 
   routing() {
-    Platform.OS !== 'ios'
-      && StatusBar.setBackgroundColor(Colors.Background, false);
+  //  Platform.OS !== 'ios'
+  //    && StatusBar.setBackgroundColor(Colors.Background, false);
     if (!this.state.referencePhotoId) {
       Actions.newReferencePhoto({
         onTaken: photoId => {
