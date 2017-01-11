@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, ActivityIndicator, StyleSheet, StatusBar, Alert
+  View, ActivityIndicator, StyleSheet, StatusBar, Alert, Platform
 } from 'react-native';
 import {
   Actions
@@ -18,6 +18,12 @@ import Database from '../../utils/Database';
  * either on app launch or after a login/registration was processed.
  */
 export default class Loader extends Component {
+  constructor(props) {
+    super(props);
+    Platform.OS !== 'ios'
+      && StatusBar.setBackgroundColor(Colors.Primary, false);
+  }
+
   componentWillUnmount() {
     this.listener && this.ref.off('value', this.listener);
   }

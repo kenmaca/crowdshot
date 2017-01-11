@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Animated, PanResponder,
+  View, StyleSheet, Text, Animated, PanResponder, StatusBar,
   ListView, TouchableOpacity, Easing, Platform
 } from 'react-native';
 import {
@@ -36,6 +36,9 @@ import ChatRoomHeaderButton from '../../components/chat/ChatRoomHeaderButton';
 export default class Main extends Component {
   constructor(props) {
     super(props);
+    Platform.OS !== 'ios'
+      && StatusBar.setBackgroundColor(Colors.Background, false);
+
     let pan = new Animated.Value(0);
     let rawData = [false];
     this.state = {
@@ -185,6 +188,7 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
+    StatusBar.setHidden(false, 'slide');
 
     // initialize FCM
     FCM.requestPermissions();

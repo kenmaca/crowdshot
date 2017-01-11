@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Modal, Image
+  View, StyleSheet, Text, Modal, Image, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes
@@ -121,9 +121,9 @@ export default class NewContest extends Component {
           style={styles.buttonContainer}>
           <Button
             label='Get started'
-            onPress={() => this.setState({
-              visible: true
-            })}
+            onPress={() => {
+              this.setState({visible: true})
+            }}
             color={Colors.Primary}
             style={styles.button} />
         </Animatable.View>

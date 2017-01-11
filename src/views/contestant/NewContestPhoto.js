@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, StatusBar, BackAndroid
 } from 'react-native';
 import {
   Colors, Sizes
@@ -22,6 +22,26 @@ export default class NewContestPhoto extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    StatusBar.setHidden(true, 'slide');
+    this.back = () => {
+      StatusBar.setHidden(false, 'slide');
+    //  Actions.pop();
+      return true;
+    };
+    BackAndroid.addEventListener('hardwareBackPress', this.back);
+  }
+
+  componentWillUnmount() {
+    // reset back to normal
+    this.back && BackAndroid.removeEventListener('hardwareBackPress', this.back);
+  }
+
+  close() {
+    StatusBar.setHidden(false, 'slide');
+    Actions.pop();
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -38,7 +58,9 @@ export default class NewContestPhoto extends Component {
               );
             }} />
         </View>
-        <CloseFullscreenButton back />
+        <CloseFullscreenButton
+          back
+          action={this.close}/>
       </View>
     );
   }

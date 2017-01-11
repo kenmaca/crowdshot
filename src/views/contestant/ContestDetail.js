@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, ScrollView, ListView,
-  TouchableOpacity, Alert, Modal, StatusBar
+  TouchableOpacity, Alert, Modal
 } from 'react-native';
 import {
   Colors, Sizes
@@ -33,8 +33,6 @@ export default class ContestDetail extends Component {
   constructor(props) {
     super(props);
 
-    StatusBar.setHidden(true, 'slide');
-
     this.state = {
       preview: null,
       entries: {},
@@ -52,6 +50,7 @@ export default class ContestDetail extends Component {
   }
 
   componentDidMount() {
+
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
         this.setState({

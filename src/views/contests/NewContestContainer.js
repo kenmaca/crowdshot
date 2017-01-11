@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Platform, Image, Alert, BackAndroid
+  View, StyleSheet, Text, Platform, Image, Alert, BackAndroid, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes
@@ -25,6 +25,8 @@ let AnimatedImage = Animatable.createAnimatableComponent(Image);
 export default class NewContestContainer extends Component {
   constructor(props) {
     super(props);
+    Platform.OS !== 'ios'
+      && StatusBar.setBackgroundColor(Colors.Primary, false);
     this.state = {
       prizeId: null,
       location: null,
@@ -39,23 +41,37 @@ export default class NewContestContainer extends Component {
   }
 
   routing() {
+    Platform.OS !== 'ios'
+      && StatusBar.setBackgroundColor(Colors.Background, false);
     if (!this.state.referencePhotoId) {
       Actions.newReferencePhoto({
-        onTaken: photoId => this.setState({
-          referencePhotoId: photoId,
-          halt: false
-        }),
+        onTaken: photoId => {
+          StatusBar.setHidden(false, 'slide');
+          Platform.OS !== 'ios'
+            && StatusBar.setBackgroundColor(Colors.Primary, false);
+          this.setState({
+            referencePhotoId: photoId,
+            halt: false
+          })
+        },
         panHandlers: null,
-        closeAction: () => Actions.pop({
-          popNum: 2
-        })
+        closeAction: () => {
+          StatusBar.setHidden(false, 'slide');
+          Actions.pop({
+            popNum: 2
+          })
+        }
       });
     } else if (!this.state.instructions) {
       Actions.textEntry({
-        onSubmit: text => this.setState({
-          instructions: text,
-          halt: false
-        }),
+        onSubmit: text => {
+          Platform.OS !== 'ios'
+            && StatusBar.setBackgroundColor(Colors.Primary, false);
+          this.setState({
+            instructions: text,
+            halt: false
+          });
+        },
         title: 'Contest Instructions',
         label: 'Instructions',
         subtitle: 'General rules for your contest',
@@ -68,10 +84,14 @@ export default class NewContestContainer extends Component {
       });
     } else if (!this.state.location) {
       Actions.mapMarkerDrop({
-        onSelected: location => this.setState({
-          location: location,
-          halt: false
-        }),
+        onSelected: location => {
+          Platform.OS !== 'ios'
+            && StatusBar.setBackgroundColor(Colors.Primary, false);
+          this.setState({
+            location: location,
+            halt: false
+          })
+        },
         panHandlers: null,
         closeAction: () => Actions.pop({
           popNum: 2
@@ -79,10 +99,14 @@ export default class NewContestContainer extends Component {
       });
     } else if (!this.state.prizeId) {
       Actions.newPayment({
-        onCharged: transactionId => this.setState({
-          prizeId: transactionId,
-          halt: false
-        }),
+        onCharged: transactionId => {
+          Platform.OS !== 'ios'
+            && StatusBar.setBackgroundColor(Colors.Primary, false);
+          this.setState({
+            prizeId: transactionId,
+            halt: false
+          })
+        },
         panHandlers: null,
         description: 'Bounty for Photo Contest',
         closeAction: () => Actions.pop({
@@ -95,7 +119,6 @@ export default class NewContestContainer extends Component {
   }
 
   componentDidMount() {
-
     // allow full exit
     this.back = () => {
       Actions.pop({

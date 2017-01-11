@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Platform
+  View, StyleSheet, Text, Platform, StatusBar, BackAndroid
 } from 'react-native';
 import {
   Colors, Sizes
@@ -21,6 +21,26 @@ import CameraView from '../../components/common/CameraView';
 export default class NewReferencePhoto extends Component {
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
+    StatusBar.setHidden(true, 'slide');
+    this.back = () => {
+      StatusBar.setHidden(false, 'slide');
+      Actions.pop();
+      return true;
+    };
+    BackAndroid.addEventListener('hardwareBackPress', this.back);
+  }
+
+  componentWillUnmount() {
+    // reset back to normal
+    this.back && BackAndroid.removeEventListener('hardwareBackPress', this.back);
+  }
+
+  close() {
+    StatusBar.setHidden(false, 'slide');
+    Actions.pop();
   }
 
   render() {
