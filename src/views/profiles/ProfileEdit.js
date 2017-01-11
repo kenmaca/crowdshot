@@ -96,6 +96,7 @@ export default class ProfileEdit extends Component {
             color={Colors.Primary} />
         </View>
         <CloseFullscreenButton
+          back
           action={this.exit} />
       </View>
     );
