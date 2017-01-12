@@ -97,16 +97,23 @@ export default class Photo extends Component {
         {
           this.state.source
           ? (
-            <Image
+            <View
               ref={c => this.c = c}
               {...this.props}
               style={[
-                styles.container,
-                this.props.style,
-              ]}
-              resizeMethod={'resize'}
-              source={{uri: this.state.source}}
-              onLoadEnd={this.props.onLoadEnd} />
+                this.props.style
+              ]} >
+              <Image
+                ref={c => this.c = c}
+                {...this.props}
+                style={[
+                  this.props.style,
+                  styles.container,
+                ]}
+                resizeMethod={'resize'}
+                source={{uri: this.state.source}}
+                onLoadEnd={this.props.onLoadEnd} />
+            </View>
           ): (
             <View
               ref={c => this.c = c}
@@ -128,6 +135,6 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    backgroundColor: Colors.Foreground
+    backgroundColor: Colors.Transparent
   }
 });
