@@ -148,7 +148,8 @@ export default class EmailLogin extends Component {
             color={Colors.Primary}
             style={styles.button} />
         </View>
-        <CloseFullscreenButton />
+        <CloseFullscreenButton
+          hide={Platform.OS !== 'ios'}/>
       </View>
     );
   }
