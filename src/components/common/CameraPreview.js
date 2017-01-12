@@ -31,6 +31,8 @@ export default class CameraPreview extends Component {
     this.revert = this.revert.bind(this);
   }
 
+
+
   revert(blob, xml) {
     window.Blob = blob;
     window.XMLHttpRequest = xml;
@@ -42,6 +44,7 @@ export default class CameraPreview extends Component {
   }
 
   render() {
+    console.log("progress,",this.state.progress)
     return (
       <View style={styles.wrapper}>
         <View
@@ -136,7 +139,8 @@ export default class CameraPreview extends Component {
           <Progress.Bar
             style={styles.progress}
             borderWidth={0}
-            color={Colors.Primary}
+            //workaround for the progress bar in android showing as 1 when 0
+            color={this.state.progress > 0 ? Colors.Primary : Colors.Transparent}
             progress={this.state.progress}
             width={Sizes.Width * 0.9} />
         </View>
