@@ -67,9 +67,10 @@ export default class CameraView extends Component {
           transparent
           animationType='slide'
           onRequestClose={() => {
-            this.setState({
-              preview: null
-            });
+            this.state.accepted ||
+              this.setState({
+                preview: null
+              });
           }}
           visible={!!this.state.preview}>
           <CameraPreview
@@ -78,7 +79,12 @@ export default class CameraView extends Component {
                 preview: null
               });
             }}
-            accept={photoId => {
+            accept={() => {
+              this.setState({
+                accepted: true
+              });
+            }}
+            uploaded={photoId => {
 
               // and close the modal
               this.setState({

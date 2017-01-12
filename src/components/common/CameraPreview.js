@@ -32,11 +32,9 @@ export default class CameraPreview extends Component {
   }
 
 
-
   revert(blob, xml) {
     window.Blob = blob;
     window.XMLHttpRequest = xml;
-
     // reset progress
     this.setState({
       progress: 0
@@ -67,7 +65,7 @@ export default class CameraPreview extends Component {
             <Animatable.View ref='accept'>
             <TouchableOpacity
               onPress={() => {
-
+                this.props.accept()
                 // hide buttons
                 this.refs.accept.bounceOutDown(1000);
                 this.refs.cancel.bounceOutDown(1000);
@@ -119,8 +117,8 @@ export default class CameraPreview extends Component {
 
                       // and now finalize by callback from parent
                       this.revert(realBlob, realXML);
-                      this.props.accept
-                      && this.props.accept(photoId);
+                      this.props.uploaded
+                      && this.props.uploaded(photoId);
 
                     });
                   }).catch(err => {
@@ -140,7 +138,7 @@ export default class CameraPreview extends Component {
             style={styles.progress}
             borderWidth={0}
             //workaround for the progress bar in android showing as 1 when 0
-            color={this.state.progress > 0 ? Colors.Primary : Colors.Transparent}
+            color={this.state.progress > 0.05 ? Colors.Primary : Colors.Transparent}
             progress={this.state.progress}
             width={Sizes.Width * 0.9} />
         </View>
