@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, Animated, PanResponder,
-  ListView, TouchableOpacity, Easing, Platform, StatusBar
+  ListView, TouchableOpacity, Easing, Platform, StatusBar, BackAndroid
 } from 'react-native';
 import {
   Actions
@@ -233,6 +233,15 @@ export default class Main extends Component {
 
     // update background greeting
     this.updateBackground();
+
+    this.back = () => {
+      if (!this.state.isDocked){
+        this.bottom();
+        return true;
+      }
+      return false;
+    };
+    BackAndroid.addEventListener('hardwareBackPress', this.back);
   }
 
   notificationResponder(notification, initial) {
@@ -266,6 +275,7 @@ export default class Main extends Component {
     this.notification();
     this.listener && this.ref.off('value', this.listener);
     this.update && clearTimeout(this.update);
+    this.back && BackAndroid.removeEventListener('hardwareBackPress', this.back);
   }
 
   getListViewStyle() {

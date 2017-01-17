@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Image, InteractionManager
+  View, StyleSheet, Text, Image, InteractionManager, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes
@@ -36,6 +36,10 @@ export default class Onboarding extends Component {
     super(props);
     this.onSlideChange = this.onSlideChange.bind(this);
     this.complete = this.complete.bind(this);
+  }
+
+  componentDidMount() {
+    StatusBar.setHidden(true, 'slide');
   }
 
   onSlideChange(i, total) {

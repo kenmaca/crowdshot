@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Modal, Alert, Platform
+  View, StyleSheet, Text, Modal, Alert, Platform, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes
@@ -32,6 +32,12 @@ export default class EmailLogin extends Component {
     // methods
     this.login = this.login.bind(this);
     this.register = this.register.bind(this);
+  }
+
+  componentDidMount() {
+    Platform.OS !== 'ios'
+      && StatusBar.setBackgroundColor(Colors.Background, true);
+    StatusBar.setHidden(false, 'slide');
   }
 
   login() {

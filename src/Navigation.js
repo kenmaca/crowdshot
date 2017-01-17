@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Navigator, Platform, StatusBar, Alert
+  View, StyleSheet, Navigator, Platform, Alert, StatusBar
 } from 'react-native';
 import {
   Router, Scene, Actions
@@ -183,7 +183,6 @@ export default class Navigation extends Component {
                 title='Your Contests'
                 iconName='home'
                 onPress={() => {
-                  StatusBar.setHidden(false, 'slide');
                   Actions.mainMainView({
                     toggle: true
                   })}
@@ -202,7 +201,6 @@ export default class Navigation extends Component {
                 title='Start a Contest'
                 iconName='assistant-photo'
                 onPress={() => {
-                  StatusBar.setHidden(false, 'slide');
                   Actions.mainBroadcastView({
                     launch: true
                   })}
@@ -220,7 +218,6 @@ export default class Navigation extends Component {
                 key='mainContestant'
                 component={Contestant}
                 onPress={() => {
-                  StatusBar.setHidden(false, 'slide');
                   Actions.mainContestantView({
                     launch: true
                   })}
