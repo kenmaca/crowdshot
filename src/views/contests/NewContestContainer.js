@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Platform, Image, Alert, BackAndroid
+  View, StyleSheet, Text, Platform, Image, Alert, BackAndroid, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes
@@ -41,21 +41,29 @@ export default class NewContestContainer extends Component {
   routing() {
     if (!this.state.referencePhotoId) {
       Actions.newReferencePhoto({
-        onTaken: photoId => this.setState({
-          referencePhotoId: photoId,
-          halt: false
-        }),
+        onTaken: photoId => {
+          this.setState({
+            referencePhotoId: photoId,
+            halt: false
+          }
+        )},
         panHandlers: null,
-        closeAction: () => Actions.pop({
-          popNum: 2
-        })
+        closeAction: () => {
+          StatusBar.setHidden(false, 'slide');
+          Actions.pop({
+            popNum: 2
+          })
+        }
       });
     } else if (!this.state.instructions) {
       Actions.textEntry({
-        onSubmit: text => this.setState({
-          instructions: text,
-          halt: false
-        }),
+        onSubmit: text => {
+          StatusBar.setHidden(true, 'slide');
+          this.setState({
+            instructions: text,
+            halt: false
+          })
+        },
         title: 'Contest Instructions',
         label: 'Instructions',
         subtitle: 'General rules for your contest',
@@ -68,21 +76,29 @@ export default class NewContestContainer extends Component {
       });
     } else if (!this.state.location) {
       Actions.mapMarkerDrop({
-        onSelected: location => this.setState({
-          location: location,
-          halt: false
-        }),
+        onSelected: location => {
+          this.setState({
+            location: location,
+            halt: false
+          })
+        },
         panHandlers: null,
-        closeAction: () => Actions.pop({
-          popNum: 2
-        })
+        closeAction: () => {
+          StatusBar.setHidden(false, 'slide');
+          Actions.pop({
+            popNum: 2
+          })
+        }
       });
     } else if (!this.state.prizeId) {
       Actions.newPayment({
-        onCharged: transactionId => this.setState({
-          prizeId: transactionId,
-          halt: false
-        }),
+        onCharged: transactionId => {
+          StatusBar.setHidden(true, 'slide');
+          this.setState({
+            prizeId: transactionId,
+            halt: false
+          })
+        },
         panHandlers: null,
         description: 'Bounty for Photo Contest',
         closeAction: () => Actions.pop({
@@ -95,7 +111,7 @@ export default class NewContestContainer extends Component {
   }
 
   componentDidMount() {
-
+    StatusBar.setHidden(true, 'slide');
     // allow full exit
     this.back = () => {
       Actions.pop({
@@ -207,7 +223,7 @@ export default class NewContestContainer extends Component {
           processing: false,
           instructions: DEFAULT_INSTRUCTIONS
         });
-
+        StatusBar.setHidden(false, 'slide');
         Actions.contest({
           contestId: contestId,
           type: 'replace'

@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Platform
+  View, StyleSheet, Text, Platform, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes
@@ -21,6 +21,10 @@ import CameraView from '../../components/common/CameraView';
 export default class NewReferencePhoto extends Component {
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
+    StatusBar.setHidden(true, 'slide');
   }
 
   render() {

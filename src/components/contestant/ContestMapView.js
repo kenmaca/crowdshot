@@ -153,7 +153,6 @@ export default class ContestMapView extends Component {
   }
 
   componentDidMount() {
-
     // setup default location
     if (Platform.OS === 'ios') {
       this.position = navigator.geolocation.watchPosition(

@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, StatusBar, Alert, Image
+  View, StyleSheet, StatusBar, Alert, Image, Platform
 } from 'react-native';
 import {
   Actions
@@ -32,6 +32,8 @@ export default class Loader extends Component {
   componentDidMount() {
 
     // globally remove
+    Platform.OS !== 'ios'
+      && StatusBar.setBackgroundColor(Colors.Primary, true);
     StatusBar.setHidden(true, 'slide');
 
     // handle version check before anything else

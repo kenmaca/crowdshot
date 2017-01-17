@@ -101,7 +101,8 @@ export default class Photo extends Component {
               ref={c => this.c = c}
               {...this.props}
               style={[
-                this.props.style
+                this.props.style,
+                styles.zeroPadding
               ]} >
               <Image
                 ref={c => this.c = c}
@@ -136,5 +137,9 @@ const styles = StyleSheet.create({
 
   container: {
     backgroundColor: Colors.Transparent
+  },
+
+  zeroPadding: {
+    padding: 0
   }
 });

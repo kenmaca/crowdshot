@@ -20,7 +20,7 @@ import EntryCard from '../../components/lists/EntryCard';
 import Swipeout from 'react-native-swipeout';
 import SwipeoutButton from '../../components/common/SwipeoutButton';
 
-export default class Settings extends Component {
+export default class Entries extends Component {
   constructor(props) {
     super(props);
     this.state = {

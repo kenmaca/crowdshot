@@ -182,9 +182,12 @@ export default class Navigation extends Component {
                 key='mainMain'
                 title='Your Contests'
                 iconName='home'
-                onPress={() => Actions.mainMainView({
-                  toggle: true
-                })}
+                onPress={() => {
+                  StatusBar.setHidden(false, 'slide');
+                  Actions.mainMainView({
+                    toggle: true
+                  })}
+                }
                 icon={YourContestsTabButton}>
                 <Scene
                   initial
@@ -198,9 +201,12 @@ export default class Navigation extends Component {
                 key='mainBroadcast'
                 title='Start a Contest'
                 iconName='assistant-photo'
-                onPress={() => Actions.mainBroadcastView({
-                  launch: true
-                })}
+                onPress={() => {
+                  StatusBar.setHidden(false, 'slide');
+                  Actions.mainBroadcastView({
+                    launch: true
+                  })}
+                }
                 icon={TabButton}>
                 <Scene
                   initial
@@ -213,9 +219,22 @@ export default class Navigation extends Component {
                 hideNavBar
                 key='mainContestant'
                 component={Contestant}
+                onPress={() => {
+                  StatusBar.setHidden(false, 'slide');
+                  Actions.mainContestantView({
+                    launch: true
+                  })}
+                }
                 title='Join a Contest'
                 iconName='camera'
-                icon={TabButton} />
+                icon={TabButton} >
+                <Scene
+                  initial
+                  hideNavBar
+                  key='mainContestantView'
+                  component={Contestant}
+                  type='refresh' />
+              </Scene>
             </Scene>
           </Scene>
         </Router>

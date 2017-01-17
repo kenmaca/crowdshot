@@ -56,7 +56,6 @@ export default class Redeem extends Component {
   }
 
   componentDidMount() {
-
     // build tabs
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {

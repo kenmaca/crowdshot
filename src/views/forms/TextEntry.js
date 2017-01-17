@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, TextInput, Platform
+  View, StyleSheet, Text, TextInput, Platform, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes
@@ -24,6 +24,10 @@ export default class TextEntry extends Component {
       value: this.props.value,
       height: 20
     };
+  }
+
+  componentDidMount() {
+    StatusBar.setHidden(false, 'slide');
   }
 
   render() {

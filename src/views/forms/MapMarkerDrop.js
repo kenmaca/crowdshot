@@ -2,7 +2,8 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, TouchableOpacity, DeviceEventEmitter, Platform
+  View, StyleSheet, Text, TouchableOpacity, DeviceEventEmitter, Platform,
+  StatusBar
 } from 'react-native';
 import {
   Colors, Sizes, Styles

@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Alert, Platform
+  View, StyleSheet, Text, Alert, Platform, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes
@@ -35,6 +35,10 @@ export default class ProfileEdit extends Component {
   }
 
   componentDidMount() {
+    StatusBar.setHidden(false, 'slide');
+    Platform.OS !== 'ios'
+      && StatusBar.setBackgroundColor(Colors.Background, true);
+      
     this.listener = this.ref.on('value', data => {
       if (data.exists()) {
         this.setState({

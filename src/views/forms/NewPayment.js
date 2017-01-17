@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, Modal, Alert, Action, Platform
+  View, StyleSheet, Text, Modal, Alert, Action, Platform, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes
@@ -37,6 +37,7 @@ export default class NewPayment extends Component {
   }
 
   componentDidMount() {
+    StatusBar.setHidden(false, 'slide');
     this.componentWillReceiveProps(this.props);
   }
 

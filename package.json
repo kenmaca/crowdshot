@@ -17,7 +17,7 @@
     "react-native-animatable": "^0.6.1",
     "react-native-app-intro": "^1.1.5",
     "react-native-blur": "^1.1.1",
-    "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git#536d39b33bea569351636741d794aec6adbe3353",
+    "react-native-camera": "^0.4.1",
     "react-native-code-push": "^1.16.1-beta",
     "react-native-fbsdk": "^0.3.0",
     "react-native-fcm": "^2.3.2",

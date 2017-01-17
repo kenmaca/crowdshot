@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, StatusBar
 } from 'react-native';
 import {
   Colors, Sizes
@@ -60,6 +60,7 @@ export default class ContestMapMarker extends Component {
           }}
           coordinate={this.props.coordinate}
           onPress={() => {
+            StatusBar.setHidden(false, 'slide');
             if (this.state.createdBy === Firebase.auth().currentUser.uid) {
               Actions.contest({
                 contestId: this.props.contestId

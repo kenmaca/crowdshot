@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, Animated, PanResponder,
-  ListView, TouchableOpacity, Easing, Platform
+  ListView, TouchableOpacity, Easing, Platform, StatusBar
 } from 'react-native';
 import {
   Actions
@@ -185,6 +185,9 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
+    StatusBar.setHidden(false, 'slide');
+    Platform.OS !== 'ios'
+      && StatusBar.setBackgroundColor(Colors.Background, true);
 
     // initialize FCM
     FCM.requestPermissions();
