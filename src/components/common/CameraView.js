@@ -104,6 +104,7 @@ export default class CameraView extends Component {
           captureMode={Camera.constants.CaptureMode.still}
           captureTarget={Camera.constants.CaptureTarget.temp}
           aspect={Camera.constants.Aspect.fill}
+          captureQuality={Platform.OS !== 'ios' ? "preview" : "high"}
           type={Camera.constants.Type.back}
           defaultOnFocusComponent={true}
           flashMode={this.state.flashMode}
