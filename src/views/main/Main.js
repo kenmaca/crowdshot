@@ -37,7 +37,7 @@ export default class Main extends Component {
   constructor(props) {
     super(props);
     let pan = new Animated.Value(0);
-    let rawData = [false];
+    let rawData = [];
     this.state = {
       scrollAllowed: true,
       isDocked: true,
