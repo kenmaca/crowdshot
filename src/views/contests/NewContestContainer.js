@@ -224,9 +224,12 @@ export default class NewContestContainer extends Component {
           instructions: DEFAULT_INSTRUCTIONS
         });
         StatusBar.setHidden(false, 'slide');
+        Actions.main({
+          type: 'reset'
+        })
         Actions.contest({
           contestId: contestId,
-          type: 'replace'
+          isNew: true,
         });
       });
     });

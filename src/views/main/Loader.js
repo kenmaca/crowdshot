@@ -96,8 +96,9 @@ export default class Loader extends Component {
                 } else {
 
                   // proceed to main
-                  Actions.main();
-                }
+                  Actions.main({
+                    type: 'reset'
+                  })                }
               } else {
 
                 // profile non-existent, so register it

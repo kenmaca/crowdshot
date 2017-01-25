@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, ScrollView, ListView,
+  View, StyleSheet, Text, ScrollView, ListView, Platform,
   TouchableOpacity, Alert, TouchableWithoutFeedback
 } from 'react-native';
 import {
@@ -297,6 +297,15 @@ export default class ContestCard extends Component {
               }
             </View>
             <View style={styles.footerContainer}>
+              {this.props.isNew ?
+              <Button
+                onPress={() => Actions.pop()}
+                squareBorders
+                color={Colors.Primary}
+                fontColor={Colors.Text}
+                style={styles.cancelButton}
+                label='Done' />
+              :
               <Button
                 isDisabled={
                   Object.keys(this.state.entries).length
@@ -338,11 +347,13 @@ export default class ContestCard extends Component {
                 fontColor={Colors.Text}
                 style={styles.cancelButton}
                 label='Cancel this Contest and Refund all Prizes' />
+                }
             </View>
           </ScrollView>
         </View>
         {!this.props.isCard && (
-          <CloseFullscreenButton />
+          <CloseFullscreenButton
+            hide={Platform.OS !== 'ios'}/>
         )}
       </View>
     );
