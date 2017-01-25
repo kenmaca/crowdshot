@@ -42,7 +42,6 @@ export default class CameraPreview extends Component {
   }
 
   render() {
-    console.log("progress,",this.state.progress)
     return (
       <View style={styles.wrapper}>
         <View
