@@ -2,7 +2,7 @@ import React, {
   Component
 } from 'react';
 import {
-  View, StyleSheet, Text, TouchableOpacity
+  View, StyleSheet, Text, TouchableOpacity, Platform
 } from 'react-native';
 import {
   Colors, Sizes, Strings
@@ -167,7 +167,8 @@ export default class Reward extends Component {
           }}
           label='Redeem this Reward'
           color={Colors.Primary} />
-        <CloseFullscreenButton />
+        <CloseFullscreenButton
+          hide={Platform.OS !== 'ios'}/>
       </View>
     );
   }

@@ -192,7 +192,7 @@ export default class NewContestContainer extends Component {
               .filter(l => l).join(' at ') || '...'
               : [(location[0].streetNumber ? location[0].streetNumber + ' ' : '')
               + location[0].streetName,
-              location[1].locality || location[1].feature]
+              location[1].feature || location[1].locality]
               .filter(l => l).join(' at ') || '...'
           },
           '.priority': -(dateCreated + 3600000)
