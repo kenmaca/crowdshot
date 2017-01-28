@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, ListView, Alert, Image,
-  Modal, TouchableOpacity
+  Modal, TouchableOpacity, Platform
 } from 'react-native';
 import {
   Colors, Sizes, Strings
@@ -332,7 +332,7 @@ export default class ConfirmRedeem extends Component {
             </Text>
           </View>
           <Text style={styles.disclaimer}>
-            {Strings.ContestDisclaimer}
+            {Platform.OS === 'ios' ? Strings.AppleDisclaimer : Strings.GoogleDisclaimer}
           </Text>
         </View>
         <Button

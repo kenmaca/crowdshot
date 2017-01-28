@@ -148,7 +148,7 @@ export default class Reward extends Component {
                 </Text>
               </View>
               <Text style={styles.disclaimer}>
-                {Strings.ContestDisclaimer}
+                {Platform.OS === 'ios' ? Strings.AppleDisclaimer : Strings.GoogleDisclaimer}
               </Text>
             </View>
           </View>

@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   View, StyleSheet, Text, ScrollView, ListView,
-  TouchableOpacity, Alert, Modal, StatusBar
+  TouchableOpacity, Alert, Modal, StatusBar, Platform
 } from 'react-native';
 import {
   Colors, Sizes, Strings
@@ -206,7 +206,7 @@ export default class ContestDetail extends Component {
                 <View style={styles.host}>
                   <HostInfo profileId={this.state.createdBy} />
                   <Text style={styles.disclaimer}>
-                    {Strings.ContestDisclaimer}
+                    {Platform.OS === 'ios' ? Strings.AppleDisclaimer : Strings.GoogleDisclaimer}
                   </Text>
                 </View>
               )

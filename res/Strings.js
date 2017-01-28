@@ -8,7 +8,8 @@ export const Strings = {
     storageBucket: "crowdshot-production.appspot.com",
     messagingSenderId: "129647293054"
   },
-  ContestDisclaimer: 'Apple, Inc. ("Apple") is not a sponsor nor is involved in any way with this app and any contests/prizes that appear in it. Crowdshot, Inc. is solely responsible for providing any prize redemption and the administration of any contests that appear in this app.'
+  AppleDisclaimer: 'Apple, Inc. ("Apple") is not a sponsor nor is involved in any way with this app and any contests/prizes that appear in it. Crowdshot, Inc. is solely responsible for providing any prize redemption and the administration of any contests that appear in this app.',
+  GoogleDisclaimer: 'Google, Inc. ("Google") is not a sponsor nor is involved in any way with this app and any contests/prizes that appear in it. Crowdshot, Inc. is solely responsible for providing any prize redemption and the administration of any contests that appear in this app.'
 };
 
 export const StringsDev = {
@@ -21,7 +22,8 @@ export const StringsDev = {
     storageBucket: "crowdshot-11ce3.appspot.com",
     messagingSenderId: "580889623356"
   },
-  ContestDisclaimer: 'Apple, Inc. ("Apple") is not a sponsor nor is involved in any way with this app and any contests/prizes that appear in it. Crowdshot, Inc. is solely responsible for providing any prize redemption and the administration of any contests that appear in this app.'
+  AppleDisclaimer: 'Apple, Inc. ("Apple") is not a sponsor nor is involved in any way with this app and any contests/prizes that appear in it. Crowdshot, Inc. is solely responsible for providing any prize redemption and the administration of any contests that appear in this app.',
+  GoogleDisclaimer: 'Google, Inc. ("Google") is not a sponsor nor is involved in any way with this app and any contests/prizes that appear in it. Crowdshot, Inc. is solely responsible for providing any prize redemption and the administration of any contests that appear in this app.'
 };
 
 export default Strings;
